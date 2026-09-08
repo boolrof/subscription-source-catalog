@@ -6,6 +6,7 @@ from pathlib import Path
 from src.catalog import Catalog
 from src.discovery import GitHubDiscovery
 from src.generator import generate_markdown, generate_url_export
+from src.security import is_safe_public_url
 
 
 def main() -> int:
@@ -28,8 +29,18 @@ def main() -> int:
         added += action == "added"
         updated += action == "updated"
 
-    # Bounded search does not prove absence. Advance stale/missing lifecycle only
-    # when the entire scan completed without API/rate-limit failures.
+    policy_rejected = 0
+    for url, item in catalog.sources.items():
+        if item.get("discovered_by") == "manual":
+            continue
+        safe, _ = is_safe_public_url(url)
+        relevant = GitHubDiscovery.looks_like_subscription_url(url)
+        if safe and relevant:
+            continue
+        if item.get("status") != "rejected":
+            item["status"] = "rejected"
+            policy_rejected += 1
+
     lifecycle_changed = False
     if discovery.stats.get("search_complete"):
         lifecycle_changed = catalog.apply_lifecycle(
@@ -41,6 +52,7 @@ def main() -> int:
         **discovery.stats,
         "added": added,
         "updated": updated,
+        "policy_rejected": policy_rejected,
         "lifecycle_changed": lifecycle_changed,
         "catalog_sources": len(catalog.sources),
     }

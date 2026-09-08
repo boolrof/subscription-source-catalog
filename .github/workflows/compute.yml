@@ -1,0 +1,82 @@
+name: Catalog Compute v2
+
+on:
+  workflow_run:
+    workflows: ["Scheduled Discovery"]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: catalog-compute-v2
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  shard:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Passive pre-admission shard
+        run: >-
+          python compute.py
+          --shard ${{ matrix.shard }}
+          --shards 8
+          --max-sources 40
+          --workers 2
+          --geo-max-new 25
+          --output compute-artifacts/shard-${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compute-shard-${{ matrix.shard }}
+          path: compute-artifacts/shard-${{ matrix.shard }}.json
+          retention-days: 1
+          if-no-files-found: error
+
+  merge:
+    needs: shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: compute-shard-*
+          path: compute-results
+          merge-multiple: false
+      - name: Merge safe compute outputs
+        run: python merge_compute.py --artifacts compute-results --top-per-country 30
+      - name: Validate generated data
+        run: python -m unittest discover -s tests -v
+      - name: Commit meaningful compute changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sources.json data/node_index.json data/geo_cache.json exports/prechecked_sources.json exports/country_handoff.json
+          if git diff --cached --quiet; then
+            echo "No compute changes."
+          else
+            git commit -m "chore(catalog): compute v2 update [skip ci]"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

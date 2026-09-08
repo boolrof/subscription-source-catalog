@@ -10,7 +10,7 @@ SUSPICIOUS_QUERY_KEYS = {
 HIGH_ENTROPY = re.compile(r"^[A-Za-z0-9_+=\-/]{28,}$")
 WIREGUARD_URI = re.compile(r"(?im)^\s*wg://\S+\s*$")
 WIREGUARD_SECRET_ASSIGNMENT = re.compile(
-    r"(?im)^\s*(?:private[_-]?key|preshared[_-]?key)\s*(?:=|:)\s*['\"]?([^'\"#\s]+)"
+    r"(?im)^\s*['\"]?(?:private[_-]?key|preshared[_-]?key)['\"]?\s*(?:=|:)\s*['\"]?([^'\"#\s]+)"
 )
 
 

@@ -28,10 +28,14 @@ def main() -> int:
         added += action == "added"
         updated += action == "updated"
 
-    lifecycle_changed = catalog.apply_lifecycle(
-        observed,
-        int(config.get("limits", {}).get("missing_scan_cycles_threshold", 3)),
-    )
+    # Bounded search does not prove absence. Advance stale/missing lifecycle only
+    # when the entire scan completed without API/rate-limit failures.
+    lifecycle_changed = False
+    if discovery.stats.get("search_complete"):
+        lifecycle_changed = catalog.apply_lifecycle(
+            observed,
+            int(config.get("limits", {}).get("missing_scan_cycles_threshold", 3)),
+        )
 
     summary = {
         **discovery.stats,
@@ -45,7 +49,6 @@ def main() -> int:
     if args.dry_run:
         return 0
 
-    # Save every real run so last_seen/missing counters advance consistently.
     catalog.save()
     sources = list(catalog.sources.values())
     generate_markdown(sources, Path("SOURCES.md"))

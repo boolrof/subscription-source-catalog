@@ -36,7 +36,7 @@ class GitHubDiscovery:
     def _request(self, url: str):
         req = urllib.request.Request(url)
         req.add_header("Accept", "application/vnd.github+json")
-        req.add_header("User-Agent", "Get09-vpn-subscription-catalog")
+        req.add_header("User-Agent", "Get09-subscription-source-catalog")
         req.add_header("X-GitHub-Api-Version", "2022-11-28")
         if self.token:
             req.add_header("Authorization", f"Bearer {self.token}")
@@ -104,8 +104,6 @@ class GitHubDiscovery:
     def _looks_like_subscription_url(url: str) -> bool:
         parsed = urllib.parse.urlparse(url)
         lower = (parsed.path + "?" + parsed.query).lower()
-        if parsed.hostname and parsed.hostname.lower() == "raw.githubusercontent.com":
-            return any(hint in lower for hint in SUBSCRIPTION_HINTS)
         return any(hint in lower for hint in SUBSCRIPTION_HINTS)
 
     def run(self) -> list[dict]:

@@ -10,6 +10,11 @@ from src.extractor import extract_candidate_urls, infer_format_hint, infer_proto
 from src.normalizer import canonicalize_url
 from src.security import is_safe_public_url
 
+SUBSCRIPTION_HINTS = (
+    "sub", "subscription", "vless", "vmess", "trojan", "shadowsocks",
+    "ss.txt", "v2ray", "config", "nodes", "clash", "singbox", "proxy"
+)
+
 
 class GitHubDiscovery:
     def __init__(self, config: dict, token: str | None = None):
@@ -22,8 +27,10 @@ class GitHubDiscovery:
             "candidate_urls": 0,
             "accepted_candidates": 0,
             "rejected_unsafe_urls": 0,
+            "rejected_irrelevant_urls": 0,
             "duplicates": 0,
             "api_requests": 0,
+            "search_complete": True,
         }
 
     def _request(self, url: str):
@@ -44,14 +51,19 @@ class GitHubDiscovery:
             except urllib.error.HTTPError as exc:
                 if exc.code == 404:
                     return None
-                if exc.code in (403, 429) and attempt < retries:
-                    time.sleep(min(2 ** attempt, 4))
-                    continue
+                if exc.code in (403, 429):
+                    if attempt < retries:
+                        time.sleep(min(2 ** attempt, 4))
+                        continue
+                    self.stats["search_complete"] = False
+                    return None
+                self.stats["search_complete"] = False
                 return None
             except (OSError, ValueError):
                 if attempt < retries:
                     time.sleep(1)
                     continue
+                self.stats["search_complete"] = False
                 return None
         return None
 
@@ -88,6 +100,14 @@ class GitHubDiscovery:
             out.append((filename, text))
         return out
 
+    @staticmethod
+    def _looks_like_subscription_url(url: str) -> bool:
+        parsed = urllib.parse.urlparse(url)
+        lower = (parsed.path + "?" + parsed.query).lower()
+        if parsed.hostname and parsed.hostname.lower() == "raw.githubusercontent.com":
+            return any(hint in lower for hint in SUBSCRIPTION_HINTS)
+        return any(hint in lower for hint in SUBSCRIPTION_HINTS)
+
     def run(self) -> list[dict]:
         repo_seen = set()
         candidate_seen = set()
@@ -113,6 +133,9 @@ class GitHubDiscovery:
                         safe, _ = is_safe_public_url(url)
                         if not safe:
                             self.stats["rejected_unsafe_urls"] += 1
+                            continue
+                        if not self._looks_like_subscription_url(url):
+                            self.stats["rejected_irrelevant_urls"] += 1
                             continue
                         if url in candidate_seen:
                             self.stats["duplicates"] += 1

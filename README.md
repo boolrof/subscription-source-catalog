@@ -20,7 +20,7 @@ data/sources.json
         └── exports/subscription_urls.txt
 ```
 
-It is **not** a node validator, not a production registry for VPN Global Monitor (VGM), and not an automatic importer to any VPS.
+It is **not** a node validator, not a production registry for VGM, and not an automatic importer to any VPS.
 
 ## Security boundary
 

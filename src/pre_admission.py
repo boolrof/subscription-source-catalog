@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import http.client
 import ipaddress
 import json
 import re
 import socket
+import ssl
 import threading
-import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -36,42 +37,106 @@ def _global_ip(value: str) -> bool:
         return False
 
 
-def resolve_public(host: str) -> list[str]:
+def resolve_public(host: str, port: int = 443) -> list[str]:
+    """Resolve a hostname and fail closed on any mixed/non-global answer."""
     try:
-        rows = socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
+        literal = ipaddress.ip_address(host.strip("[]"))
+    except ValueError:
+        literal = None
+    if literal is not None:
+        return [str(literal)] if literal.is_global else []
+    try:
+        rows = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)
     except OSError:
         return []
-    return [ip for ip in sorted({row[4][0] for row in rows}) if _global_ip(ip)]
+    addresses = sorted({row[4][0] for row in rows})
+    if not addresses or any(not _global_ip(ip) for ip in addresses):
+        return []
+    return addresses
 
 
-class PublicRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
-        parsed = urllib.parse.urlsplit(newurl)
-        if parsed.scheme != "https" or not parsed.hostname or not resolve_public(parsed.hostname):
-            raise urllib.error.URLError("unsafe redirect")
-        return super().redirect_request(req, fp, code, msg, headers, newurl)
+class _PinnedHTTPSConnection(http.client.HTTPConnection):
+    def __init__(self, ip: str, port: int, server_hostname: str, *, timeout: float):
+        super().__init__(ip, port=port, timeout=timeout)
+        self._server_hostname = server_hostname
+        self._context = ssl.create_default_context()
+
+    def connect(self) -> None:
+        super().connect()
+        self.sock = self._context.wrap_socket(self.sock, server_hostname=self._server_hostname)
+
+
+def _read_bounded(response: http.client.HTTPResponse, max_bytes: int) -> bytes:
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        chunk = response.read(min(65_536, max_bytes + 1 - total))
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > max_bytes:
+            raise ValueError("source too large")
+        chunks.append(chunk)
+    return b"".join(chunks)
+
+
+def _safe_header(value: str | None, maximum: int = 512) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text or len(text) > maximum or any(ord(ch) < 32 or ord(ch) == 127 for ch in text):
+        return None
+    return text
 
 
 def fetch_bounded(url: str, *, max_bytes: int, timeout: float) -> tuple[bytes, dict]:
+    """Fetch one public HTTPS source with DNS validation, IP pinning and no redirects."""
     parsed = urllib.parse.urlsplit(url)
-    if parsed.scheme != "https" or not parsed.hostname or not resolve_public(parsed.hostname):
-        raise ValueError("source host is not public HTTPS")
-    req = urllib.request.Request(url, headers={
-        "User-Agent": "subscription-source-catalog/compute-v2",
-        "Accept": "text/plain,application/json,application/yaml,text/yaml,*/*;q=0.5",
-    })
-    with urllib.request.build_opener(PublicRedirect()).open(req, timeout=timeout) as response:
-        length = response.headers.get("Content-Length")
-        if length and int(length) > max_bytes:
-            raise ValueError("source too large")
-        body = response.read(max_bytes + 1)
-        if len(body) > max_bytes:
-            raise ValueError("source too large")
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
+        raise ValueError("source URL must be public HTTPS without userinfo/fragment")
+    if timeout <= 0 or max_bytes < 1:
+        raise ValueError("invalid fetch limits")
+    port = parsed.port or 443
+    addresses = resolve_public(parsed.hostname, port)
+    if not addresses:
+        raise ValueError("source host is not global-unicast")
+    ip = addresses[0]
+    target = parsed.path or "/"
+    if parsed.query:
+        target += "?" + parsed.query
+    host_header = parsed.hostname if port == 443 else f"{parsed.hostname}:{port}"
+    connection = _PinnedHTTPSConnection(ip, port, parsed.hostname, timeout=timeout)
+    try:
+        connection.putrequest("GET", target, skip_host=True, skip_accept_encoding=True)
+        connection.putheader("Host", host_header)
+        connection.putheader("User-Agent", "subscription-source-catalog/compute-v2")
+        connection.putheader("Accept", "text/plain,application/json,application/yaml,text/yaml,*/*;q=0.5")
+        connection.putheader("Accept-Encoding", "identity")
+        connection.endheaders()
+        response = connection.getresponse()
+        status = int(response.status)
+        if 300 <= status < 400:
+            raise ValueError("source redirects are disabled")
+        if not 200 <= status < 300:
+            raise ValueError(f"source HTTP status {status}")
+        length = response.getheader("Content-Length")
+        if length:
+            try:
+                if int(length) > max_bytes:
+                    raise ValueError("source too large")
+            except ValueError as exc:
+                if str(exc) == "source too large":
+                    raise
+        body = _read_bounded(response, max_bytes)
         return body, {
-            "content_type": (response.headers.get("Content-Type") or "").split(";", 1)[0].lower(),
-            "etag": response.headers.get("ETag"),
-            "last_modified": response.headers.get("Last-Modified"),
+            "content_type": (response.getheader("Content-Type") or "").split(";", 1)[0].lower(),
+            "etag": _safe_header(response.getheader("ETag")),
+            "last_modified": _safe_header(response.getheader("Last-Modified")),
         }
+    except (OSError, ssl.SSLError, http.client.HTTPException, TimeoutError) as exc:
+        raise ValueError("source transport failed") from exc
+    finally:
+        connection.close()
 
 
 def _decode_text(body: bytes) -> str:
@@ -151,7 +216,7 @@ def parse_nodes(body: bytes, *, max_nodes: int = 10000) -> tuple[list[NodeFact],
             continue
         seen.add(digest)
         if host not in resolved_hosts:
-            resolved_hosts[host] = resolve_public(host)
+            resolved_hosts[host] = resolve_public(host, int(port))
         ips = resolved_hosts[host]
         nodes.append(NodeFact(digest, scheme, host, ips[0] if ips else None))
         protocol_counts[scheme] = protocol_counts.get(scheme, 0) + 1
@@ -200,8 +265,9 @@ class GeoResolver:
                 country = ""
         except Exception:
             country = ""
-        with self._lock:
-            self.cache[key] = country
+        if country:
+            with self._lock:
+                self.cache[key] = country
         return country or None
 
 

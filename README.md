@@ -43,6 +43,8 @@ Generated compute outputs:
 
 This repository is public. Never add private subscription URLs, credentials, API keys, tokens, private node lists, or URLs containing subscriber secrets.
 
+Personal/provider WireGuard inventories are explicitly excluded. ProtonVPN/FastestVPN account-derived profiles and any other private WireGuard nodes remain on the private monitoring side only. `PrivateKey`, `PresharedKey`, complete client profiles, and `wg://` payloads must never enter catalog data, Actions artifacts, logs, issues, or pull requests. Discovery rejects actionable WireGuard secret material in candidate payload files before catalog admission.
+
 The compute layer never commits raw proxy URIs. It does not establish proxy tunnels and does not probe discovered node ports. Real canonical fingerprint v2, L1/L2/L3 validation, latency, exit IP, and `verified_exit_country` remain responsibilities of the private monitoring VPS.
 
 ## Source of truth
@@ -86,4 +88,4 @@ alive/dead + latency + exit IP + verified_exit_country
 country pools for later use by the main VPS
 ```
 
-There is no automatic production import and GitHub results never replace VPS-authoritative identity or exit validation.
+There is no reverse inventory export from the private VPS into this public catalog. There is no automatic production import and GitHub results never replace VPS-authoritative identity or exit validation.

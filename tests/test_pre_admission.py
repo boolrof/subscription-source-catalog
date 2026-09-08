@@ -30,9 +30,11 @@ class FakeResponse:
 class FakeConnection:
     response = FakeResponse()
     created = None
+    last_instance = None
 
     def __init__(self, ip, port, server_hostname, timeout):
         FakeConnection.created = (ip, port, server_hostname, timeout)
+        FakeConnection.last_instance = self
         self.headers = []
 
     def putrequest(self, *args, **kwargs):
@@ -114,7 +116,7 @@ class PreAdmissionTests(unittest.TestCase):
             body, meta = p.fetch_bounded("https://example.com/sub.txt", max_bytes=1024, timeout=5)
         self.assertEqual(body, b"payload")
         self.assertEqual(FakeConnection.created, ("8.8.8.8", 443, "example.com", 5))
-        self.assertIn(("Host", "example.com"), FakeConnection.__dict__.get("headers", []) if False else [])
+        self.assertIn(("Host", "example.com"), FakeConnection.last_instance.headers)
         self.assertEqual(meta["etag"], "abc")
 
     def test_fetch_rejects_redirects_without_following_location(self):

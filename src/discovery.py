@@ -8,7 +8,7 @@ import urllib.request
 
 from src.extractor import extract_candidate_urls, infer_format_hint, infer_protocol_hints
 from src.normalizer import canonicalize_url
-from src.security import is_safe_public_url
+from src.security import contains_private_wireguard_material, is_safe_public_url
 
 CONTENT_SUFFIXES = (".txt", ".yaml", ".yml", ".json", ".conf", ".ini", ".list", ".meta")
 BARE_NAMES = {"sub", "subscription", "nodes", "configs", "all", "mix-uri", "proxylist"}
@@ -30,6 +30,7 @@ class GitHubDiscovery:
             "accepted_candidates": 0,
             "rejected_unsafe_urls": 0,
             "rejected_irrelevant_urls": 0,
+            "rejected_private_material": 0,
             "duplicates": 0,
             "api_requests": 0,
             "search_complete": True,
@@ -121,13 +122,8 @@ class GitHubDiscovery:
         if "broken" in lower_path:
             return False
 
-        # A content-like file is a reasonable candidate when it is linked from a
-        # repository already selected by the bounded discovery search.
         if lower_path.endswith(CONTENT_SUFFIXES):
             return True
-
-        # Extensionless subscription endpoints are common, but require a strong
-        # terminal/path token instead of a loose substring such as "sub".
         if leaf in BARE_NAMES:
             return True
         segments = {segment for segment in lower_path.split("/") if segment}
@@ -135,7 +131,6 @@ class GitHubDiscovery:
             return True
         if "sub" in segments and any(hint in lower_path for hint in PROTOCOL_HINTS):
             return True
-
         return False
 
     def run(self) -> list[dict]:
@@ -152,8 +147,15 @@ class GitHubDiscovery:
                 branch = repo.get("default_branch") or "main"
                 files = self._read_candidate_files(repo)
                 for filename, text in files:
+                    # README prose may mention example secret fields, so only reject an
+                    # actual candidate payload file here. Linked sources are checked again
+                    # after bounded fetch in Catalog Compute v2.
+                    is_readme = filename.lower() == "readme.md"
+                    if not is_readme and contains_private_wireguard_material(text):
+                        self.stats["rejected_private_material"] += 1
+                        continue
                     urls = extract_candidate_urls(text)
-                    if filename.lower() != "readme.md" and filename.lower().endswith((".txt", ".yaml", ".yml", ".json")):
+                    if not is_readme and filename.lower().endswith((".txt", ".yaml", ".yml", ".json")):
                         owner, name = full_name.split("/", 1)
                         urls.append(f"https://raw.githubusercontent.com/{owner}/{name}/{branch}/{filename}")
                     self.stats["candidate_urls"] += len(urls)

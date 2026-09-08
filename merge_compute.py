@@ -262,6 +262,7 @@ def main() -> int:
         handoff[country] = selected
         safe_ranked = [{
             "node_digest": row["node_digest"],
+            "source_id": row["source_ids"][0],
             "protocol": row["protocol"],
             "pre_score": row["pre_score"],
             "source_count": row["source_count"],
@@ -272,6 +273,7 @@ def main() -> int:
             "schema": "subscription-source-country-ranking-v3",
             "country": country,
             "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
+            "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
             "total_candidates": len(ranked),
             "exported_candidates": len(safe_ranked),
             "nodes": safe_ranked,

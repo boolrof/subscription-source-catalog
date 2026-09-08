@@ -59,7 +59,7 @@ class Catalog:
     def apply_lifecycle(self, observed: set[str], missing_limit: int) -> bool:
         changed = False
         for url, item in self.sources.items():
-            if item.get("discovered_by") == "manual" or url in observed:
+            if item.get("discovered_by") == "manual" or item.get("status") == "rejected" or url in observed:
                 continue
             cycles = int(item.get("missing_cycles", 0)) + 1
             item["missing_cycles"] = cycles

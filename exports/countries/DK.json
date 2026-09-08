@@ -4,6 +4,15 @@
   "exported_candidates": 7,
   "nodes": [
     {
+      "independent_source_count": 5,
+      "last_seen_at": "2026-09-08T16:52:52Z",
+      "node_digest": "caecca9ec86618fe7af00d12ce408e92d9dc5509069ae524676bba2dff9571b3",
+      "pre_score": 115,
+      "protocol": "vmess",
+      "source_count": 5,
+      "source_id": "004d3a206cee3b1915be8ac0"
+    },
+    {
       "independent_source_count": 3,
       "last_seen_at": "2026-09-08T10:52:24Z",
       "node_digest": "f1d8bd87bc7892e4590bf7560a199b8ce6da95d5df95972d75da11cadf508348",
@@ -11,15 +20,6 @@
       "protocol": "vmess",
       "source_count": 3,
       "source_id": "e6a228d9ccaa2045a894b27d"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-08T08:51:34Z",
-      "node_digest": "aef97abed148b0fd52b23911463bc2e0d467f2d2bb854a830cbd544f297c274a",
-      "pre_score": 100,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "34d660b3274860d12b39ac1e"
     },
     {
       "independent_source_count": 1,
@@ -32,7 +32,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-08T10:52:02Z",
+      "last_seen_at": "2026-09-08T16:52:33Z",
       "node_digest": "602f9e3fc841b5162326917a619e8c973ace34d9b1f3506e44f1f75ca417205e",
       "pre_score": 93,
       "protocol": "trojan",
@@ -41,8 +41,17 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-08T10:51:10Z",
-      "node_digest": "48b2ab47bfd9f65433885a7d4191241b829e73e298882af5669fd45558264e30",
+      "last_seen_at": "2026-09-08T16:52:13Z",
+      "node_digest": "da0f13c0b30b653c45f395ac4a1dd3f430cd33b31a651dccf2bc7b9f0213e380",
+      "pre_score": 93,
+      "protocol": "trojan",
+      "source_count": 1,
+      "source_id": "e45e834e687d94ff4c02a8ac"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T16:53:20Z",
+      "node_digest": "4517ce83a3048eb656b5df79d903209b6cd860ea8ad121eea548393db517dc0c",
       "pre_score": 93,
       "protocol": "vmess",
       "source_count": 1,
@@ -56,15 +65,6 @@
       "protocol": "trojan",
       "source_count": 1,
       "source_id": "b50c27874935b7e3bffc5e6c"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-08T10:51:27Z",
-      "node_digest": "da0f13c0b30b653c45f395ac4a1dd3f430cd33b31a651dccf2bc7b9f0213e380",
-      "pre_score": 83,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "e45e834e687d94ff4c02a8ac"
     }
   ],
   "schema": "subscription-source-country-ranking-v3",

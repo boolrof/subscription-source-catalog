@@ -122,13 +122,13 @@ def _uri_endpoint(uri: str, scheme: str) -> tuple[str | None, int | None]:
 
 @dataclass(frozen=True)
 class NodeFact:
-    fingerprint: str
+    node_digest: str
     protocol: str
     endpoint_host: str
     endpoint_ip: str | None
 
     def safe(self, sid: str, country: str | None) -> dict:
-        return {"fingerprint": self.fingerprint, "source_id": sid, "protocol": self.protocol, "endpoint_country": country}
+        return {"node_digest": self.node_digest, "source_id": sid, "protocol": self.protocol, "endpoint_country": country}
 
 
 def parse_nodes(body: bytes, *, max_nodes: int = 10000) -> tuple[list[NodeFact], dict]:
@@ -146,14 +146,14 @@ def parse_nodes(body: bytes, *, max_nodes: int = 10000) -> tuple[list[NodeFact],
         if not host or not port or not (1 <= int(port) <= 65535):
             invalid += 1
             continue
-        fp = hashlib.sha256(raw.encode("utf-8")).hexdigest()
-        if fp in seen:
+        digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        if digest in seen:
             continue
-        seen.add(fp)
+        seen.add(digest)
         if host not in resolved_hosts:
             resolved_hosts[host] = resolve_public(host)
         ips = resolved_hosts[host]
-        nodes.append(NodeFact(fp, scheme, host, ips[0] if ips else None))
+        nodes.append(NodeFact(digest, scheme, host, ips[0] if ips else None))
         protocol_counts[scheme] = protocol_counts.get(scheme, 0) + 1
         if len(nodes) >= max_nodes:
             break

@@ -35,7 +35,7 @@ class ComputeMergeTests(unittest.TestCase):
                         "quality_score": 90,
                     },
                     "nodes": [{
-                        "fingerprint": "f" * 64,
+                        "node_digest": "f" * 64,
                         "source_id": "source123",
                         "protocol": "vless",
                         "endpoint_country": "NL",
@@ -53,7 +53,8 @@ class ComputeMergeTests(unittest.TestCase):
                 self.assertEqual(merge_compute.main(), 0)
             payload = json.loads(handoff.read_text(encoding="utf-8"))
             row = payload["countries"]["NL"][0]
-            self.assertEqual(set(row), {"fingerprint", "source_id", "protocol", "pre_score"})
+            self.assertEqual(set(row), {"node_digest", "source_id", "protocol", "pre_score"})
+            self.assertIn("not_vgm_canonical_fingerprint", payload["digest_semantics"])
             rendered = handoff.read_text(encoding="utf-8")
             self.assertNotIn("raw.githubusercontent.com", rendered)
             self.assertNotIn("uuid", rendered.lower())

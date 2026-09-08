@@ -101,26 +101,27 @@ def main() -> int:
         score = source_score.get(sid, 0)
         for node in payload.get("nodes") or []:
             country = node.get("endpoint_country")
-            fp = node.get("fingerprint")
-            if not country or not fp:
+            digest = node.get("node_digest")
+            if not country or not digest:
                 continue
             row = {
-                "fingerprint": fp,
+                "node_digest": digest,
                 "source_id": sid,
                 "protocol": node.get("protocol"),
                 "pre_score": score,
             }
-            old = countries[country].get(fp)
+            old = countries[country].get(digest)
             if old is None or row["pre_score"] > old["pre_score"]:
-                countries[country][fp] = row
+                countries[country][digest] = row
 
     handoff = {}
     for country, rows in countries.items():
-        ranked = sorted(rows.values(), key=lambda r: (-r["pre_score"], r["protocol"] or "", r["fingerprint"]))
+        ranked = sorted(rows.values(), key=lambda r: (-r["pre_score"], r["protocol"] or "", r["node_digest"]))
         handoff[country] = ranked[:max(1, args.top_per_country)]
     dump(Path(args.handoff), {
         "schema": "subscription-source-country-handoff-v2",
         "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
+        "digest_semantics": "sha256_raw_public_uri_selection_digest_not_vgm_canonical_fingerprint",
         "top_per_country": args.top_per_country,
         "countries": dict(sorted(handoff.items())),
     })

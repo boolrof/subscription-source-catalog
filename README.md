@@ -21,7 +21,7 @@ Catalog Compute v2 (8 bounded shards)
         ├── bounded HTTPS source fetch
         ├── URI/base64 syntax parsing
         ├── protocol counts
-        ├── content fingerprints / mirror groups
+        ├── source content digests / mirror groups
         ├── DNS resolution of published endpoints
         ├── passive GeoIP country hints
         ├── source quality scoring
@@ -30,10 +30,12 @@ Catalog Compute v2 (8 bounded shards)
 
 Generated compute outputs:
 
-- `data/node_index.json` — safe node fingerprints and passive country hints; no URI, credential, host, or IP is published.
+- `data/node_index.json` — safe per-source `node_digest` values and passive country hints; no URI, credential, host, or IP is published.
 - `data/geo_cache.json` — hashed-IP GeoIP cache; raw endpoint IPs are not stored.
 - `exports/prechecked_sources.json` — aggregate pre-admission metrics and quality scores.
-- `exports/country_handoff.json` — top candidates per `endpoint_country`, keyed only by node fingerprint/source id/protocol/score.
+- `exports/country_handoff.json` — top candidates per `endpoint_country`, keyed only by `node_digest`/source id/protocol/score.
+
+`node_digest` is SHA-256 of the raw public URI used only as an opaque selection handle inside this public preprocessing layer. It is **not** VGM canonical fingerprint v2 and must never be treated as node identity by the monitoring VPS.
 
 `endpoint_country` means the country of the published network endpoint observed by passive DNS/GeoIP. It is **not** the authoritative VPN/proxy exit country.
 
@@ -41,7 +43,7 @@ Generated compute outputs:
 
 This repository is public. Never add private subscription URLs, credentials, API keys, tokens, private node lists, or URLs containing subscriber secrets.
 
-The compute layer never commits raw proxy URIs. It does not establish proxy tunnels and does not probe discovered node ports. Real L1/L2/L3 validation, latency, exit IP, and `verified_exit_country` remain responsibilities of the private monitoring VPS.
+The compute layer never commits raw proxy URIs. It does not establish proxy tunnels and does not probe discovered node ports. Real canonical fingerprint v2, L1/L2/L3 validation, latency, exit IP, and `verified_exit_country` remain responsibilities of the private monitoring VPS.
 
 ## Source of truth
 
@@ -73,7 +75,9 @@ source score + endpoint-country candidate handoff
     ↓
 explicit/private VPS intake
     ↓
-refetch public source + fingerprint match
+refetch public source + optional node_digest selection
+    ↓
+VGM normalize + canonical fingerprint v2
     ↓
 real protocol validation
     ↓
@@ -82,4 +86,4 @@ alive/dead + latency + exit IP + verified_exit_country
 country pools for later use by the main VPS
 ```
 
-There is no automatic production import and GitHub results never replace VPS-authoritative exit validation.
+There is no automatic production import and GitHub results never replace VPS-authoritative identity or exit validation.

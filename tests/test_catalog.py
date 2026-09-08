@@ -48,6 +48,24 @@ class CatalogTests(unittest.TestCase):
             c.apply_lifecycle(set(), 3)
             self.assertEqual(c.sources[candidate["url"]]["status"], "missing")
 
+    def test_rejected_state_is_not_overwritten_by_lifecycle(self):
+        with tempfile.TemporaryDirectory() as td:
+            c = Catalog(Path(td) / "sources.json")
+            candidate = {
+                "url": "https://raw.githubusercontent.com/a/b/main/sub.txt",
+                "repository": "a/b",
+                "repository_url": "https://github.com/a/b",
+                "repo_updated_at": "",
+                "discovered_by": "github-search",
+                "protocol_hints": [],
+                "format_hint": "unknown",
+                "source_kind": "unknown",
+            }
+            c.upsert(candidate)
+            c.sources[candidate["url"]]["status"] = "rejected"
+            self.assertFalse(c.apply_lifecycle(set(), 3))
+            self.assertEqual(c.sources[candidate["url"]]["status"], "rejected")
+
 
 if __name__ == "__main__":
     unittest.main()

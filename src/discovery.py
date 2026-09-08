@@ -10,10 +10,12 @@ from src.extractor import extract_candidate_urls, infer_format_hint, infer_proto
 from src.normalizer import canonicalize_url
 from src.security import is_safe_public_url
 
-SUBSCRIPTION_HINTS = (
-    "sub", "subscription", "vless", "vmess", "trojan", "shadowsocks",
-    "ss.txt", "v2ray", "config", "nodes", "clash", "singbox", "proxy"
-)
+CONTENT_SUFFIXES = (".txt", ".yaml", ".yml", ".json", ".conf", ".ini", ".list", ".meta")
+BARE_NAMES = {"sub", "subscription", "nodes", "configs", "all", "mix-uri", "proxylist"}
+DISALLOWED_SUFFIXES = (".svg", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".html", ".md")
+DISALLOWED_HOSTS = {"img.shields.io", "shields.io"}
+DISALLOWED_PATH_PARTS = ("/actions/", "/stargazers", "/issues/", "/pull/", "/assets/", "/archive/")
+PROTOCOL_HINTS = ("vless", "vmess", "trojan", "shadowsocks", "v2ray", "clash", "singbox", "hysteria", "tuic")
 
 
 class GitHubDiscovery:
@@ -101,10 +103,40 @@ class GitHubDiscovery:
         return out
 
     @staticmethod
-    def _looks_like_subscription_url(url: str) -> bool:
+    def looks_like_subscription_url(url: str) -> bool:
         parsed = urllib.parse.urlparse(url)
-        lower = (parsed.path + "?" + parsed.query).lower()
-        return any(hint in lower for hint in SUBSCRIPTION_HINTS)
+        host = (parsed.hostname or "").lower()
+        path = parsed.path or ""
+        lower_path = path.lower()
+        leaf = lower_path.rsplit("/", 1)[-1]
+
+        if not host or host in DISALLOWED_HOSTS:
+            return False
+        if host == "github.com":
+            return False
+        if lower_path.endswith(DISALLOWED_SUFFIXES):
+            return False
+        if any(part in lower_path for part in DISALLOWED_PATH_PARTS):
+            return False
+        if "broken" in lower_path:
+            return False
+
+        # A content-like file is a reasonable candidate when it is linked from a
+        # repository already selected by the bounded discovery search.
+        if lower_path.endswith(CONTENT_SUFFIXES):
+            return True
+
+        # Extensionless subscription endpoints are common, but require a strong
+        # terminal/path token instead of a loose substring such as "sub".
+        if leaf in BARE_NAMES:
+            return True
+        segments = {segment for segment in lower_path.split("/") if segment}
+        if "subscription" in segments or "subscriptions" in segments:
+            return True
+        if "sub" in segments and any(hint in lower_path for hint in PROTOCOL_HINTS):
+            return True
+
+        return False
 
     def run(self) -> list[dict]:
         repo_seen = set()
@@ -132,7 +164,7 @@ class GitHubDiscovery:
                         if not safe:
                             self.stats["rejected_unsafe_urls"] += 1
                             continue
-                        if not self._looks_like_subscription_url(url):
+                        if not self.looks_like_subscription_url(url):
                             self.stats["rejected_irrelevant_urls"] += 1
                             continue
                         if url in candidate_seen:

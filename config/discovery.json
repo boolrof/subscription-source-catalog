@@ -1,0 +1,37 @@
+{
+  "queries": [
+    "vless sub",
+    "vless subscription",
+    "v2ray subscription",
+    "v2ray configs",
+    "free v2ray",
+    "vmess subscription",
+    "trojan subscription",
+    "shadowsocks subscription",
+    "free vpn configs",
+    "singbox subscription",
+    "clash subscription vless"
+  ],
+  "limits": {
+    "max_repositories_per_query": 10,
+    "max_files_inspected_per_repo": 12,
+    "max_file_size_bytes": 1048576,
+    "api_timeout_seconds": 15,
+    "max_retries": 2,
+    "missing_scan_cycles_threshold": 3
+  },
+  "candidate_filenames": [
+    "README.md",
+    "readme.md",
+    "sub",
+    "sub.txt",
+    "subscription.txt",
+    "nodes.txt",
+    "all.txt",
+    "configs.txt",
+    "vless.txt",
+    "vmess.txt",
+    "trojan.txt",
+    "ss.txt"
+  ]
+}

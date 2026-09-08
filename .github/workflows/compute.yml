@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: catalog-compute-v2
+  group: catalog-main-write
   cancel-in-progress: false
 
 permissions:

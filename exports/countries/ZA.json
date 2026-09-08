@@ -1,0 +1,28 @@
+{
+  "country": "ZA",
+  "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
+  "exported_candidates": 2,
+  "nodes": [
+    {
+      "independent_source_count": 7,
+      "last_seen_at": "2026-09-08T08:49:48Z",
+      "node_digest": "738f3a27e11633bbb752414d4d8fbae9f4eeea4e56c7a6685e62d19442f033ea",
+      "pre_score": 119,
+      "protocol": "vmess",
+      "source_count": 7,
+      "source_id": "01d2ed69746ac615e2493d1f"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T08:50:57Z",
+      "node_digest": "d96ddbfad5edcc450dd72569b96fa57c0fe05e385706b0489fc2a83dfb2eedae",
+      "pre_score": 90,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "1144c34b185d19c3d6c6c4c6"
+    }
+  ],
+  "schema": "subscription-source-country-ranking-v3",
+  "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
+  "total_candidates": 2
+}

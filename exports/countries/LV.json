@@ -1,17 +1,33 @@
 {
   "country": "LV",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 1,
+  "exported_candidates": 3,
   "nodes": [
     {
-      "independent_source_count": 5,
-      "last_seen_at": "2026-09-08T06:51:59Z",
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-08T07:00:56Z",
       "node_digest": "d779909d65a42cc6192483a5f832f8c91e537bfa1c66c60112f386caa1b4f9bb",
-      "pre_score": 116,
+      "pre_score": 102,
+      "protocol": "vmess",
+      "source_count": 4
+    },
+    {
+      "independent_source_count": 5,
+      "last_seen_at": "2026-09-08T07:01:19Z",
+      "node_digest": "0d7afd0a1a0dc73ab98a054002f702f36f945725260a9baddc51824e858c0a2e",
+      "pre_score": 99,
       "protocol": "vmess",
       "source_count": 5
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:00:42Z",
+      "node_digest": "76a1201681ff9da59c8ad1381a22ddc7043a7fa2bbc9cd27ad6d8484201b18c5",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
-  "total_candidates": 1
+  "total_candidates": 3
 }

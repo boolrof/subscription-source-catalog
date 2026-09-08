@@ -8,6 +8,29 @@ SUSPICIOUS_QUERY_KEYS = {
 }
 
 HIGH_ENTROPY = re.compile(r"^[A-Za-z0-9_+=\-/]{28,}$")
+WIREGUARD_URI = re.compile(r"(?im)^\s*wg://\S+\s*$")
+WIREGUARD_SECRET_ASSIGNMENT = re.compile(
+    r"(?im)^\s*(?:private[_-]?key|preshared[_-]?key)\s*(?:=|:)\s*['\"]?([^'\"#\s]+)"
+)
+
+
+def contains_private_wireguard_material(value: str | bytes) -> bool:
+    """Fail closed on actionable WireGuard secret material in public-catalog content.
+
+    PublicKey/Endpoint/AllowedIPs alone are not secrets and are deliberately not enough
+    to trigger this guard. PrivateKey/PresharedKey values and wg:// payloads are.
+    """
+    if isinstance(value, bytes):
+        text = value.decode("utf-8", errors="ignore")
+    else:
+        text = str(value)
+    if WIREGUARD_URI.search(text):
+        return True
+    for match in WIREGUARD_SECRET_ASSIGNMENT.finditer(text):
+        secret = match.group(1).strip()
+        if len(secret) >= 20:
+            return True
+    return False
 
 
 def is_safe_public_url(url: str) -> tuple[bool, str]:

@@ -1,25 +1,65 @@
 {
   "country": "IT",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 2,
+  "exported_candidates": 7,
   "nodes": [
     {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-08T07:00:48Z",
-      "node_digest": "91b706df709143baebdb3fbef04914a35461b255222e5b3ff0a7d60f3dc9bf33",
-      "pre_score": 97,
+      "independent_source_count": 6,
+      "last_seen_at": "2026-09-08T07:17:47Z",
+      "node_digest": "ba6b8149ef914d75343faba48cf1e3f4b3d4d5df5c787e0080ca07be402eb228",
+      "pre_score": 120,
+      "protocol": "vless",
+      "source_count": 6
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:17:06Z",
+      "node_digest": "23c9b5d728aa628c70e737dcf528a01f8f48138621b37e75f3f99fe6576c95e4",
+      "pre_score": 100,
       "protocol": "ss",
-      "source_count": 2
+      "source_count": 1
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:17:09Z",
+      "node_digest": "c194a54bb627ec075e86d9c71b085788e81556335b05396d2be6af690583d732",
+      "pre_score": 100,
+      "protocol": "ss",
+      "source_count": 1
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:15:57Z",
+      "node_digest": "250491fefd3d4c8353245dc9b875dc6f51ade1035e567cdf92ef4bcaef92d88d",
+      "pre_score": 93,
+      "protocol": "ss",
+      "source_count": 1
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:16:02Z",
+      "node_digest": "81a6f355c20664f9ccb8c1c5b401accd2188bfc939f312fa446d1f10195c235c",
+      "pre_score": 83,
+      "protocol": "ss",
+      "source_count": 1
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:16:44Z",
+      "node_digest": "b35129bbb98de24e0de2710afdad7b4087184589dfae54b50ee86c26e0435e81",
+      "pre_score": 83,
+      "protocol": "ss",
+      "source_count": 1
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-08T07:00:48Z",
-      "node_digest": "e82fc67412f5cfa425129c24c4d7341d865dfae9d012037e0d283389610f012b",
-      "pre_score": 97,
+      "last_seen_at": "2026-09-08T07:17:37Z",
+      "node_digest": "cf1b2ee89c2c4d20efb5e375f6bec548a151bbc50fd03dd6a5dfb3971a74877a",
+      "pre_score": 82,
       "protocol": "ss",
       "source_count": 2
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
-  "total_candidates": 2
+  "total_candidates": 7
 }

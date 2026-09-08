@@ -1,33 +1,49 @@
 {
   "country": "LV",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 3,
+  "exported_candidates": 5,
   "nodes": [
     {
+      "independent_source_count": 9,
+      "last_seen_at": "2026-09-08T07:17:47Z",
+      "node_digest": "0d7afd0a1a0dc73ab98a054002f702f36f945725260a9baddc51824e858c0a2e",
+      "pre_score": 120,
+      "protocol": "vmess",
+      "source_count": 9
+    },
+    {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-08T07:00:56Z",
+      "last_seen_at": "2026-09-08T07:16:23Z",
+      "node_digest": "ebef8bde55cb091d967cc01ee07f8da52a56fd5f4ab9d853cfea66ccd20bca78",
+      "pre_score": 112,
+      "protocol": "vmess",
+      "source_count": 4
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-08T07:16:35Z",
       "node_digest": "d779909d65a42cc6192483a5f832f8c91e537bfa1c66c60112f386caa1b4f9bb",
       "pre_score": 102,
       "protocol": "vmess",
       "source_count": 4
     },
     {
-      "independent_source_count": 5,
-      "last_seen_at": "2026-09-08T07:01:19Z",
-      "node_digest": "0d7afd0a1a0dc73ab98a054002f702f36f945725260a9baddc51824e858c0a2e",
-      "pre_score": 99,
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:17:57Z",
+      "node_digest": "9bc5d86bf3269acc98426d9fa15fa247bd11f7f0f00dfd3524d7a449a1bd1599",
+      "pre_score": 93,
       "protocol": "vmess",
-      "source_count": 5
+      "source_count": 1
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-08T07:00:42Z",
-      "node_digest": "76a1201681ff9da59c8ad1381a22ddc7043a7fa2bbc9cd27ad6d8484201b18c5",
+      "last_seen_at": "2026-09-08T07:16:23Z",
+      "node_digest": "cda4def7cfa1e890f840b9fda034a362071b5a34760c8baff502d5b57001756f",
       "pre_score": 93,
       "protocol": "vmess",
       "source_count": 1
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
-  "total_candidates": 3
+  "total_candidates": 5
 }

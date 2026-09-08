@@ -1,0 +1,41 @@
+{
+  "country": "KZ",
+  "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
+  "exported_candidates": 4,
+  "nodes": [
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-08T07:15:56Z",
+      "node_digest": "49947b5d593fecc11ae488acbd8eefb1a1f9ea012cc025bf7cfcaab59a4ff1c7",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 2
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:17:06Z",
+      "node_digest": "3b7fc0dd99e0650d2a85ec82fecd498a97dc1fb06f00051a3e34e73ee59983db",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-08T07:15:58Z",
+      "node_digest": "ac33098d10edd1231de0fc3468cf58ab11a05b7e0cd44e449542a25d9e749859",
+      "pre_score": 97,
+      "protocol": "vmess",
+      "source_count": 2
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T07:15:56Z",
+      "node_digest": "65093f2efb83243add35e3cf39aff1f44bafce546c04f30f3bf1d09a63ea7cae",
+      "pre_score": 96,
+      "protocol": "vless",
+      "source_count": 1
+    }
+  ],
+  "schema": "subscription-source-country-ranking-v3",
+  "total_candidates": 4
+}

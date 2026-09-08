@@ -3,7 +3,7 @@ from pathlib import Path
 
 def generate_markdown(sources: list[dict], path: Path) -> None:
     lines = [
-        "# Public VPN Subscription Catalog",
+        "# Public Subscription Source Catalog",
         "",
         "> Source of truth: `data/sources.json`.",
         "",

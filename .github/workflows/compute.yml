@@ -5,6 +5,17 @@ on:
     workflows: ["Scheduled Discovery"]
     types: [completed]
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/compute.yml'
+      - 'compute.py'
+      - 'merge_compute.py'
+      - 'src/pre_admission.py'
+      - 'src/security.py'
+      - 'tests/test_pre_admission.py'
+      - 'tests/test_compute_merge.py'
+      - 'tests/test_security.py'
 
 concurrency:
   group: catalog-main-write
@@ -16,7 +27,7 @@ permissions:
 
 jobs:
   shard:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     strategy:
       fail-fast: false
       matrix:

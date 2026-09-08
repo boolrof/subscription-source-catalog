@@ -17,7 +17,10 @@ class PreAdmissionTests(unittest.TestCase):
         self.assertEqual(stats["raw_items"], 2)
         self.assertEqual(stats["valid_nodes"], 2)
         self.assertEqual(stats["protocol_counts"], {"trojan": 1, "vless": 1})
-        rendered = json.dumps([n.safe("source", "NL") for n in nodes])
+        safe = [n.safe("source", "NL") for n in nodes]
+        rendered = json.dumps(safe)
+        self.assertEqual(set(safe[0]), {"node_digest", "source_id", "protocol", "endpoint_country"})
+        self.assertNotIn("fingerprint", rendered)
         self.assertNotIn("secret", rendered)
         self.assertNotIn("11111111-1111", rendered)
         self.assertNotIn("example.com", rendered)

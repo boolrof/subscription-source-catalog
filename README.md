@@ -77,7 +77,7 @@ python compute.py --shard 0 --shards 8 --output /tmp/shard-0.json
 python merge_compute.py --artifacts /tmp/compute-results --top-per-country 30 --country-export-limit 200 --max-per-source 5
 ```
 
-GitHub Actions runs source discovery every 12 hours. After a successful discovery workflow, Catalog Compute v3 runs eight bounded shards, globally deduplicates safe node metadata, ranks country candidates, and merges safe results. Both workflows serialize writes to `main`.
+GitHub Actions runs source discovery every 12 hours at 02:17 and 14:17 UTC. Catalog Compute v3 runs independently every 6 hours at 00:47, 06:47, 12:47, and 18:47 UTC, and it also runs immediately after every successful discovery workflow. This keeps known-source freshness, global deduplication, and country ranking more current without running the heavier source-discovery step every six hours. Both workflows serialize writes to `main`.
 
 ## Architectural boundary with the monitoring VPS
 

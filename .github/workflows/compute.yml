@@ -1,6 +1,8 @@
 name: Catalog Compute v3
 
 on:
+  schedule:
+    - cron: '47 */6 * * *'
   workflow_run:
     workflows: ["Scheduled Discovery"]
     types: [completed]
@@ -27,7 +29,7 @@ permissions:
 
 jobs:
   shard:
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     strategy:
       fail-fast: false
       matrix:

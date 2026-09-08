@@ -38,11 +38,7 @@ def build_global_nodes(catalog, index_sources, previous_nodes):
             "independent_key": pre.get("duplicate_group") or sid,
         }
 
-    previous_by_digest = {
-        row.get("node_digest"): row
-        for row in (previous_nodes.get("nodes") or [])
-        if row.get("node_digest")
-    }
+    previous_by_digest = {row.get("node_digest"): row for row in (previous_nodes.get("nodes") or []) if row.get("node_digest")}
     aggregate = {}
     for sid, payload in index_sources.items():
         if sid not in source_meta:
@@ -54,11 +50,8 @@ def build_global_nodes(catalog, index_sources, previous_nodes):
             if not digest or not protocol:
                 continue
             row = aggregate.setdefault(digest, {
-                "source_ids": set(),
-                "independent_keys": set(),
-                "protocols": Counter(),
-                "countries": Counter(),
-                "seen_at": [],
+                "source_ids": set(), "independent_keys": set(), "protocols": Counter(),
+                "countries": Counter(), "seen_at": [],
             })
             row["source_ids"].add(sid)
             row["independent_keys"].add(source_meta[sid]["independent_key"])
@@ -72,10 +65,7 @@ def build_global_nodes(catalog, index_sources, previous_nodes):
     nodes = []
     for digest, agg in aggregate.items():
         source_ids = sorted(agg["source_ids"])
-        source_ids_ranked = sorted(
-            source_ids,
-            key=lambda sid: (-source_meta[sid]["quality_score"], sid),
-        )
+        source_ids_ranked = sorted(source_ids, key=lambda sid: (-source_meta[sid]["quality_score"], sid))
         best_source_score = max(source_meta[sid]["quality_score"] for sid in source_ids)
         independent_count = len(agg["independent_keys"])
         corroboration_bonus = min(20, max(0, independent_count - 1) * 4)
@@ -85,16 +75,11 @@ def build_global_nodes(catalog, index_sources, previous_nodes):
         first_seen_at = previous.get("first_seen_at") or (seen_at[0] if seen_at else None)
         last_seen_at = seen_at[-1] if seen_at else previous.get("last_seen_at")
         nodes.append({
-            "node_digest": digest,
-            "protocol": choose(agg["protocols"]),
-            "endpoint_country": choose(agg["countries"]),
-            "source_count": len(source_ids),
-            "independent_source_count": independent_count,
-            "source_ids": source_ids_ranked,
-            "best_source_score": best_source_score,
-            "pre_score": pre_score,
-            "first_seen_at": first_seen_at,
-            "last_seen_at": last_seen_at,
+            "node_digest": digest, "protocol": choose(agg["protocols"]),
+            "endpoint_country": choose(agg["countries"]), "source_count": len(source_ids),
+            "independent_source_count": independent_count, "source_ids": source_ids_ranked,
+            "best_source_score": best_source_score, "pre_score": pre_score,
+            "first_seen_at": first_seen_at, "last_seen_at": last_seen_at,
         })
 
     nodes.sort(key=lambda row: (-row["pre_score"], -row["independent_source_count"], -row["source_count"], row["protocol"], row["node_digest"]))
@@ -102,32 +87,18 @@ def build_global_nodes(catalog, index_sources, previous_nodes):
 
 
 def select_country(rows, source_meta, limit, max_per_source):
-    ranked = sorted(
-        rows,
-        key=lambda row: (
-            -row["pre_score"],
-            -row["independent_source_count"],
-            -row["source_count"],
-            row.get("protocol") or "",
-            row["node_digest"],
-        ),
-    )
+    ranked = sorted(rows, key=lambda row: (-row["pre_score"], -row["independent_source_count"], -row["source_count"], row.get("protocol") or "", row["node_digest"]))
     selected = []
     selected_digests = set()
     source_counts = Counter()
 
     def pick_source(row, enforce_cap):
-        candidates = sorted(
-            row["source_ids"],
-            key=lambda sid: (source_counts[sid], -source_meta[sid]["quality_score"], sid),
-        )
+        candidates = sorted(row["source_ids"], key=lambda sid: (source_counts[sid], -source_meta[sid]["quality_score"], sid))
         for sid in candidates:
             if not enforce_cap or source_counts[sid] < max_per_source:
                 return sid
         return None
 
-    # Diversity is a soft preference. It applies to source representation only;
-    # protocol popularity is never penalized or capped.
     for enforce_cap in (True, False):
         for row in ranked:
             if len(selected) >= limit:
@@ -140,11 +111,8 @@ def select_country(rows, source_meta, limit, max_per_source):
             selected_digests.add(row["node_digest"])
             source_counts[sid] += 1
             selected.append({
-                "node_digest": row["node_digest"],
-                "source_id": sid,
-                "protocol": row["protocol"],
-                "pre_score": row["pre_score"],
-                "source_count": row["source_count"],
+                "node_digest": row["node_digest"], "source_id": sid, "protocol": row["protocol"],
+                "pre_score": row["pre_score"], "source_count": row["source_count"],
                 "independent_source_count": row["independent_source_count"],
             })
         if len(selected) >= limit:
@@ -163,7 +131,7 @@ def main() -> int:
     p.add_argument("--nodes-deduplicated", default="exports/nodes_deduplicated.json")
     p.add_argument("--countries-dir", default="exports/countries")
     p.add_argument("--top-per-country", type=int, default=30)
-    p.add_argument("--country-export-limit", type=int, default=200)
+    p.add_argument("--country-export-limit", type=int, default=500)
     p.add_argument("--max-per-source", type=int, default=5)
     args = p.parse_args()
 
@@ -190,10 +158,7 @@ def main() -> int:
             by_url[url]["source_id"] = result.get("source_id")
             if precheck.get("fetch_status") == "success":
                 success += 1
-                index_sources[result["source_id"]] = {
-                    "nodes": result.get("nodes") or [],
-                    "checked_at": precheck.get("checked_at"),
-                }
+                index_sources[result["source_id"]] = {"nodes": result.get("nodes") or [], "checked_at": precheck.get("checked_at")}
 
     groups = defaultdict(list)
     for source in by_url.values():
@@ -222,17 +187,8 @@ def main() -> int:
         pre = s.get("precheck") or {}
         if not pre:
             continue
-        safe_sources.append({
-            "source_id": sid,
-            "repository": s.get("repository"),
-            "status": s.get("status"),
-            "format_hint": s.get("format_hint"),
-            "precheck": pre,
-        })
-    dump(Path(args.prechecked), {
-        "schema": "subscription-source-prechecked-v3",
-        "sources": sorted(safe_sources, key=lambda x: (-int((x["precheck"] or {}).get("quality_score") or 0), x["source_id"])),
-    })
+        safe_sources.append({"source_id": sid, "repository": s.get("repository"), "status": s.get("status"), "format_hint": s.get("format_hint"), "precheck": pre})
+    dump(Path(args.prechecked), {"schema": "subscription-source-prechecked-v3", "sources": sorted(safe_sources, key=lambda x: (-int((x["precheck"] or {}).get("quality_score") or 0), x["source_id"]))})
 
     previous_nodes = load(Path(args.nodes_deduplicated), {})
     nodes, source_meta = build_global_nodes(catalog, index_sources, previous_nodes)
@@ -261,22 +217,15 @@ def main() -> int:
         ranked, selected = select_country(rows, source_meta, max(1, args.top_per_country), max(1, args.max_per_source))
         handoff[country] = selected
         safe_ranked = [{
-            "node_digest": row["node_digest"],
-            "source_id": row["source_ids"][0],
-            "protocol": row["protocol"],
-            "pre_score": row["pre_score"],
-            "source_count": row["source_count"],
-            "independent_source_count": row["independent_source_count"],
-            "last_seen_at": row["last_seen_at"],
+            "node_digest": row["node_digest"], "source_id": row["source_ids"][0], "protocol": row["protocol"],
+            "pre_score": row["pre_score"], "source_count": row["source_count"],
+            "independent_source_count": row["independent_source_count"], "last_seen_at": row["last_seen_at"],
         } for row in ranked[:max(1, args.country_export_limit)]]
         dump(countries_dir / f"{country}.json", {
-            "schema": "subscription-source-country-ranking-v3",
-            "country": country,
+            "schema": "subscription-source-country-ranking-v3", "country": country,
             "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
             "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-            "total_candidates": len(ranked),
-            "exported_candidates": len(safe_ranked),
-            "nodes": safe_ranked,
+            "total_candidates": len(ranked), "exported_candidates": len(safe_ranked), "nodes": safe_ranked,
         })
 
     dump(Path(args.handoff), {
@@ -285,19 +234,14 @@ def main() -> int:
         "digest_semantics": "sha256_raw_public_uri_selection_digest_not_vgm_canonical_fingerprint",
         "ranking_semantics": "global_node_dedup_plus_independent_source_corroboration_with_soft_source_diversity",
         "protocol_diversity_policy": "no_protocol_caps_or_protocol_popularity_penalties",
-        "top_per_country": args.top_per_country,
-        "max_per_source_soft": args.max_per_source,
+        "top_per_country": args.top_per_country, "max_per_source_soft": args.max_per_source,
         "countries": dict(sorted(handoff.items())),
     })
 
     print(json.dumps({
-        "processed": processed,
-        "success": success,
-        "catalog_sources": len(catalog["sources"]),
-        "indexed_sources": len(index_sources),
-        "deduplicated_nodes": len(nodes),
-        "countries": len(handoff),
-        "handoff_nodes": sum(len(rows) for rows in handoff.values()),
+        "processed": processed, "success": success, "catalog_sources": len(catalog["sources"]),
+        "indexed_sources": len(index_sources), "deduplicated_nodes": len(nodes), "countries": len(handoff),
+        "handoff_nodes": sum(len(rows) for rows in handoff.values()), "country_export_limit": args.country_export_limit,
     }, sort_keys=True))
     return 0
 

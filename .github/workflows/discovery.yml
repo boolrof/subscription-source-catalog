@@ -1,0 +1,40 @@
+name: Scheduled Discovery
+
+on:
+  schedule:
+    - cron: '17 2,14 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: subscription-discovery
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Run discovery
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python run.py
+      - name: Commit meaningful catalog changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sources.json SOURCES.md exports/subscription_urls.txt
+          if git diff --cached --quiet; then
+            echo "No catalog changes."
+          else
+            git commit -m "chore(catalog): automated discovery update [skip ci]"
+            git push origin HEAD:main
+          fi

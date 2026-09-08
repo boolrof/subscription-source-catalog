@@ -82,7 +82,7 @@ jobs:
           python merge_compute.py
           --artifacts compute-results
           --top-per-country 30
-          --country-export-limit 200
+          --country-export-limit 500
           --max-per-source 5
       - name: Validate generated data
         run: python -m unittest discover -s tests -v

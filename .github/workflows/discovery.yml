@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: subscription-discovery
+  group: catalog-main-write
   cancel-in-progress: false
 
 permissions:

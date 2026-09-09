@@ -1,8 +1,17 @@
 {
   "country": "BE",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 6,
+  "exported_candidates": 7,
   "nodes": [
+    {
+      "independent_source_count": 5,
+      "last_seen_at": "2026-09-09T21:16:22Z",
+      "node_digest": "fa1797c6b5678a4483d08e057c883adcf98cc0c3dd88230f166e2f2a0bef224c",
+      "pre_score": 115,
+      "protocol": "vmess",
+      "source_count": 5,
+      "source_id": "59770ee2927f14c2602a5518"
+    },
     {
       "independent_source_count": 4,
       "last_seen_at": "2026-09-09T16:55:36Z",
@@ -60,5 +69,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 6
+  "total_candidates": 7
 }

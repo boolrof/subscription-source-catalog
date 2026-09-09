@@ -1,8 +1,35 @@
 {
   "country": "LT",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 2,
+  "exported_candidates": 5,
   "nodes": [
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-09T21:16:27Z",
+      "node_digest": "aaaae354418767982552a53888a0ccb7af65a8a2a485f2f3c7d0ea6873f56eee",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-09T21:16:27Z",
+      "node_digest": "ac72a920c2c8bdd7bca776c7e9431c666ab11838fc2dc193772418173a459d53",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-09T21:15:20Z",
+      "node_digest": "de365b7b92d1f1ef33502e5ecab11599d56c0ff0abffe30815716ebe86bd8617",
+      "pre_score": 108,
+      "protocol": "trojan",
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-09T16:54:08Z",
@@ -24,5 +51,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 2
+  "total_candidates": 5
 }

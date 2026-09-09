@@ -1,16 +1,25 @@
 {
   "country": "IL",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 8,
+  "exported_candidates": 5,
   "nodes": [
     {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-09T21:15:20Z",
+      "node_digest": "f2085687cddb734f006b5748be27c7a0f26791db6aeb638a3565bc668469074c",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
+    },
+    {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T07:24:40Z",
-      "node_digest": "8053c84207117b181347f3ea4679b1b0a56bedbd2db63f7ebcaab82cfa142ba0",
+      "last_seen_at": "2026-09-09T16:54:17Z",
+      "node_digest": "fbc82eaad6e8eba2f9791253eb6b0d6e6abfc74fa1310a96613da1f18fd615b0",
       "pre_score": 100,
       "protocol": "vless",
       "source_count": 1,
-      "source_id": "e563bbf99ec6448f6e7d5808"
+      "source_id": "fd9bc2b5b01180ce920b4f9c"
     },
     {
       "independent_source_count": 1,
@@ -20,42 +29,6 @@
       "protocol": "hysteria2",
       "source_count": 1,
       "source_id": "44c82fbafcca1976a311b785"
-    },
-    {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-09T11:57:00Z",
-      "node_digest": "d68dbe25c67b63127a3fdaab2f6ffb69057aa827d528f9a7aea02c902c5f4279",
-      "pre_score": 97,
-      "protocol": "vless",
-      "source_count": 2,
-      "source_id": "a7381b648102600a3e5d1a90"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T11:54:59Z",
-      "node_digest": "0b31b819c2851032fac4b5a2f509519c656ee0acd81ad5aba3a0f15d515524cb",
-      "pre_score": 96,
-      "protocol": "hysteria2",
-      "source_count": 1,
-      "source_id": "eca3fbe82ad5fe9cc142db4c"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T11:56:22Z",
-      "node_digest": "bd47b84ce5128085ea5135e2b3a5334de5474055a2f1804b3fc55da27250784a",
-      "pre_score": 96,
-      "protocol": "hysteria2",
-      "source_count": 1,
-      "source_id": "59770ee2927f14c2602a5518"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T16:54:17Z",
-      "node_digest": "fbc82eaad6e8eba2f9791253eb6b0d6e6abfc74fa1310a96613da1f18fd615b0",
-      "pre_score": 95,
-      "protocol": "vless",
-      "source_count": 2,
-      "source_id": "fd35ea6cf91c588b49da91bf"
     },
     {
       "independent_source_count": 1,
@@ -78,5 +51,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 8
+  "total_candidates": 5
 }

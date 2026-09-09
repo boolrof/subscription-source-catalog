@@ -1,26 +1,8 @@
 {
   "country": "IQ",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 5,
+  "exported_candidates": 3,
   "nodes": [
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-09T05:22:54Z",
-      "node_digest": "ff6bf3cd1657e0ebf140b4fcc5f2bf1d1b2cb892e03dd9da88d113344da766a6",
-      "pre_score": 108,
-      "protocol": "vless",
-      "source_count": 3,
-      "source_id": "34d660b3274860d12b39ac1e"
-    },
-    {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-09T07:24:21Z",
-      "node_digest": "b3523654b0998cde13206d614058759b2ec829756ad6013a13495c03a4fa5795",
-      "pre_score": 104,
-      "protocol": "vless",
-      "source_count": 2,
-      "source_id": "7a13c5ecd078dc62b2b1e3eb"
-    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-09T07:24:56Z",
@@ -32,24 +14,24 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-09T05:21:41Z",
+      "node_digest": "ff6bf3cd1657e0ebf140b4fcc5f2bf1d1b2cb892e03dd9da88d113344da766a6",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "e6a228d9ccaa2045a894b27d"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-09T07:24:50Z",
       "node_digest": "0142cdd7b4a850c9eb37d9bd4886f95cd3fa9a6b04de25d13a7a5922b108e220",
       "pre_score": 93,
       "protocol": "vless",
       "source_count": 1,
       "source_id": "c218e3a17bf4c2c3e5275df3"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T05:20:53Z",
-      "node_digest": "248c91420cebfb5bfc8dadbabba2f56e900b9e814b1ce383810d663925b5f2ff",
-      "pre_score": 93,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "baff843ddd50e1f7de6f7509"
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 5
+  "total_candidates": 3
 }

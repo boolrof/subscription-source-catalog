@@ -1,11 +1,11 @@
 {
   "country": "LU",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 6,
+  "exported_candidates": 7,
   "nodes": [
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-09T07:24:15Z",
+      "last_seen_at": "2026-09-09T11:56:39Z",
       "node_digest": "df8a577cb06dce0a122300b3591c5ae9a451c9ac4d7195ce6494d4978b1d112b",
       "pre_score": 112,
       "protocol": "trojan",
@@ -14,16 +14,25 @@
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-09T05:21:20Z",
-      "node_digest": "756c405738076fcbd0b76a5cacb2043f9ecb45193ee95746480af9c1809e1f02",
+      "last_seen_at": "2026-09-09T11:55:32Z",
+      "node_digest": "74a6c5653dfb3b61481b3d27a62f06337379f979d0889f590e653e94a2d18e0b",
       "pre_score": 108,
       "protocol": "trojan",
-      "source_count": 3,
+      "source_count": 4,
       "source_id": "861faa1dc64d1ad4ade01c9d"
     },
     {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-09T11:56:39Z",
+      "node_digest": "7e466c33420f3c9da9ccbaad3f15f9332e48b5d04d50306fb4fb2c8fe008c49c",
+      "pre_score": 108,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-09T07:24:20Z",
+      "last_seen_at": "2026-09-09T11:56:40Z",
       "node_digest": "dbb0eace187b3d850914f2fd15f7995f34731d4e9f00ae104e3d9c8b41472c5d",
       "pre_score": 104,
       "protocol": "trojan",
@@ -32,11 +41,11 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T07:24:35Z",
+      "last_seen_at": "2026-09-09T07:24:13Z",
       "node_digest": "2e3344117f2a616aaeaa2ccbecd37fc3cb9b33cc51888e658952a3cbd787ee27",
-      "pre_score": 95,
+      "pre_score": 100,
       "protocol": "trojan",
-      "source_count": 2,
+      "source_count": 1,
       "source_id": "a31b48893b6c0361dca6910d"
     },
     {
@@ -60,5 +69,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 6
+  "total_candidates": 7
 }

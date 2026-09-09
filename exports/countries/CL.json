@@ -1,8 +1,26 @@
 {
   "country": "CL",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 3,
+  "exported_candidates": 5,
   "nodes": [
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-09T16:54:57Z",
+      "node_digest": "12c0b67544534ec229414d668c9ba8c8d926615d908dec4c1d06b04214b18790",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "601b6574b0423728bc330eeb"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-09T16:54:57Z",
+      "node_digest": "4d89fbecb14e038cfdb58ed16c0f93bea4609281550c8f2e6ae8b1f79714131b",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "601b6574b0423728bc330eeb"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-09T11:55:30Z",
@@ -33,5 +51,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 3
+  "total_candidates": 5
 }

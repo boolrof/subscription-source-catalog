@@ -14,12 +14,13 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from typing import Any
 
-URI_RE = re.compile(r"(?im)^\s*(vless|vmess|trojan|ss|ssr|hysteria2|hy2|tuic)://\S+\s*$")
-SERVER_RE = re.compile(r"(?im)^\s*server\s*:\s*['\"]?([^'\"#\s]+)")
-TYPE_RE = re.compile(r"(?im)^\s*type\s*:\s*['\"]?([a-zA-Z0-9_-]+)")
-PORT_RE = re.compile(r"(?im)^\s*port\s*:\s*(\d{1,5})")
+APPROVED_PROTOCOLS = {"vless", "vmess", "trojan", "ss", "hysteria2"}
+SCHEME_ALIASES = {"hy2": "hysteria2", "hysteria2": "hysteria2"}
+URI_SCAN_RE = re.compile(r"(?i)(?:vless|vmess|trojan|ss|hysteria2|hy2)://[^\s<>\"'`]+")
 MAX_DECODED = 4 * 1024 * 1024
+MAX_DECODE_DEPTH = 2
 
 
 def now() -> str:
@@ -109,7 +110,7 @@ def fetch_bounded(url: str, *, max_bytes: int, timeout: float) -> tuple[bytes, d
     try:
         connection.putrequest("GET", target, skip_host=True, skip_accept_encoding=True)
         connection.putheader("Host", host_header)
-        connection.putheader("User-Agent", "subscription-source-catalog/compute-v2")
+        connection.putheader("User-Agent", "subscription-source-catalog/compute-v4")
         connection.putheader("Accept", "text/plain,application/json,application/yaml,text/yaml,*/*;q=0.5")
         connection.putheader("Accept-Encoding", "identity")
         connection.endheaders()
@@ -139,19 +140,45 @@ def fetch_bounded(url: str, *, max_bytes: int, timeout: float) -> tuple[bytes, d
         connection.close()
 
 
-def _decode_text(body: bytes) -> str:
-    text = body.decode("utf-8", errors="replace").strip()
-    if URI_RE.search(text):
-        return text
+def _decode_base64_text(text: str) -> str | None:
     compact = re.sub(r"\s+", "", text)
-    if 16 <= len(compact) <= MAX_DECODED * 2 and re.fullmatch(r"[A-Za-z0-9+/=_-]+", compact):
-        try:
-            decoded = base64.urlsafe_b64decode(compact + "=" * (-len(compact) % 4)).decode("utf-8")
-            if URI_RE.search(decoded):
-                return decoded
-        except (ValueError, UnicodeDecodeError):
-            pass
-    return text
+    if not 16 <= len(compact) <= MAX_DECODED * 2:
+        return None
+    if not re.fullmatch(r"[A-Za-z0-9+/=_-]+", compact):
+        return None
+    try:
+        decoded = base64.urlsafe_b64decode(compact + "=" * (-len(compact) % 4))
+    except (ValueError, TypeError):
+        return None
+    if len(decoded) > MAX_DECODED:
+        return None
+    try:
+        value = decoded.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+    return value if value.strip() else None
+
+
+def _text_layers(body: bytes) -> list[str]:
+    """Return plain text plus bounded nested base64 subscription layers."""
+    root = body[:MAX_DECODED].decode("utf-8", errors="replace").strip()
+    layers = [root]
+    current = root
+    for _ in range(MAX_DECODE_DEPTH):
+        decoded = _decode_base64_text(current)
+        if not decoded or decoded in layers:
+            break
+        layers.append(decoded.strip())
+        current = decoded
+    return layers
+
+
+def _normal_protocol(value: str) -> str | None:
+    value = str(value or "").strip().lower()
+    value = SCHEME_ALIASES.get(value, value)
+    if value == "shadowsocks":
+        value = "ss"
+    return value if value in APPROVED_PROTOCOLS else None
 
 
 def _vmess_endpoint(uri: str) -> tuple[str | None, int | None]:
@@ -165,24 +192,40 @@ def _vmess_endpoint(uri: str) -> tuple[str | None, int | None]:
         return None, None
 
 
+def _ss_endpoint(uri: str) -> tuple[str | None, int | None]:
+    try:
+        raw = uri.split("://", 1)[1].split("#", 1)[0].split("?", 1)[0]
+        if "@" in raw:
+            right = raw.rsplit("@", 1)[1]
+            parsed = urllib.parse.urlsplit("ss://x@" + right)
+            return parsed.hostname, parsed.port
+        decoded = base64.urlsafe_b64decode(raw + "=" * (-len(raw) % 4)).decode("utf-8", errors="ignore")
+        right = decoded.rsplit("@", 1)[-1]
+        if right.startswith("["):
+            host, port = right.rsplit("]:", 1)
+            return host.lstrip("["), int(port)
+        host, port = right.rsplit(":", 1)
+        return host, int(port)
+    except Exception:
+        return None, None
+
+
 def _uri_endpoint(uri: str, scheme: str) -> tuple[str | None, int | None]:
     if scheme == "vmess":
         return _vmess_endpoint(uri)
+    if scheme == "ss":
+        return _ss_endpoint(uri)
     try:
         parsed = urllib.parse.urlsplit(uri)
         if parsed.hostname:
             return parsed.hostname, parsed.port
     except (ValueError, UnicodeError):
         pass
-    if scheme in {"ss", "ssr"}:
-        try:
-            raw = uri.split("://", 1)[1].split("#", 1)[0].split("?", 1)[0]
-            decoded = base64.urlsafe_b64decode(raw + "=" * (-len(raw) % 4)).decode("utf-8", errors="ignore")
-            host, port = decoded.rsplit("@", 1)[-1].rsplit(":", 1)
-            return host.strip("[]"), int(port)
-        except Exception:
-            pass
     return None, None
+
+
+def _stable_digest(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -196,39 +239,174 @@ class NodeFact:
         return {"node_digest": self.node_digest, "source_id": sid, "protocol": self.protocol, "endpoint_country": country}
 
 
+def _node_from_endpoint(raw_identity: str, protocol: str, host: str | None, port: int | None, resolved_hosts: dict[tuple[str, int], list[str]]) -> NodeFact | None:
+    protocol = _normal_protocol(protocol) or ""
+    if not protocol or not host or not port or not (1 <= int(port) <= 65535):
+        return None
+    host = str(host).strip().strip("[]")
+    if not host:
+        return None
+    key = (host, int(port))
+    if key not in resolved_hosts:
+        resolved_hosts[key] = resolve_public(host, int(port))
+    ips = resolved_hosts[key]
+    return NodeFact(_stable_digest(raw_identity), protocol, host, ips[0] if ips else None)
+
+
+def _json_candidates(text: str) -> list[tuple[str, str, str | None, int | None]]:
+    try:
+        obj = json.loads(text)
+    except Exception:
+        return []
+    out: list[tuple[str, str, str | None, int | None]] = []
+
+    def walk(value: Any) -> None:
+        if isinstance(value, str):
+            for match in URI_SCAN_RE.finditer(value):
+                raw = match.group(0).rstrip(",;)]}")
+                scheme = _normal_protocol(raw.split("://", 1)[0])
+                if scheme:
+                    host, port = _uri_endpoint(raw, scheme)
+                    out.append((raw, scheme, host, port))
+            return
+        if isinstance(value, list):
+            for item in value:
+                walk(item)
+            return
+        if not isinstance(value, dict):
+            return
+
+        p = _normal_protocol(value.get("type") or value.get("protocol"))
+        if p:
+            host = value.get("server") or value.get("address") or value.get("add")
+            port = value.get("server_port") or value.get("port")
+            try:
+                port_i = int(port) if port is not None else None
+            except (TypeError, ValueError):
+                port_i = None
+            identity = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+            out.append((identity, p, str(host).strip() if host else None, port_i))
+        for child in value.values():
+            walk(child)
+
+    walk(obj)
+    return out
+
+
+def _clean_yaml_scalar(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        value = value[1:-1]
+    return value.strip()
+
+
+def _mihomo_candidates(text: str) -> list[tuple[str, str, str | None, int | None]]:
+    """Parse the common flat proxy objects under a Clash/Mihomo proxies list.
+
+    This is intentionally dependency-free and conservative: nested plugin/TLS fields are
+    retained only in the private raw identity digest; public output remains opaque.
+    """
+    if "proxies:" not in text:
+        return []
+    out: list[tuple[str, str, str | None, int | None]] = []
+    current: dict[str, str] | None = None
+
+    def emit() -> None:
+        nonlocal current
+        if not current:
+            return
+        protocol = _normal_protocol(current.get("type", ""))
+        host = current.get("server")
+        try:
+            port = int(current.get("port", "0"))
+        except ValueError:
+            port = 0
+        if protocol and host and port:
+            identity = json.dumps(current, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+            out.append((identity, protocol, host, port))
+        current = None
+
+    in_proxies = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not in_proxies:
+            if stripped == "proxies:":
+                in_proxies = True
+            continue
+        if stripped and not line.startswith((" ", "\t", "-")) and not stripped.startswith("-"):
+            emit()
+            break
+        if stripped.startswith("-"):
+            emit()
+            current = {}
+            stripped = stripped[1:].strip()
+        if current is None or ":" not in stripped:
+            continue
+        key, value = stripped.split(":", 1)
+        key = key.strip().lower()
+        if key in {"type", "server", "port", "name"}:
+            current[key] = _clean_yaml_scalar(value)
+    emit()
+    return out
+
+
 def parse_nodes(body: bytes, *, max_nodes: int = 10000) -> tuple[list[NodeFact], dict]:
-    text = _decode_text(body)
+    layers = _text_layers(body)
     nodes: list[NodeFact] = []
     invalid = raw_items = 0
     protocol_counts: dict[str, int] = {}
     seen: set[str] = set()
-    resolved_hosts: dict[str, list[str]] = {}
-    for match in URI_RE.finditer(text):
+    resolved_hosts: dict[tuple[str, int], list[str]] = {}
+    formats: set[str] = set()
+
+    candidates: list[tuple[str, str, str | None, int | None]] = []
+    for text in layers:
+        uri_found = False
+        for match in URI_SCAN_RE.finditer(text):
+            raw = match.group(0).strip().rstrip(",;)]}")
+            scheme = _normal_protocol(raw.split("://", 1)[0])
+            if not scheme:
+                continue
+            uri_found = True
+            host, port = _uri_endpoint(raw, scheme)
+            candidates.append((raw, scheme, host, port))
+        if uri_found:
+            formats.add("uri")
+
+        json_rows = _json_candidates(text)
+        if json_rows:
+            formats.add("json")
+            candidates.extend(json_rows)
+
+        yaml_rows = _mihomo_candidates(text)
+        if yaml_rows:
+            formats.add("mihomo")
+            candidates.extend(yaml_rows)
+
+    for identity, scheme, host, port in candidates:
         raw_items += 1
-        raw = match.group(0).strip()
-        scheme = match.group(1).lower()
-        host, port = _uri_endpoint(raw, scheme)
-        if not host or not port or not (1 <= int(port) <= 65535):
-            invalid += 1
-            continue
-        digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+        digest = _stable_digest(identity)
         if digest in seen:
             continue
+        fact = _node_from_endpoint(identity, scheme, host, port, resolved_hosts)
+        if not fact:
+            invalid += 1
+            continue
         seen.add(digest)
-        if host not in resolved_hosts:
-            resolved_hosts[host] = resolve_public(host, int(port))
-        ips = resolved_hosts[host]
-        nodes.append(NodeFact(digest, scheme, host, ips[0] if ips else None))
-        protocol_counts[scheme] = protocol_counts.get(scheme, 0) + 1
+        nodes.append(fact)
+        protocol_counts[fact.protocol] = protocol_counts.get(fact.protocol, 0) + 1
         if len(nodes) >= max_nodes:
             break
-    detected = "uri" if raw_items else "unknown"
-    if not raw_items and ("proxies:" in text or SERVER_RE.search(text)):
-        detected = "mihomo"
-        servers, types, ports = SERVER_RE.findall(text), TYPE_RE.findall(text), PORT_RE.findall(text)
-        raw_items = min(len(servers), max(len(types), len(ports), len(servers)))
-        if raw_items:
-            protocol_counts["mihomo"] = raw_items
+
+    if not formats:
+        detected = "unknown"
+    elif formats == {"uri"}:
+        detected = "uri"
+    elif len(formats) == 1:
+        detected = next(iter(formats))
+    else:
+        detected = "mixed"
+
     return nodes, {
         "format_detected": detected,
         "raw_items": raw_items,
@@ -257,7 +435,7 @@ class GeoResolver:
                 return None
             self._new += 1
         try:
-            req = urllib.request.Request("https://api.country.is/" + urllib.parse.quote(ip, safe=":"), headers={"User-Agent": "subscription-source-catalog/compute-v2"})
+            req = urllib.request.Request("https://api.country.is/" + urllib.parse.quote(ip, safe=":"), headers={"User-Agent": "subscription-source-catalog/compute-v4"})
             with urllib.request.urlopen(req, timeout=self.timeout) as response:
                 obj = json.loads(response.read(4096).decode("utf-8"))
             country = str(obj.get("country") or "").upper()

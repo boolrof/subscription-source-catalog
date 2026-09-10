@@ -1,12 +1,21 @@
 {
   "country": "AL",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 1,
+  "exported_candidates": 2,
   "nodes": [
     {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-10T11:51:47Z",
+      "node_digest": "271b97ea25cfe5dd2ca1cf5f76d557baa6ea96efefb11f965affe1ffe3b8819f",
+      "pre_score": 97,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-09T16:54:24Z",
-      "node_digest": "28ba2650f71397218517bff647fdc6cfa48f2b23634474ca43d3bbea2c9e0423",
+      "last_seen_at": "2026-09-10T11:51:48Z",
+      "node_digest": "5339bccfc8bd6f5f668db53713f25df8b13c5524a08920eccf8c5d4667b07cbd",
       "pre_score": 93,
       "protocol": "trojan",
       "source_count": 1,
@@ -15,5 +24,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 1
+  "total_candidates": 2
 }

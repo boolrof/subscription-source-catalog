@@ -1,0 +1,32 @@
+{
+  "countries": {
+    "NL": [
+      {
+        "best_source_score": 100,
+        "endpoint_country": "NL",
+        "independent_source_count": 1,
+        "last_seen_at": "2026-09-08T00:00:00Z",
+        "node_digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "pre_score": 100,
+        "protocol": "vless",
+        "source_count": 1,
+        "source_id": "safe-source-id"
+      }
+    ]
+  },
+  "country_semantics": "endpoint_country_is_passive_hint_only_not_verified_exit_country",
+  "digest_semantics": "node_digest_is_public_selection_handle_not_vgm_canonical_fingerprint",
+  "generated_at": "2026-09-10T12:03:00Z",
+  "max_per_source_soft": 5,
+  "protocol_contract": [
+    "vless",
+    "vmess",
+    "trojan",
+    "ss",
+    "hysteria2"
+  ],
+  "ranking_semantics": "global_dedup_source_quality_corroboration_and_soft_source_diversity",
+  "schema": "subscription-source-country-handoff-v4",
+  "selection_semantics": "bounded_pre_ranked_candidates_for_private_vgm_materialization_and_live_validation",
+  "top_per_country": 30
+}

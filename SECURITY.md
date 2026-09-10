@@ -1,17 +1,59 @@
-# Security Policy
+# Политика безопасности
 
-## Strict public boundary
+## Публичная граница
 
-**THIS IS A PUBLIC REPOSITORY — NEVER SUBMIT PRIVATE SUBSCRIPTION URLS, CREDENTIALS, TOKENS, PRIVATE KEYS, OR PERSONAL ACCESS/PROXY CONFIGURATIONS.**
+Этот репозиторий публичный. В него запрещено добавлять приватные subscription URL, credentials, токены, API keys, private keys, персональные/provider конфигурации и любые данные, позволяющие восстановить приватный доступ.
 
-The catalog accepts only public HTTP/HTTPS subscription candidates. URLs containing userinfo credentials, suspicious authentication/query parameters, or credential-like secret material must be rejected before publication.
+Каталог принимает только публичные HTTP/HTTPS source URL. URL с userinfo credentials, подозрительными auth/query parameters или credential-like значениями должны отклоняться до публикации.
 
-Private WireGuard inventories are explicitly out of scope. Do not publish or feed into this repository personal/provider WireGuard profiles, including ProtonVPN/FastestVPN account-derived nodes, `PrivateKey`, `PresharedKey`, complete client profiles, or any representation from which private access material can be reconstructed.
+## WireGuard
 
-Discovery also applies a content guard to candidate payload files: actionable WireGuard secret assignments and `wg://` payloads are rejected before they can become catalog candidates. `PublicKey`, endpoint and country metadata alone are not treated as secrets, but they still must not be used as a path for exporting a user's private inventory.
+WireGuard полностью исключён из публичного search contract.
 
-The allowed direction is one-way: this public catalog may provide sanitized candidate metadata to a private monitoring VPS. The private VPS must never upload its trusted/provider inventory back into this repository.
+Запрещены:
 
-If a candidate is ambiguous, reject it rather than publish it.
+- `wg://`;
+- `wireguard://`;
+- `PrivateKey`;
+- `PresharedKey`;
+- полный WireGuard client profile;
+- account-derived WireGuard inventory;
+- экспорт provider/private WireGuard nodes.
 
-Do not report secrets in issues, pull requests, Actions logs, or catalog notes.
+PublicKey, Endpoint и country metadata сами по себе не считаются секретом, но не должны использоваться как обходной путь для публикации персонального inventory.
+
+## Proxy credentials
+
+Публичный каталог не должен публиковать raw VLESS/VMess/Trojan/Shadowsocks/Hysteria2 URI или поля, из которых можно восстановить credential.
+
+В safe exports допускаются только bounded selection metadata, например digest/source/protocol/passive country/ranking/freshness information.
+
+## Направление данных
+
+Разрешено только:
+
+```text
+public catalog → safe metadata → private VPN Global Monitor
+```
+
+Запрещено возвращать из приватного VGM/VPS в публичный каталог:
+
+- trusted inventory;
+- raw URI;
+- credentials;
+- runtime SQLite;
+- exit IP history, если она раскрывает приватный operational state;
+- provider account data.
+
+## Fail closed
+
+Если источник или payload неоднозначен с точки зрения секрета, он отклоняется.
+
+Secrets не должны появляться в:
+
+- issues;
+- pull requests;
+- Actions logs;
+- commit messages;
+- generated documentation;
+- artifacts.

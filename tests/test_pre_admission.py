@@ -54,13 +54,16 @@ class FakeConnection:
 
 
 class PreAdmissionTests(unittest.TestCase):
+    def parse(self, payload: bytes):
+        with mock.patch.object(p, "resolve_public", return_value=["203.0.113.10"]):
+            return p.parse_nodes(payload)
+
     def test_uri_list_is_parsed_without_exposing_uri(self):
         text = (
             "vless://11111111-1111-1111-1111-111111111111@example.com:443?security=tls#x\n"
             "trojan://secret@example.net:443?security=tls#y\n"
         ).encode()
-        with mock.patch.object(p, "resolve_public", return_value=["203.0.113.10"]):
-            nodes, stats = p.parse_nodes(text)
+        nodes, stats = self.parse(text)
         self.assertEqual(stats["raw_items"], 2)
         self.assertEqual(stats["valid_nodes"], 2)
         self.assertEqual(stats["protocol_counts"], {"trojan": 1, "vless": 1})
@@ -75,10 +78,80 @@ class PreAdmissionTests(unittest.TestCase):
     def test_base64_subscription_is_detected(self):
         raw = b"vless://u@example.com:443?security=tls\n"
         body = base64.b64encode(raw)
-        with mock.patch.object(p, "resolve_public", return_value=["198.51.100.7"]):
-            nodes, stats = p.parse_nodes(body)
+        nodes, stats = self.parse(body)
         self.assertEqual(len(nodes), 1)
         self.assertEqual(stats["format_detected"], "uri")
+
+    def test_nested_base64_subscription_is_detected(self):
+        raw = b"trojan://p@example.com:443?security=tls\n"
+        body = base64.b64encode(base64.b64encode(raw))
+        nodes, stats = self.parse(body)
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(stats["protocol_counts"], {"trojan": 1})
+
+    def test_approved_uri_protocols_and_hy2_alias(self):
+        vmess_obj = {"add": "vm.example", "port": "443", "id": "secret"}
+        vmess = "vmess://" + base64.b64encode(json.dumps(vmess_obj).encode()).decode()
+        payload = (
+            "vless://u@vless.example:443?security=tls\n"
+            f"{vmess}\n"
+            "trojan://p@trojan.example:443?security=tls\n"
+            "ss://YWVzLTEyOC1nY206cGFzcw==@ss.example:8388#ss\n"
+            "hy2://p@hy.example:443?sni=example.com\n"
+        ).encode()
+        nodes, stats = self.parse(payload)
+        self.assertEqual(len(nodes), 5)
+        self.assertEqual(
+            stats["protocol_counts"],
+            {"hysteria2": 1, "ss": 1, "trojan": 1, "vless": 1, "vmess": 1},
+        )
+
+    def test_non_target_uri_protocols_are_not_admitted(self):
+        payload = (
+            "wireguard://secret@example.com:51820\n"
+            "tuic://uuid:pass@example.com:443\n"
+            "ssr://ZXhhbXBsZQ==\n"
+        ).encode()
+        nodes, stats = self.parse(payload)
+        self.assertEqual(nodes, [])
+        self.assertEqual(stats["raw_items"], 0)
+        self.assertEqual(stats["protocol_counts"], {})
+
+    def test_singbox_json_outbounds_are_parsed(self):
+        payload = json.dumps({
+            "outbounds": [
+                {"type": "vless", "server": "es.example", "server_port": 443, "uuid": "secret"},
+                {"type": "hysteria2", "server": "de.example", "server_port": 8443, "password": "secret"},
+                {"type": "wireguard", "server": "wg.example", "server_port": 51820, "private_key": "secret"},
+            ]
+        }).encode()
+        nodes, stats = self.parse(payload)
+        self.assertEqual(len(nodes), 2)
+        self.assertEqual(stats["format_detected"], "json")
+        self.assertEqual(stats["protocol_counts"], {"hysteria2": 1, "vless": 1})
+
+    def test_mihomo_yaml_proxy_objects_are_parsed(self):
+        payload = b"""proxies:
+  - name: ES-vless
+    type: vless
+    server: es.example
+    port: 443
+    uuid: secret
+  - name: NL-ss
+    type: ss
+    server: nl.example
+    port: 8388
+    cipher: aes-128-gcm
+    password: secret
+  - name: skip-tuic
+    type: tuic
+    server: tuic.example
+    port: 443
+"""
+        nodes, stats = self.parse(payload)
+        self.assertEqual(len(nodes), 2)
+        self.assertEqual(stats["format_detected"], "mihomo")
+        self.assertEqual(stats["protocol_counts"], {"ss": 1, "vless": 1})
 
     def test_vmess_endpoint(self):
         obj = {"add": "example.com", "port": "443", "id": "secret"}

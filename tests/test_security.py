@@ -24,8 +24,9 @@ class SecurityTests(unittest.TestCase):
         material = '"preshared_key": "' + "B" * 43 + '="'
         self.assertTrue(contains_private_wireguard_material(material))
 
-    def test_wireguard_uri_rejected(self):
+    def test_wireguard_uri_schemes_rejected(self):
         self.assertTrue(contains_private_wireguard_material("wg://private-profile-payload"))
+        self.assertTrue(contains_private_wireguard_material("wireguard://private-profile-payload"))
 
     def test_public_wireguard_metadata_without_secrets_is_allowed(self):
         material = "[Peer]\nPublicKey = " + "C" * 43 + "=\nEndpoint = vpn.example:51820\nAllowedIPs = 0.0.0.0/0\n"

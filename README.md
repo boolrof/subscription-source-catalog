@@ -1,15 +1,40 @@
 # Public Subscription Source Catalog
 
-Automated discovery, passive pre-admission compute, global node deduplication, and country ranking catalog for **public** proxy/configuration subscription endpoints.
+Public discovery and preprocessing layer for **public proxy subscription sources** used by VPN Global Monitor.
 
-## Scope
-
-This repository is the public discovery and preprocessing layer. It deliberately does **not** perform active proxy validation, port scanning, or exit-country verification.
+## Approved project boundary
 
 ```text
-GitHub Search / manual public sources
+GitHub searches and prepares.
+VGM decides what to validate.
+VPS proves that a node really works.
+The panel lets the user request a country and receive TOP live results.
+```
+
+This repository owns the first line: broad public discovery, bounded source fetching, parsing, filtering, passive classification, deduplication and country-oriented candidate ranking.
+
+It deliberately does **not** establish proxy tunnels, measure real proxy latency, determine authoritative exit IP/country, or publish private runtime material.
+
+## Primary protocol scope
+
+The public catalog is optimized for the share-link subscription protocols used by the 3x-ui outbound subscription workflow:
+
+- `vless://`
+- `vmess://`
+- `trojan://`
+- `ss://`
+- `hysteria2://` and its `hy2://` alias
+
+**WireGuard is excluded from discovery and node admission.**
+
+SSR, TUIC and other non-target schemes are not part of the primary catalog contract. They may appear in source payloads but are ignored by the approved node parser.
+
+## Pipeline
+
+```text
+GitHub Search / known public sources
         ↓
-candidate extraction
+subscription source discovery
         ↓
 URL normalization + security filtering
         ↓
@@ -17,90 +42,116 @@ source deduplication
         ↓
 data/sources.json
         ↓
-Catalog Compute v3 (8 bounded shards)
+Catalog Compute
         ├── bounded HTTPS source fetch
-        ├── URI/base64 syntax parsing
-        ├── protocol counts
-        ├── source content digests / mirror groups
+        ├── plain / base64 / nested-base64 decoding
+        ├── raw share-link parsing
+        ├── VMess JSON decoding
+        ├── Clash/Mihomo proxy-object extraction
+        ├── sing-box/generic JSON outbound extraction
+        ├── approved-protocol filtering
         ├── DNS resolution of published endpoints
         ├── passive GeoIP country hints
         ├── source quality scoring
         ├── global cross-source node_digest deduplication
         ├── independent-source corroboration scoring
         ├── endpoint-country ranking
-        └── top-30 endpoint-country handoff with soft source diversity
+        └── bounded country handoff for private VGM validation
 ```
 
-Generated compute outputs:
+## Generated outputs
 
-- `data/node_index.json` — safe per-source `node_digest` values and passive country hints; no URI, credential, host, or IP is published.
+- `data/node_index.json` — safe per-source opaque `node_digest` values and passive country hints; no URI, credential, host or IP is published.
 - `data/geo_cache.json` — hashed-IP GeoIP cache; raw endpoint IPs are not stored.
-- `exports/prechecked_sources.json` — aggregate pre-admission metrics and source quality scores.
-- `exports/nodes_deduplicated.json` — one safe row per current `node_digest` across successful active sources, including source corroboration counts, passive endpoint country, freshness timestamps, and pre-score.
-- `exports/countries/<CC>.json` — bounded ranked safe candidate lists per passive endpoint country (up to 200 by default).
-- `exports/country_handoff.json` — top candidates per `endpoint_country` for private VPS validation, keyed only by opaque digest, safe source id, protocol, score, and source-support counts.
+- `exports/prechecked_sources.json` — aggregate source quality/pre-admission metrics.
+- `exports/nodes_deduplicated.json` — safe global candidate index.
+- `exports/countries/<CC>.json` — ranked candidates grouped by passive endpoint country.
+- `exports/country_handoff.json` — bounded handoff for private VGM intake.
 
-`node_digest` is SHA-256 of the raw public URI used only as an opaque selection handle inside this public preprocessing layer. It is **not** VGM canonical fingerprint v2 and must never be treated as node identity by the monitoring VPS.
+`node_digest` is an opaque SHA-256 selection handle derived from the public source representation. It is **not** VGM canonical fingerprint v2 and must never be treated as VPS-authoritative node identity.
 
-`endpoint_country` means the country of the published network endpoint observed by passive DNS/GeoIP. It is **not** the authoritative VPN/proxy exit country.
+`endpoint_country` is a passive DNS/GeoIP hint for the published endpoint. It is **not** the authoritative VPN/proxy exit country.
 
-## Deduplication, ranking, and protocol policy
+## Parser policy
 
-Catalog Compute v3 globally collapses the same `node_digest` seen in multiple sources into one safe logical candidate. Exact mirror feeds are grouped by source-content digest so mirrors do not falsely inflate independent-source corroboration. Nodes seen in genuinely independent sources receive a bounded corroboration bonus on top of the best current source-quality score.
+The parser is intentionally protocol-aware instead of treating every payload as a simple line-oriented URI list.
 
-Protocol popularity is **not** treated as noise. There are no VLESS/Trojan/VMess/Shadowsocks/Hysteria/TUIC quotas, penalties, or protocol-diversity requirements. If the best thirty candidates for a country are all VLESS, all thirty may be handed to the VPS. Diversity is only a soft source-representation preference when building a bounded country handoff; if that preference would leave slots empty, the remaining best-ranked candidates are used regardless of source concentration.
+Supported inputs include:
 
-Syntax-invalid payloads, malformed/base64 noise, unresolved/non-global endpoints, private-material violations, exact node duplicates, and exact source mirrors are removed or collapsed before country handoff. Candidates that are not selected into the top handoff are not deleted from the global safe deduplicated index.
+- plain URI lists;
+- standard base64 subscriptions;
+- bounded nested base64 subscriptions;
+- mixed text containing approved share links;
+- VMess base64 JSON links;
+- Clash/Mihomo `proxies:` lists for approved types;
+- sing-box/generic JSON objects with approved outbound types.
+
+The public parser extracts only enough information to create an opaque candidate handle, protocol classification and passive endpoint-country hint. Secrets and raw actionable proxy configuration are not exported.
+
+## Discovery policy
+
+Discovery is intentionally broad and protocol-specific. Search queries and candidate filenames cover VLESS, VMess, Trojan, Shadowsocks and Hysteria2/Hy2 plus common aggregate formats such as Xray/V2Ray, Clash/Mihomo and sing-box.
+
+The discovery layer rejects obvious UI/assets, unsafe URLs and private-material violations before catalog admission. Catalog compute then performs a bounded refetch and a second parsing/security boundary.
 
 ## Security boundary
 
-This repository is public. Never add private subscription URLs, credentials, API keys, tokens, private node lists, or URLs containing subscriber secrets.
+This repository is public. Never add private subscription URLs, credentials, API keys, tokens, private node lists, raw proxy URI exports or runtime databases.
 
-Personal/provider WireGuard inventories are explicitly excluded. ProtonVPN/FastestVPN account-derived profiles and any other private WireGuard nodes remain on the private monitoring side only. `PrivateKey`, `PresharedKey`, complete client profiles, and `wg://` payloads must never enter catalog data, Actions artifacts, logs, issues, or pull requests. Discovery rejects actionable WireGuard secret material in candidate payload files before catalog admission.
+WireGuard is outside this catalog's discovery contract. `PrivateKey`, `PresharedKey`, complete client profiles, `wg://`, `wireguard://` and account-derived WireGuard inventories must not enter catalog data, Actions artifacts, logs, issues or pull requests.
 
-The compute layer never commits raw proxy URIs. It does not establish proxy tunnels and does not probe discovered node ports. Real canonical fingerprint v2, L1/L2/L3 validation, latency, exit IP, and `verified_exit_country` remain responsibilities of the private monitoring VPS.
+The compute layer never commits raw proxy URIs. Real canonical fingerprint v2, active protocol validation, HTTP-through-proxy, real latency, exit IP and `verified_exit_country` remain responsibilities of private VGM/VPS.
 
 ## Source of truth
 
-`data/sources.json` remains the source catalog of record. Generated compatibility files:
+`data/sources.json` remains the source catalog of record.
 
-- `SOURCES.md` — human-readable source catalog
-- `exports/subscription_urls.txt` — active/stale public source URLs
+Generated compatibility files include:
 
-## Usage
+- `SOURCES.md` — human-readable source catalog;
+- `exports/subscription_urls.txt` — active/stale public source URLs.
+
+## Automation
+
+GitHub Actions performs two distinct workloads:
+
+- discovery: find and refresh public subscription sources;
+- compute: fetch known sources, parse/filter/deduplicate nodes and refresh country rankings.
+
+The public repository should absorb as much safe discovery/preprocessing work as practical so the private VPS does not waste resources scanning large unfiltered global inventories.
+
+## Architectural handoff
+
+```text
+PUBLIC subscription-source-catalog
+    ↓
+broad discovery
+    ↓
+parse + filter + deduplicate
+    ↓
+passive country hint + ranking
+    ↓
+bounded country candidate handoff
+    ↓
+PRIVATE vpn-global-monitor
+    ↓
+query planner / history / cooldown
+    ↓
+VPS isolated live validation
+    ↓
+L1 / protocol handshake / HTTP-through-proxy
+    ↓
+real latency + exit IP + verified exit country
+    ↓
+TOP live nodes returned to the panel
+```
+
+There is no reverse private inventory export into this public catalog. GitHub results never replace VPS-authoritative identity or live exit validation.
+
+## Local checks
 
 ```bash
 python -m unittest discover -s tests -v
 python run.py --dry-run
 python run.py
-python compute.py --shard 0 --shards 8 --output /tmp/shard-0.json
-python merge_compute.py --artifacts /tmp/compute-results --top-per-country 30 --country-export-limit 200 --max-per-source 5
 ```
-
-GitHub Actions runs source discovery every 12 hours at 02:17 and 14:17 UTC. Catalog Compute v3 runs independently every 6 hours at 00:47, 06:47, 12:47, and 18:47 UTC, and it also runs immediately after every successful discovery workflow. This keeps known-source freshness, global deduplication, and country ranking more current without running the heavier source-discovery step every six hours. Both workflows serialize writes to `main`.
-
-## Architectural boundary with the monitoring VPS
-
-Integration remains one-way and explicit:
-
-```text
-GitHub catalog compute
-    ↓
-global safe dedup + source score + endpoint-country ranking
-    ↓
-bounded top-30 country candidate handoff
-    ↓
-explicit/private training VPS intake
-    ↓
-refetch public source + optional node_digest selection
-    ↓
-VGM normalize + canonical fingerprint v2
-    ↓
-real protocol validation
-    ↓
-alive/dead + latency + exit IP + verified_exit_country
-    ↓
-verified country pools for later use by the main VPS
-```
-
-There is no reverse inventory export from the private VPS into this public catalog. There is no automatic production import and GitHub results never replace VPS-authoritative identity or exit validation.

@@ -8,17 +8,18 @@ SUSPICIOUS_QUERY_KEYS = {
 }
 
 HIGH_ENTROPY = re.compile(r"^[A-Za-z0-9_+=\-/]{28,}$")
-WIREGUARD_URI = re.compile(r"(?im)^\s*wg://\S+\s*$")
+WIREGUARD_URI = re.compile(r"(?im)^\s*(?:wg|wireguard)://\S+\s*$")
 WIREGUARD_SECRET_ASSIGNMENT = re.compile(
     r"(?im)^\s*['\"]?(?:private[_-]?key|preshared[_-]?key)['\"]?\s*(?:=|:)\s*['\"]?([^'\"#\s]+)"
 )
 
 
 def contains_private_wireguard_material(value: str | bytes) -> bool:
-    """Fail closed on actionable WireGuard secret material in public-catalog content.
+    """Fail closed on WireGuard share links or actionable WireGuard secrets.
 
-    PublicKey/Endpoint/AllowedIPs alone are not secrets and are deliberately not enough
-    to trigger this guard. PrivateKey/PresharedKey values and wg:// payloads are.
+    WireGuard is outside the public catalog discovery contract. PublicKey/Endpoint/
+    AllowedIPs metadata alone is not secret and does not trigger rejection, while
+    wg://, wireguard://, PrivateKey and PresharedKey material does.
     """
     if isinstance(value, bytes):
         text = value.decode("utf-8", errors="ignore")

@@ -1,16 +1,511 @@
 {
   "country": "LV",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 45,
+  "exported_candidates": 164,
   "nodes": [
     {
-      "independent_source_count": 4,
-      "last_seen_at": "2026-09-10T11:57:02Z",
+      "independent_source_count": 10,
+      "last_seen_at": "2026-09-10T16:44:08Z",
       "node_digest": "edc59865f56d0a43986b603e7728fe8c2724603bf642ef1cdcee234978ebe16c",
+      "pre_score": 120,
+      "protocol": "vless",
+      "source_count": 10,
+      "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 8,
+      "last_seen_at": "2026-09-10T16:43:32Z",
+      "node_digest": "c6892fb5ba6204d7737fb45dc1b3bc928ff7eaa0c90d094a5ea2fe5d5f67a17c",
+      "pre_score": 120,
+      "protocol": "vless",
+      "source_count": 8,
+      "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 7,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "27ab67c3a1525c54d497d49173063d5411825ba68e5c8cb9e7b0f3f3dbbed99c",
+      "pre_score": 120,
+      "protocol": "vless",
+      "source_count": 7,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 7,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "4806fd1d95b6c609553f4c30b1e8cd25096dea8a8a2625cfff95fb53e95db30e",
+      "pre_score": 120,
+      "protocol": "vless",
+      "source_count": 7,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 7,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "a625d2cf27aadcf0767c02a4b38818d373be0b626cd43b740c34c2632a66f076",
+      "pre_score": 120,
+      "protocol": "vless",
+      "source_count": 7,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 6,
+      "last_seen_at": "2026-09-10T16:42:56Z",
+      "node_digest": "1f1b8ec14fab063bb9ffe1fe83acea35e5abedac74deb6908274a2fe0f101d99",
+      "pre_score": 119,
+      "protocol": "vless",
+      "source_count": 6,
+      "source_id": "4317f8b507c0508badd5008f"
+    },
+    {
+      "independent_source_count": 6,
+      "last_seen_at": "2026-09-10T16:42:56Z",
+      "node_digest": "55350c3da48d73b3d980448dfbd1759c6e752cb190d9eb781d519c75d6c1abd4",
+      "pre_score": 119,
+      "protocol": "vless",
+      "source_count": 6,
+      "source_id": "4317f8b507c0508badd5008f"
+    },
+    {
+      "independent_source_count": 6,
+      "last_seen_at": "2026-09-10T16:42:56Z",
+      "node_digest": "90b150769cf51fc2fd30b9aa0817a9484fb148e2b9e8012a4d4763e5f083afc5",
+      "pre_score": 119,
+      "protocol": "vless",
+      "source_count": 6,
+      "source_id": "4317f8b507c0508badd5008f"
+    },
+    {
+      "independent_source_count": 5,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "2eb39b3767b6895be8c0a641be35d734b21f1b86870191945584cddb3efe4809",
+      "pre_score": 116,
+      "protocol": "vless",
+      "source_count": 5,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 5,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "fd4cb88df30f2324af8451b571f053046eb53c342f5fa370ba7387a291582bd3",
+      "pre_score": 116,
+      "protocol": "vless",
+      "source_count": 5,
+      "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 5,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "8a9a4c8cda9f513e014d7b2731ea50319ee8ebd8c005ca716751da4f9a1bef76",
+      "pre_score": 116,
+      "protocol": "vmess",
+      "source_count": 5,
+      "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:57Z",
+      "node_digest": "064f62b6a7938cca78aeb83ef26cdae18bcd2397779a26d700611339b18ae87f",
+      "pre_score": 112,
+      "protocol": "ss",
+      "source_count": 4,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:57Z",
+      "node_digest": "b81b6edecebe8eef45d79b43813d28de5c1b01d1e9ac08c8ee45456c963299d4",
+      "pre_score": 112,
+      "protocol": "ss",
+      "source_count": 4,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "03a4b33d0757f69fde618bec37e72b2bb726a9d657f3cb6066f6846a37d2db00",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "06e8fc49118a2171922ca71c674ff36b977815dd40a34b7d6d6ed12ffb0cec3a",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "18949033c53e256c6dc4308e2ecc752eb36e6fc2a099c448cb2f7d475bbbe0e2",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "2279e187e3e200c6f2290ec905428284a15c6f668cd1072cb7730931e3576893",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "270948297fc6ee7e30eb8a9aa45501695b3697813f151414521c66fc5c3423fc",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "2ef6112355d56c7bf78de5b7ec22004d518010565517aba07d90ea342d750ac7",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "3679a91ae93a760a2a44cdc84e7fdac575a04e79cdd43c57048f17794cf49c95",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "3f50f6152715c90e6b6911ccbea74dceb5333843411c0c053e7f676c6e8e253d",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "4225851ed36fbdfc0c113e7ca109a5fdf9f63087d620c394540e53e85bf90f59",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "42ffa4e6de8a5cabea4e5f1cad9009254a9603336a45e56ce4a28a18b883405d",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "46d877027b6a147d13f43a49800605774dbe6a37349ae6d1701f4a735fb9c482",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "4db6068ec564c1c98daae579124ea4313f8c4457f7600b248a43bcdf45afa465",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "5529f02072317cb3649f8eb45bd8299abfd119e991095da8fd9a5f44211453e1",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "632118406d9b153cd64e4ecc554d305d6d6feb29e987288c3ec012c0baee181e",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:44:08Z",
+      "node_digest": "63951b8da0fc8a7322b03a45749430d198db19a03f4e0a5eed570774eaf2772d",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "6538bf831def44c2cb7b88b2af5adb9922e338172cea76435011522bb83ebcf5",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "68d54af1eafc16212e0e4d945137c7da13e2e252c5f4c4e9b56de0aa31f9de78",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "79b588300fbb9a07de1c8ab5091cad017014ff6a4adf9d1438416e2d5c6ea10d",
       "pre_score": 112,
       "protocol": "vless",
       "source_count": 4,
       "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "8127bdf8f30837c6866017457afc6992badb78f7b7630027b4f19f07011af92b",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:25Z",
+      "node_digest": "82ec22a04d848f367cc9d17de2d6c008deff745357225504586d170c779080c7",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "89d763ee7c23b7072846543a7345ee0f29893d8cf15a1dcbd655932409f90d72",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "8e3d59ff01ef872458781548b43357d1c2d8f97da9be09c1625d988accb4bc83",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "8fe902c4d3f559948177e4b7b14cef45bd813bd1aa2e4632d956c95ce8bdc7ef",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "90dbd6a6606e731f05b056ef7e9648336390a49a81aee9f64b7704a649ac0ee2",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "9297a854e0822df02d0dd8193f8d11f2c527a86e3f26e688ee6ba857479650dc",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "99aeef1eee3b738e3062e6be71ceb1c8e7fd810152660cd3da18b5b8a9d61b00",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "9dd9cd40ebd715ffe25127b561f1facb725702c71adec2d47f51caca2a219db7",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "9e14f7314d2509e2510de19b88d1ae595045a0c4ffa0c1261858b4586bfda4c1",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "a2e9fdedd120a6b7cad0fc09412433d8625787a69b0e36e03c85786af8e902d1",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "ac526f1afdb9dcf17e27ccec298a774523bd94fc28a7e8463da1797527489ae8",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "b2fd096fd94cfa5df8821b8efe6b96a80adb3ace8c9e048e6b8f6e0323530c2d",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "005a0e2b44c2836269514f49"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "b62afb3add9d9347553b6650a2cc1cae962a4c258fac0e9394b276407596fd56",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "b8a6f3e05d9b7177e2c58fb023a7a3e96934e46ea4a6842b9d407f8164ee26fe",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "bc5618ca7dcf73a3feb16745f1d180a2db1ee30fcd8a494900a8184dcb7cba7c",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "bc795c86424c8a842f14c91e805060eb28da7924aea30e310cea6ef2b7b410ac",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "c9cae00812e08f419ba9173f5a3e8b6371617de8aca9afc1334cb9aa9fd983f2",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:25Z",
+      "node_digest": "c9eab6b8205ff29f4bb3b14b05d859382f7f381b01da8565ebe296717b6e145e",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "5c4c4184331ef39f6f876ec9"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "ce765be232a62c723695ffd41604b0784742467a47eed6daa49a5334bfc3e959",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "e0c4e8f62dbcfa7afc12156f1eac30223c1e23cb648364f052ad27cf3a6e66ae",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "e766b1a342e0e1ed7344ca99b6c91b7c3ae776a416b6ba6eed77bee2dcb4d390",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:50Z",
+      "node_digest": "f160582da3dea16b49f80a4aa8dfa01d474f21376e815c3e81acc76d3cb9f202",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "8a35305257cf3de873a1ad98"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "f3a94ecb8720ba32198e6314d6e1e04ae11b0cda5d71792881b20add8257ae13",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "f4bba1abe9353a7dd0ec561e52eb2222f3a0e607072d4dd7e9517da31fd00364",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "7b372538361c23149c3044bd"
     },
     {
       "independent_source_count": 4,
@@ -42,15 +537,6 @@
     {
       "independent_source_count": 4,
       "last_seen_at": "2026-09-10T11:55:37Z",
-      "node_digest": "8a9a4c8cda9f513e014d7b2731ea50319ee8ebd8c005ca716751da4f9a1bef76",
-      "pre_score": 112,
-      "protocol": "vmess",
-      "source_count": 4,
-      "source_id": "005a0e2b44c2836269514f49"
-    },
-    {
-      "independent_source_count": 4,
-      "last_seen_at": "2026-09-10T11:55:37Z",
       "node_digest": "9448908e0068255e66b265fb386b906a252363fc9159f73c921bf77e51213ee9",
       "pre_score": 112,
       "protocol": "vmess",
@@ -68,17 +554,35 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-10T11:53:19Z",
-      "node_digest": "1f1b8ec14fab063bb9ffe1fe83acea35e5abedac74deb6908274a2fe0f101d99",
-      "pre_score": 108,
+      "last_seen_at": "2026-09-10T16:42:38Z",
+      "node_digest": "4cfcae05aa3f305dc88aab19957e0f9c377ac58dfcc90523623cb774a8124d9a",
+      "pre_score": 111,
       "protocol": "vless",
       "source_count": 4,
-      "source_id": "c4b3f7046435e44402e0fdfe"
+      "source_id": "4317f8b507c0508badd5008f"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:38Z",
+      "node_digest": "58c8590bde937142b746c7127b10cf55cc692b56946ca837f86f88be553159aa",
+      "pre_score": 111,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "4317f8b507c0508badd5008f"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-10T16:42:38Z",
+      "node_digest": "918dced053d79acc4b554e07020c0fe7efa37b17f66a62a9867df9a83eccc8fc",
+      "pre_score": 111,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "4317f8b507c0508badd5008f"
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-09T21:15:20Z",
-      "node_digest": "a611243cd868362e9fad7be9013bd80e3dcd244e0b0732197f82e37001ed2b6e",
+      "last_seen_at": "2026-09-10T16:48:06Z",
+      "node_digest": "06cd1c307ce45122f57eb18d77dd77f62bab8afd64e218b8e5521a166d072f8a",
       "pre_score": 108,
       "protocol": "vless",
       "source_count": 4,
@@ -86,39 +590,309 @@
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-10T11:53:11Z",
-      "node_digest": "9dd9cd40ebd715ffe25127b561f1facb725702c71adec2d47f51caca2a219db7",
+      "last_seen_at": "2026-09-10T16:48:06Z",
+      "node_digest": "1fd235f41bfe5fb74510c9e8b98a331e000e272c26c77d873d81938b8fec9ab5",
       "pre_score": 108,
       "protocol": "vless",
-      "source_count": 3,
-      "source_id": "8a35305257cf3de873a1ad98"
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-10T11:53:11Z",
-      "node_digest": "bc795c86424c8a842f14c91e805060eb28da7924aea30e310cea6ef2b7b410ac",
+      "last_seen_at": "2026-09-10T16:48:06Z",
+      "node_digest": "26adc1649d00b959d6dd6cb71936cf69acf42c060229647d65c764ae6806ca94",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:48:06Z",
+      "node_digest": "36bc017b0f7b10c74126d8481bcd5006ebb71ff249ecc3f33cedd93a4e323e7d",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:48:06Z",
+      "node_digest": "838763c8fdcce93150c6989432d22908c175f368fc4ab831beab4065b022dfa1",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:48:06Z",
+      "node_digest": "edb9713cfe923caa975c443c4883234b44b260b0ca011714b67f1e9d0c2e355d",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "861faa1dc64d1ad4ade01c9d"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "09fca0afb6cf4915aff47bd5c25b2556e352666250901e0023f2bb9e1940099a",
       "pre_score": 108,
       "protocol": "vless",
       "source_count": 3,
-      "source_id": "8a35305257cf3de873a1ad98"
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "126a1a0bf9798ec68c4a3e06a37c04c9186dae2d303ef3e8ba2596686f88a5fa",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "1eadefbe1a7b31c34aac8cfc29b3360e031b922aa628922d3c1bb57b788974c4",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:32Z",
+      "node_digest": "23fc944fb52dee9265af188b13de2c214dde178747de25615d1f27ecb36955ac",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "273f01d0023901c017896aa7a758ab712f9880d84b4806518e2487bdade55b2d",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:15Z",
+      "node_digest": "30f3b3c5bf818d5595bdf2cf16d711e22979abddf3c9bd97f594f9e171a8f2c8",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "84860a5969d00dff95576217"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:32Z",
+      "node_digest": "3505a2c6c769b26dce777abece8ca43443a20b845db89658566da69eeefb3a6c",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "3cb5bab26ec8ede43a5d1c01a7be07c23797549359927d4e1d7adf371fc3dcf3",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "976b8c1ede302f5101882ea0"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:15Z",
+      "node_digest": "43f2eb4bfee7236618c96fc0eb6a9efccd38776bc173529015a27ab2ec27df34",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "84860a5969d00dff95576217"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:15Z",
+      "node_digest": "5534eb9d02ab1a1ce21cb91fa8b5b19d2ee7e012de727afdbe4048541661b339",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "84860a5969d00dff95576217"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "58bc896a0c99ce4666ed69d50b8a6631fa5819c6913adf57a6ed54311adf36f0",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "7403afdae12f119b8a4e45f5ba30de56cbafb9b2bf6827d6f256c5d74f66ec19",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "976b8c1ede302f5101882ea0"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:32Z",
+      "node_digest": "763938ce8ec82d58d00a70bfe419f2cc1e3da77b05785721fb3da2e5c277c704",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:32Z",
+      "node_digest": "85ed09bb8bdd474596aabcf0188248af28f7e0fedfc147ebe63377934985c236",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "8b86ae37f58f1e7d7470dd266a84ec1acde77aabd3961c7a71aaffb7482302f3",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "976b8c1ede302f5101882ea0"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "946865a60ec22239bc7431e8a85663f38fadd64abdef2ecbcfad43a5ee2faeed",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "976b8c1ede302f5101882ea0"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "bc7369aaa2d9b9c42a2e2d879bf7f464d82414b72f5339dea8be0a74c10fdae7",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "c3fd3f460f09196b3f0e3d9557124e4508485894d43852958cdd8c48e11a17da",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "c43de144edd9a88858f7a0870292b6ce2912cb07327b875d57ba1b7ed0dfaaa2",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:15Z",
+      "node_digest": "cbf115b5df869e97437a101e597d4ef09c43f5acd82114aee52d47edc82a7b44",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "84860a5969d00dff95576217"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:32Z",
+      "node_digest": "d3b5ce489e53fdf1b8dbaf37389e6986392159ef59516116db3db895f4a53154",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "6c957cd615bbc514b929decf"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "dca739f515780dea14b8721b32a169303a227c035883d7619772274ba50f956e",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "ddb35172cd9b267e52b8c70f51a85926d10f6fb2adfb7b53d02be02c51a7a90d",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "e9cc0ccbc504cd3dcfb32a835a511c7d925640ab034c125e43ee970a033705a4",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "fac70e65f69c5bc099c1dc2301a605b5866ebdd5a707fa6ecaa925ee64ddb152",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:36Z",
+      "node_digest": "fb5a1300031944ada1f1c6edf88d9d68adbdac40a99363ede25602d5cfee7058",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "976b8c1ede302f5101882ea0"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:43:15Z",
+      "node_digest": "fde8a114e4e932767411b4628be2ffa2a007df4b61423e147682b576fa2cdb77",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "84860a5969d00dff95576217"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-10T16:42:56Z",
+      "node_digest": "8fd2936b706d5573aea2df4e591e2988e547edc5e36d6b52774d333ddb74a4c4",
+      "pre_score": 107,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "4317f8b507c0508badd5008f"
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-10T11:53:26Z",
-      "node_digest": "b81b6edecebe8eef45d79b43813d28de5c1b01d1e9ac08c8ee45456c963299d4",
-      "pre_score": 104,
-      "protocol": "ss",
-      "source_count": 2,
-      "source_id": "8e0667960401f662c7ec3edd"
-    },
-    {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-10T11:52:20Z",
-      "node_digest": "c9eab6b8205ff29f4bb3b14b05d859382f7f381b01da8565ebe296717b6e145e",
+      "last_seen_at": "2026-09-10T16:42:59Z",
+      "node_digest": "bb9803a15c1d2a72cc91d2b2d025a1c466ea1897378c88ed6c0e29174ff5fdfa",
       "pre_score": 104,
       "protocol": "vless",
-      "source_count": 2,
-      "source_id": "8e0667960401f662c7ec3edd"
+      "source_count": 3,
+      "source_id": "64ad60ffb6461565c559d6f9"
     },
     {
       "independent_source_count": 1,
@@ -149,12 +923,39 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:41:59Z",
+      "node_digest": "2bcf6b467c5025d365dca38595b3f2636b3bf66d97d4b1b66acb74aff56b3f13",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "e1f0fade7d7f87d2f7150525"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "3e2353386a7b990f9402fd4d7bb5487b9e924eb23ece14cce21164eabafe03df",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:51:43Z",
       "node_digest": "590174372ba0064f7a8cd3abf036c4ad88d7cbc22e1bb1b34b8d7ca2c77e45a0",
       "pre_score": 100,
       "protocol": "vless",
       "source_count": 1,
       "source_id": "4620a2637caff5ae951b24ca"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:41:59Z",
+      "node_digest": "629c7d55182136e6869dcd41d31246a7ca83975c368e2aa0b7f708d7a502d7df",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "e1f0fade7d7f87d2f7150525"
     },
     {
       "independent_source_count": 1,
@@ -167,12 +968,39 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "9fae005ecb35bf896404fc98a5b8c7cb8b694fa2d17688aa0d2da1262ed96cfc",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "bb2655a32a1f3b941f1cbc4e"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "a0dd26b766a3cf1ee0c9db2819de7c97265c1a9353e3de897edb2abe07ab92c6",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:51:43Z",
       "node_digest": "a8291b96f7f775f2ca1fc079017e768ca24942f8d80eb3af77cf7471426a9a55",
       "pre_score": 100,
       "protocol": "vless",
       "source_count": 1,
       "source_id": "4620a2637caff5ae951b24ca"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "aae6233a10a06a4af8515cd7f953ff93d02e7c21356d7637f321e5c4711a0dd2",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
     },
     {
       "independent_source_count": 1,
@@ -194,12 +1022,39 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-10T11:51:33Z",
-      "node_digest": "c8ae16ab799a68b93d76218bb9d2171f3138c375cf6aac1b673fe8b5f62a71e7",
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "cbdb0cbc91d094e0ea3aeec10a5b15f1b33829128991dc4f6efec946c4b0b267",
       "pre_score": 100,
       "protocol": "vless",
       "source_count": 1,
-      "source_id": "fd9bc2b5b01180ce920b4f9c"
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "1aae68e555f7e11e4ce27f5b1fb1c8f8c2fac96893423ebac59f2c0d41923e45",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "2180508705275219b0e9dc1fb36eedabd51611dc233b1477751535135d47d6e3",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "33c7ac9285a5e239eb3578a71847cfc3906804c4bb17cd8a463d8c45ada0e74e",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
     },
     {
       "independent_source_count": 1,
@@ -212,12 +1067,66 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "4bb8df58f09bfe6fd67d3c0c914113ac3c70ccf66654f7f40057d1cafe015919",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "959d17ab64846d0ee41a31d01adc7f0d55814d92d75a960f89589983eeeb1f59",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "a098b6939ff82c5af2d538aa2f56583c5bb951fc05d6506c87610cd7743103bd",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:51:43Z",
       "node_digest": "ae579559b8f8821fd6243b917ed551b44a0788f4454ab9f10ee0707fcdd6d13c",
       "pre_score": 100,
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "4620a2637caff5ae951b24ca"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "b12a41359068d24ca3c1040a5cb2be7ac99149099739299bb9349fec5f1c460d",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "b51856736a4ab8c517d4972d0df5341a2917c2ea747a253f460c464f7969928e",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "b9556ba424bb6e118df7374bbde2c549906ee8c753535fbe1ce67c5516ad7162",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
     },
     {
       "independent_source_count": 1,
@@ -230,6 +1139,24 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:20Z",
+      "node_digest": "c684f1a946faebadd67bc03056093c17bfaf8ea8804b14d297f0f3d357525ae6",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "34d660b3274860d12b39ac1e"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "d41ec4130fe29027d07fbfef25d135bc5fce3f87d2de5df297c1ac22d899c7ca",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:51:43Z",
       "node_digest": "d80579852eeab58b6829a66c7ad4c31697db1d19728534850a425316a7099b7e",
       "pre_score": 100,
@@ -238,13 +1165,22 @@
       "source_id": "4620a2637caff5ae951b24ca"
     },
     {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-10T11:51:43Z",
-      "node_digest": "ada342d1fa754d1e13b8aad76f9d4c476acfa8163a91183df2d08ae67f80e2e8",
-      "pre_score": 97,
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:05Z",
+      "node_digest": "ef05a38f274591000dad8d5b88e00e04d739bae8a2ab5cd6acfb609b515292f0",
+      "pre_score": 100,
       "protocol": "vmess",
-      "source_count": 2,
-      "source_id": "a7a04b28b1ad4d3c1d86ef85"
+      "source_count": 1,
+      "source_id": "7b372538361c23149c3044bd"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:38Z",
+      "node_digest": "fac4b61a41b26be53264551c59e90daec8dc80d2cb6377cd1a09cc8efcf76459",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "7fc5b1d6146f55721fc22128"
     },
     {
       "independent_source_count": 1,
@@ -254,6 +1190,24 @@
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "81e107e4c5cfa8506f8a13a7"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:46:23Z",
+      "node_digest": "06a0d429791c59b2f07b7230478ff5f3167d2ab474fc8d30a724e40f99e90671",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "040ea2131afc4764f06e3c55"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:04Z",
+      "node_digest": "13545c18086db3976c3a652e9f6236a91fd86134a5ecb9f6a1336aee8afaaaa7",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "1773c3baddf1511d5f13dc58"
     },
     {
       "independent_source_count": 1,
@@ -311,6 +1265,15 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:04Z",
+      "node_digest": "76a961f0664c3f08d2089416b91011d5c032f56901dc733a2f7727256ebe4a87",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "1773c3baddf1511d5f13dc58"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:54:16Z",
       "node_digest": "97bea7cc19585403ebcf69ee6556a69b38643b321068cd9ddbdde99787acd54c",
       "pre_score": 95,
@@ -329,12 +1292,102 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:04Z",
+      "node_digest": "c2f8b4fec687c729d2e4cdb2a654ae3cfc04b27c58f452c0b34d8a9bde5611b3",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "1773c3baddf1511d5f13dc58"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:04Z",
+      "node_digest": "c498b1096376388fb5a82977cf91f15d6d1bf0b08a0853d678827cda795c80eb",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "1773c3baddf1511d5f13dc58"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:46:23Z",
+      "node_digest": "cdeb955659bbe2c75e3d1b02fd1daaa778b3f34a5191a94be975d8e299063818",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "040ea2131afc4764f06e3c55"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:04Z",
+      "node_digest": "d5129a70ab6e6901454aa7d4b4af348c4a3c6b00bbab366858bc006ed302264a",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "1773c3baddf1511d5f13dc58"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:04Z",
+      "node_digest": "dd4f0b0963604db04a9553ffa2c65e67eb9de4986dbcf0a0d2ebd08cc0e7c177",
+      "pre_score": 95,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "1773c3baddf1511d5f13dc58"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:54:16Z",
       "node_digest": "f73eaefbdcd754ca578b4993ed80b088cdc03047305399cd49043d1533f57373",
       "pre_score": 95,
       "protocol": "vless",
       "source_count": 2,
       "source_id": "97a955d263fa26fa4a9eda8c"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:06Z",
+      "node_digest": "135012ef85585df12c1f843bb8ca1008a370699daa0f54fbc7e00b4a3a9e9a91",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "8625ca4be1a8d222abfcc205"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:06Z",
+      "node_digest": "2746354f1ffdf93b0040895d2cdd9b08f05fcdbd290bc9a8000bf2566f4908a1",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "8625ca4be1a8d222abfcc205"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:06Z",
+      "node_digest": "43b74d81dc42655843e51cbb4de5edb64cefe859a9235ee4188395c4b8ab7287",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "8625ca4be1a8d222abfcc205"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:11Z",
+      "node_digest": "79210863e9c31f4dae9d92e48648c9f897198d860b74b6a8111f2f5b6836fae9",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "3d14def1fc95f22ef1553a43"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:42:06Z",
+      "node_digest": "98cbc25ac4122a4622df166adfd3381e1f7967f4993cf4cb64ec0e5656d3fd2f",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "8625ca4be1a8d222abfcc205"
     },
     {
       "independent_source_count": 1,
@@ -374,12 +1427,30 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T11:51:43Z",
+      "node_digest": "ada342d1fa754d1e13b8aad76f9d4c476acfa8163a91183df2d08ae67f80e2e8",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "a7a04b28b1ad4d3c1d86ef85"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-10T11:58:23Z",
       "node_digest": "cfab41e2effdf99d94d3db69f2217dbfb7d8874ff3b668335d749820e55f3fed",
       "pre_score": 93,
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "601b6574b0423728bc330eeb"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-10T16:43:02Z",
+      "node_digest": "dc8dafe96b231be59809642e4264eedd0e987079cd3da0b65e61a978e67c4c21",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "affeeb59320eed629afc77c7"
     },
     {
       "independent_source_count": 1,
@@ -411,5 +1482,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 45
+  "total_candidates": 164
 }

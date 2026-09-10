@@ -2,6 +2,7 @@ import argparse
 import hashlib
 import json
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -14,6 +15,10 @@ def load(path: Path, default):
 def dump(path: Path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def source_id_for(source):
@@ -120,6 +125,26 @@ def select_country(rows, source_meta, limit, max_per_source):
     return ranked, selected
 
 
+def build_handoff_v4(country, ranked, selected):
+    """Build the versioned private-intake contract without changing legacy v3 output."""
+    by_digest = {row["node_digest"]: row for row in ranked}
+    out = []
+    for selected_row in selected:
+        source = by_digest[selected_row["node_digest"]]
+        out.append({
+            "node_digest": selected_row["node_digest"],
+            "source_id": selected_row["source_id"],
+            "protocol": selected_row["protocol"],
+            "endpoint_country": country,
+            "pre_score": selected_row["pre_score"],
+            "best_source_score": source["best_source_score"],
+            "source_count": selected_row["source_count"],
+            "independent_source_count": selected_row["independent_source_count"],
+            "last_seen_at": source.get("last_seen_at"),
+        })
+    return out
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--data", default="data/sources.json")
@@ -127,6 +152,7 @@ def main() -> int:
     p.add_argument("--geo-cache", default="data/geo_cache.json")
     p.add_argument("--artifacts", required=True)
     p.add_argument("--handoff", default="exports/country_handoff.json")
+    p.add_argument("--handoff-v4", default="exports/country_handoff_v4.json")
     p.add_argument("--prechecked", default="exports/prechecked_sources.json")
     p.add_argument("--nodes-deduplicated", default="exports/nodes_deduplicated.json")
     p.add_argument("--countries-dir", default="exports/countries")
@@ -194,7 +220,7 @@ def main() -> int:
     nodes, source_meta = build_global_nodes(catalog, index_sources, previous_nodes)
     dump(Path(args.nodes_deduplicated), {
         "schema": "subscription-source-global-node-index-v3",
-        "digest_semantics": "sha256_raw_public_uri_selection_digest_not_vgm_canonical_fingerprint",
+        "digest_semantics": "sha256_public_candidate_selection_digest_not_vgm_canonical_fingerprint",
         "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
         "dedup_semantics": "one_row_per_node_digest_across_current_successful_active_sources",
         "protocol_diversity_policy": "no_protocol_caps_or_protocol_popularity_penalties",
@@ -213,9 +239,11 @@ def main() -> int:
         old.unlink()
 
     handoff = {}
+    handoff_v4 = {}
     for country, rows in sorted(countries.items()):
         ranked, selected = select_country(rows, source_meta, max(1, args.top_per_country), max(1, args.max_per_source))
         handoff[country] = selected
+        handoff_v4[country] = build_handoff_v4(country, ranked, selected)
         safe_ranked = [{
             "node_digest": row["node_digest"], "source_id": row["source_ids"][0], "protocol": row["protocol"],
             "pre_score": row["pre_score"], "source_count": row["source_count"],
@@ -228,20 +256,36 @@ def main() -> int:
             "total_candidates": len(ranked), "exported_candidates": len(safe_ranked), "nodes": safe_ranked,
         })
 
+    # Keep the established v3 handoff unchanged while private VGM migrates.
     dump(Path(args.handoff), {
         "schema": "subscription-source-country-handoff-v3",
         "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-        "digest_semantics": "sha256_raw_public_uri_selection_digest_not_vgm_canonical_fingerprint",
+        "digest_semantics": "sha256_public_candidate_selection_digest_not_vgm_canonical_fingerprint",
         "ranking_semantics": "global_node_dedup_plus_independent_source_corroboration_with_soft_source_diversity",
         "protocol_diversity_policy": "no_protocol_caps_or_protocol_popularity_penalties",
         "top_per_country": args.top_per_country, "max_per_source_soft": args.max_per_source,
         "countries": dict(sorted(handoff.items())),
     })
 
+    dump(Path(args.handoff_v4), {
+        "schema": "subscription-source-country-handoff-v4",
+        "generated_at": utc_now(),
+        "protocol_contract": ["vless", "vmess", "trojan", "ss", "hysteria2"],
+        "country_semantics": "endpoint_country_is_passive_hint_only_not_verified_exit_country",
+        "digest_semantics": "node_digest_is_public_selection_handle_not_vgm_canonical_fingerprint",
+        "ranking_semantics": "global_dedup_source_quality_corroboration_and_soft_source_diversity",
+        "selection_semantics": "bounded_pre_ranked_candidates_for_private_vgm_materialization_and_live_validation",
+        "top_per_country": args.top_per_country,
+        "max_per_source_soft": args.max_per_source,
+        "countries": dict(sorted(handoff_v4.items())),
+    })
+
     print(json.dumps({
         "processed": processed, "success": success, "catalog_sources": len(catalog["sources"]),
         "indexed_sources": len(index_sources), "deduplicated_nodes": len(nodes), "countries": len(handoff),
-        "handoff_nodes": sum(len(rows) for rows in handoff.values()), "country_export_limit": args.country_export_limit,
+        "handoff_nodes": sum(len(rows) for rows in handoff.values()),
+        "handoff_v4_nodes": sum(len(rows) for rows in handoff_v4.values()),
+        "country_export_limit": args.country_export_limit,
     }, sort_keys=True))
     return 0
 

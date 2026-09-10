@@ -11,11 +11,21 @@ from src.normalizer import canonicalize_url
 from src.security import contains_private_wireguard_material, is_safe_public_url
 
 CONTENT_SUFFIXES = (".txt", ".yaml", ".yml", ".json", ".conf", ".ini", ".list", ".meta")
-BARE_NAMES = {"sub", "subscription", "nodes", "configs", "all", "mix-uri", "proxylist"}
+BARE_NAMES = {
+    "sub", "subscription", "subscriptions", "nodes", "configs", "config",
+    "all", "mix-uri", "proxylist", "proxy", "proxies",
+}
 DISALLOWED_SUFFIXES = (".svg", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".html", ".md")
 DISALLOWED_HOSTS = {"img.shields.io", "shields.io"}
 DISALLOWED_PATH_PARTS = ("/actions/", "/stargazers", "/issues/", "/pull/", "/assets/", "/archive/")
-PROTOCOL_HINTS = ("vless", "vmess", "trojan", "shadowsocks", "v2ray", "clash", "singbox", "hysteria", "tuic")
+
+# Search hints intentionally exclude WireGuard, SSR and TUIC. The public catalog
+# is optimized for the share-link protocols consumed by the 3x-ui outbound
+# subscription workflow.
+PROTOCOL_HINTS = (
+    "vless", "vmess", "trojan", "shadowsocks", "ss", "hysteria2", "hy2",
+    "v2ray", "xray", "clash", "mihomo", "singbox", "sing-box",
+)
 
 
 class GitHubDiscovery:
@@ -127,9 +137,9 @@ class GitHubDiscovery:
         if leaf in BARE_NAMES:
             return True
         segments = {segment for segment in lower_path.split("/") if segment}
-        if "subscription" in segments or "subscriptions" in segments:
+        if {"subscription", "subscriptions", "sub"} & segments:
             return True
-        if "sub" in segments and any(hint in lower_path for hint in PROTOCOL_HINTS):
+        if any(hint in lower_path for hint in PROTOCOL_HINTS) and ({"config", "configs", "nodes", "proxy", "proxies"} & segments):
             return True
         return False
 
@@ -149,7 +159,7 @@ class GitHubDiscovery:
                 for filename, text in files:
                     # README prose may mention example secret fields, so only reject an
                     # actual candidate payload file here. Linked sources are checked again
-                    # after bounded fetch in Catalog Compute v2.
+                    # after bounded fetch in catalog compute.
                     is_readme = filename.lower() == "readme.md"
                     if not is_readme and contains_private_wireguard_material(text):
                         self.stats["rejected_private_material"] += 1

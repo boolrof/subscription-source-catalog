@@ -1,157 +1,146 @@
-# Public Subscription Source Catalog
+# Subscription Source Catalog
 
-Public discovery and preprocessing layer for **public proxy subscription sources** used by VPN Global Monitor.
+Публичный каталог источников и кандидатов для VPN Global Monitor.
 
-## Approved project boundary
+Репозиторий автоматически находит и обрабатывает публичные subscription/source URL, извлекает поддерживаемые proxy URI, выполняет безопасную предварительную дедупликацию и пассивную геолокацию endpoint, а затем публикует ограниченные метаданные для приватного query engine.
+
+## Назначение
+
+Каталог уменьшает объём работы, который приходится выполнять приватному VPS.
+
+Он отвечает за дешёвые операции:
 
 ```text
-GitHub searches and prepares.
-VGM decides what to validate.
-VPS proves that a node really works.
-The panel lets the user request a country and receive TOP live results.
+public source discovery
+→ fetch
+→ parse
+→ protocol filtering
+→ public digest dedup
+→ endpoint GeoIP hint
+→ source quality/corroboration
+→ country ranking
+→ safe handoff to VGM
 ```
 
-This repository owns the first line: broad public discovery, bounded source fetching, parsing, filtering, passive classification, deduplication and country-oriented candidate ranking.
+Каталог не определяет, работает ли узел фактически. Он также не является источником истины для страны выхода.
 
-It deliberately does **not** establish proxy tunnels, measure real proxy latency, determine authoritative exit IP/country, or publish private runtime material.
-
-## Primary protocol scope
-
-The public catalog is optimized for the share-link subscription protocols used by the 3x-ui outbound subscription workflow:
-
-- `vless://`
-- `vmess://`
-- `trojan://`
-- `ss://`
-- `hysteria2://` and its `hy2://` alias
-
-**WireGuard is excluded from discovery and node admission.**
-
-SSR, TUIC and other non-target schemes are not part of the primary catalog contract. They may appear in source payloads but are ignored by the approved node parser.
-
-## Pipeline
+## Поддерживаемые протоколы поиска
 
 ```text
-GitHub Search / known public sources
-        ↓
-subscription source discovery
-        ↓
-URL normalization + security filtering
-        ↓
-source deduplication
-        ↓
+VLESS
+VMess
+Trojan
+Shadowsocks
+Hysteria2
+```
+
+WireGuard не входит в поисковый контракт каталога. `wg://`, `wireguard://`, приватные WireGuard-профили, PrivateKey и PresharedKey блокируются на публичной границе.
+
+TUIC, SSR и другие протоколы не включаются в основной pipeline без отдельного утверждённого контракта.
+
+## Что публикуется
+
+Публичные exports содержат только безопасные данные, необходимые для отбора кандидатов:
+
+- `node_digest` — непрозрачный selection handle;
+- `source_id`;
+- protocol;
+- passive `endpoint_country`;
+- pre-score;
+- source count / independent source count;
+- source quality metadata;
+- freshness metadata.
+
+Raw proxy URI, UUID, passwords, tokens, private keys и другие credentials в generated exports не публикуются.
+
+## Country semantics
+
+`endpoint_country` означает только пассивную геолокацию адреса endpoint.
+
+```text
+endpoint_country != verified_exit_country
+```
+
+Фактическая страна выхода определяется только приватным VPN Global Monitor после реальной L3-проверки через сам узел.
+
+## Handoff
+
+Основной контракт для VGM:
+
+```text
+exports/country_handoff_v4.json
+schema: subscription-source-country-handoff-v4
+```
+
+Он предоставляет безопасный bounded список кандидатов по странам и ranking metadata для Country Query Planner.
+
+Legacy handoff может временно существовать только ради совместимости потребителей. Его наличие не меняет основной контракт v4.
+
+## Generated state
+
+Каталог хранит generated state и exports, используемые последующими workflow и VGM:
+
+```text
 data/sources.json
-        ↓
-Catalog Compute
-        ├── bounded HTTPS source fetch
-        ├── plain / base64 / nested-base64 decoding
-        ├── raw share-link parsing
-        ├── VMess JSON decoding
-        ├── Clash/Mihomo proxy-object extraction
-        ├── sing-box/generic JSON outbound extraction
-        ├── approved-protocol filtering
-        ├── DNS resolution of published endpoints
-        ├── passive GeoIP country hints
-        ├── source quality scoring
-        ├── global cross-source node_digest deduplication
-        ├── independent-source corroboration scoring
-        ├── endpoint-country ranking
-        └── bounded country handoff for private VGM validation
+data/node_index.json
+data/geo_cache.json
+exports/
+SOURCES.md
 ```
 
-## Generated outputs
+Эти файлы являются машинным состоянием каталога, а не ручной документацией. Их изменение выполняется workflow/compute pipeline.
 
-- `data/node_index.json` — safe per-source opaque `node_digest` values and passive country hints; no URI, credential, host or IP is published.
-- `data/geo_cache.json` — hashed-IP GeoIP cache; raw endpoint IPs are not stored.
-- `exports/prechecked_sources.json` — aggregate source quality/pre-admission metrics.
-- `exports/nodes_deduplicated.json` — safe global candidate index.
-- `exports/countries/<CC>.json` — ranked candidates grouped by passive endpoint country.
-- `exports/country_handoff.json` — bounded handoff for private VGM intake.
+## GitHub Actions
 
-`node_digest` is an opaque SHA-256 selection handle derived from the public source representation. It is **not** VGM canonical fingerprint v2 and must never be treated as VPS-authoritative node identity.
+### Discovery
 
-`endpoint_country` is a passive DNS/GeoIP hint for the published endpoint. It is **not** the authoritative VPN/proxy exit country.
+Периодически ищет и проверяет новые публичные источники в пределах заданного budget.
 
-## Parser policy
+### Compute
 
-The parser is intentionally protocol-aware instead of treating every payload as a simple line-oriented URI list.
+Пересчитывает node index, country ranking и safe handoff exports.
 
-Supported inputs include:
+### CI
 
-- plain URI lists;
-- standard base64 subscriptions;
-- bounded nested base64 subscriptions;
-- mixed text containing approved share links;
-- VMess base64 JSON links;
-- Clash/Mihomo `proxies:` lists for approved types;
-- sing-box/generic JSON objects with approved outbound types.
+Проверяет parser, security boundary, deterministic compute contracts и отсутствие запрещённых данных.
 
-The public parser extracts only enough information to create an opaque candidate handle, protocol classification and passive endpoint-country hint. Secrets and raw actionable proxy configuration are not exported.
+## Безопасность
 
-## Discovery policy
+Публичный репозиторий никогда не должен содержать:
 
-Discovery is intentionally broad and protocol-specific. Search queries and candidate filenames cover VLESS, VMess, Trojan, Shadowsocks and Hysteria2/Hy2 plus common aggregate formats such as Xray/V2Ray, Clash/Mihomo and sing-box.
+- private subscription URL;
+- credential-bearing source URL;
+- raw proxy URI export;
+- API token;
+- private key;
+- персональный/provider account inventory;
+- WireGuard client profile;
+- runtime database приватного VGM.
 
-The discovery layer rejects obvious UI/assets, unsafe URLs and private-material violations before catalog admission. Catalog compute then performs a bounded refetch and a second parsing/security boundary.
-
-## Security boundary
-
-This repository is public. Never add private subscription URLs, credentials, API keys, tokens, private node lists, raw proxy URI exports or runtime databases.
-
-WireGuard is outside this catalog's discovery contract. `PrivateKey`, `PresharedKey`, complete client profiles, `wg://`, `wireguard://` and account-derived WireGuard inventories must not enter catalog data, Actions artifacts, logs, issues or pull requests.
-
-The compute layer never commits raw proxy URIs. Real canonical fingerprint v2, active protocol validation, HTTP-through-proxy, real latency, exit IP and `verified_exit_country` remain responsibilities of private VGM/VPS.
-
-## Source of truth
-
-`data/sources.json` remains the source catalog of record.
-
-Generated compatibility files include:
-
-- `SOURCES.md` — human-readable source catalog;
-- `exports/subscription_urls.txt` — active/stale public source URLs.
-
-## Automation
-
-GitHub Actions performs two distinct workloads:
-
-- discovery: find and refresh public subscription sources;
-- compute: fetch known sources, parse/filter/deduplicate nodes and refresh country rankings.
-
-The public repository should absorb as much safe discovery/preprocessing work as practical so the private VPS does not waste resources scanning large unfiltered global inventories.
-
-## Architectural handoff
+Направление данных только одностороннее:
 
 ```text
-PUBLIC subscription-source-catalog
-    ↓
-broad discovery
-    ↓
-parse + filter + deduplicate
-    ↓
-passive country hint + ranking
-    ↓
-bounded country candidate handoff
-    ↓
-PRIVATE vpn-global-monitor
-    ↓
-query planner / history / cooldown
-    ↓
-VPS isolated live validation
-    ↓
-L1 / protocol handshake / HTTP-through-proxy
-    ↓
-real latency + exit IP + verified exit country
-    ↓
-TOP live nodes returned to the panel
+public catalog → safe metadata → private VGM
 ```
 
-There is no reverse private inventory export into this public catalog. GitHub results never replace VPS-authoritative identity or live exit validation.
+Приватный VGM не выгружает свои credentials, trusted inventory или реальные runtime secrets обратно в этот репозиторий.
 
-## Local checks
+## Роль в общей системе
 
-```bash
-python -m unittest discover -s tests -v
-python run.py --dry-run
-python run.py
+```text
+Internet
+  ↓
+Subscription Source Catalog
+  ↓ safe candidate metadata
+VPN Global Monitor Query Planner
+  ↓
+private materialization
+  ↓
+VPS validation
+  ↓
+verified exit country + latency
+  ↓
+TOP-N
 ```
+
+Каталог отвечает за широкий поиск и предварительный отбор. Решение о реальной работоспособности и качестве узла принимает только приватный validation plane.

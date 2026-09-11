@@ -3,27 +3,26 @@
     "gap_to_assigned_target": 152,
     "iso3166_1_alpha2_assigned_target": 249,
     "lost_country_codes": [],
-    "new_country_codes": [
-      "VG"
-    ],
+    "new_country_codes": [],
     "observed_country_codes": 97,
     "per_country": {
       "AE": {
-        "contributing_sources": 166,
+        "contributing_sources": 513,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 146,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 439,
         "lost_candidates": 0,
-        "new_candidates": 592,
+        "new_candidates": 1098,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
         "protocol_counts": {
-          "hysteria2": 55,
-          "ss": 170,
-          "vless": 1256,
-          "vmess": 137
+          "hysteria2": 94,
+          "ss": 372,
+          "trojan": 14,
+          "vless": 1999,
+          "vmess": 237
         },
-        "retained_candidates": 1026,
-        "total_candidates": 1618
+        "retained_candidates": 1618,
+        "total_candidates": 2716
       },
       "AF": {
         "contributing_sources": 1,
@@ -40,1216 +39,1210 @@
         "total_candidates": 1
       },
       "AL": {
-        "contributing_sources": 21,
-        "exported_candidates": 57,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:16Z",
-        "independent_sources": 21,
+        "contributing_sources": 77,
+        "exported_candidates": 97,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:07Z",
+        "independent_sources": 61,
         "lost_candidates": 0,
-        "new_candidates": 14,
+        "new_candidates": 40,
         "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "ss": 23,
-          "trojan": 6,
-          "vless": 28
+          "ss": 38,
+          "trojan": 15,
+          "vless": 44
         },
-        "retained_candidates": 43,
-        "total_candidates": 57
+        "retained_candidates": 57,
+        "total_candidates": 97
       },
       "AM": {
-        "contributing_sources": 50,
-        "exported_candidates": 63,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 44,
+        "contributing_sources": 150,
+        "exported_candidates": 157,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:07Z",
+        "independent_sources": 128,
         "lost_candidates": 0,
-        "new_candidates": 23,
+        "new_candidates": 94,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
+        "protocol_counts": {
+          "ss": 33,
+          "vless": 124
+        },
+        "retained_candidates": 63,
+        "total_candidates": 157
+      },
+      "AQ": {
+        "contributing_sources": 20,
+        "exported_candidates": 7,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:21:34Z",
+        "independent_sources": 19,
+        "lost_candidates": 0,
+        "new_candidates": 1,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:16Z",
+        "protocol_counts": {
+          "vless": 7
+        },
+        "retained_candidates": 6,
+        "total_candidates": 7
+      },
+      "AT": {
+        "contributing_sources": 348,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 304,
+        "lost_candidates": 0,
+        "new_candidates": 213,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:55:59Z",
+        "protocol_counts": {
+          "ss": 156,
+          "trojan": 145,
+          "vless": 216
+        },
+        "retained_candidates": 304,
+        "total_candidates": 517
+      },
+      "AU": {
+        "contributing_sources": 277,
+        "exported_candidates": 492,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:43Z",
+        "independent_sources": 227,
+        "lost_candidates": 0,
+        "new_candidates": 205,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:22:51Z",
+        "protocol_counts": {
+          "hysteria2": 94,
+          "ss": 48,
+          "trojan": 60,
+          "vless": 30,
+          "vmess": 260
+        },
+        "retained_candidates": 287,
+        "total_candidates": 492
+      },
+      "AZ": {
+        "contributing_sources": 48,
+        "exported_candidates": 102,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:02Z",
+        "independent_sources": 39,
+        "lost_candidates": 0,
+        "new_candidates": 39,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:16Z",
+        "protocol_counts": {
+          "ss": 90,
+          "vless": 12
+        },
+        "retained_candidates": 63,
+        "total_candidates": 102
+      },
+      "BA": {
+        "contributing_sources": 24,
+        "exported_candidates": 51,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:20:44Z",
+        "independent_sources": 21,
+        "lost_candidates": 0,
+        "new_candidates": 24,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:58Z",
+        "protocol_counts": {
+          "ss": 49,
+          "vless": 2
+        },
+        "retained_candidates": 27,
+        "total_candidates": 51
+      },
+      "BE": {
+        "contributing_sources": 61,
+        "exported_candidates": 54,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:32Z",
+        "independent_sources": 54,
+        "lost_candidates": 0,
+        "new_candidates": 20,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:28Z",
+        "protocol_counts": {
+          "ss": 32,
+          "vmess": 22
+        },
+        "retained_candidates": 34,
+        "total_candidates": 54
+      },
+      "BG": {
+        "contributing_sources": 349,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 306,
+        "lost_candidates": 0,
+        "new_candidates": 605,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
+        "protocol_counts": {
+          "ss": 328,
+          "vless": 1546,
+          "vmess": 24
+        },
+        "retained_candidates": 1293,
+        "total_candidates": 1898
+      },
+      "BH": {
+        "contributing_sources": 22,
+        "exported_candidates": 35,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:55Z",
+        "independent_sources": 21,
+        "lost_candidates": 0,
+        "new_candidates": 19,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:59Z",
+        "protocol_counts": {
+          "ss": 34,
+          "vmess": 1
+        },
+        "retained_candidates": 16,
+        "total_candidates": 35
+      },
+      "BO": {
+        "contributing_sources": 7,
+        "exported_candidates": 11,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:55Z",
+        "independent_sources": 6,
+        "lost_candidates": 0,
+        "new_candidates": 8,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:31Z",
+        "protocol_counts": {
+          "ss": 11
+        },
+        "retained_candidates": 3,
+        "total_candidates": 11
+      },
+      "BR": {
+        "contributing_sources": 123,
+        "exported_candidates": 227,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:02Z",
+        "independent_sources": 105,
+        "lost_candidates": 0,
+        "new_candidates": 68,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
+        "protocol_counts": {
+          "ss": 172,
+          "vless": 17,
+          "vmess": 38
+        },
+        "retained_candidates": 159,
+        "total_candidates": 227
+      },
+      "BY": {
+        "contributing_sources": 86,
+        "exported_candidates": 34,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:07Z",
+        "independent_sources": 77,
+        "lost_candidates": 0,
+        "new_candidates": 18,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:04Z",
+        "protocol_counts": {
+          "trojan": 30,
+          "vless": 4
+        },
+        "retained_candidates": 16,
+        "total_candidates": 34
+      },
+      "BZ": {
+        "contributing_sources": 23,
+        "exported_candidates": 122,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:03Z",
+        "independent_sources": 19,
+        "lost_candidates": 0,
+        "new_candidates": 47,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:34Z",
+        "protocol_counts": {
+          "vmess": 122
+        },
+        "retained_candidates": 75,
+        "total_candidates": 122
+      },
+      "CA": {
+        "contributing_sources": 564,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 492,
+        "lost_candidates": 0,
+        "new_candidates": 1213,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:24Z",
+        "protocol_counts": {
+          "hysteria2": 126,
+          "ss": 1770,
+          "trojan": 8,
+          "vless": 785,
+          "vmess": 307
+        },
+        "retained_candidates": 1783,
+        "total_candidates": 2996
+      },
+      "CH": {
+        "contributing_sources": 398,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 332,
+        "lost_candidates": 0,
+        "new_candidates": 281,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
+        "protocol_counts": {
+          "hysteria2": 14,
+          "ss": 65,
+          "trojan": 422,
+          "vless": 249
+        },
+        "retained_candidates": 469,
+        "total_candidates": 750
+      },
+      "CL": {
+        "contributing_sources": 25,
+        "exported_candidates": 12,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:16Z",
+        "independent_sources": 23,
+        "lost_candidates": 0,
+        "new_candidates": 3,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:25:06Z",
+        "protocol_counts": {
+          "ss": 9,
+          "vmess": 3
+        },
+        "retained_candidates": 9,
+        "total_candidates": 12
+      },
+      "CN": {
+        "contributing_sources": 281,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:35Z",
+        "independent_sources": 224,
+        "lost_candidates": 0,
+        "new_candidates": 523,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
+        "protocol_counts": {
+          "hysteria2": 6,
+          "ss": 648,
+          "trojan": 247,
+          "vless": 22,
+          "vmess": 246
+        },
+        "retained_candidates": 646,
+        "total_candidates": 1169
+      },
+      "CO": {
+        "contributing_sources": 47,
+        "exported_candidates": 21,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:21:43Z",
+        "independent_sources": 42,
+        "lost_candidates": 0,
+        "new_candidates": 6,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:24:58Z",
+        "protocol_counts": {
+          "ss": 6,
+          "vless": 15
+        },
+        "retained_candidates": 15,
+        "total_candidates": 21
+      },
+      "CR": {
+        "contributing_sources": 30,
+        "exported_candidates": 18,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:22:04Z",
+        "independent_sources": 27,
+        "lost_candidates": 0,
+        "new_candidates": 9,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:16Z",
+        "protocol_counts": {
+          "ss": 18
+        },
+        "retained_candidates": 9,
+        "total_candidates": 18
+      },
+      "CY": {
+        "contributing_sources": 438,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 379,
+        "lost_candidates": 0,
+        "new_candidates": 501,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
+        "protocol_counts": {
+          "ss": 224,
+          "vless": 927,
+          "vmess": 1
+        },
+        "retained_candidates": 651,
+        "total_candidates": 1152
+      },
+      "CZ": {
+        "contributing_sources": 264,
+        "exported_candidates": 224,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:35Z",
+        "independent_sources": 204,
+        "lost_candidates": 0,
+        "new_candidates": 89,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "protocol_counts": {
+          "ss": 30,
+          "vless": 123,
+          "vmess": 71
+        },
+        "retained_candidates": 135,
+        "total_candidates": 224
+      },
+      "DE": {
+        "contributing_sources": 919,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 747,
+        "lost_candidates": 0,
+        "new_candidates": 7249,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "protocol_counts": {
+          "hysteria2": 464,
+          "ss": 2151,
+          "trojan": 779,
+          "vless": 9246,
+          "vmess": 5348
+        },
+        "retained_candidates": 10739,
+        "total_candidates": 17988
+      },
+      "DK": {
+        "contributing_sources": 247,
+        "exported_candidates": 205,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 196,
+        "lost_candidates": 0,
+        "new_candidates": 89,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:59Z",
+        "protocol_counts": {
+          "hysteria2": 1,
+          "ss": 117,
+          "trojan": 14,
+          "vless": 44,
+          "vmess": 29
+        },
+        "retained_candidates": 116,
+        "total_candidates": 205
+      },
+      "DZ": {
+        "contributing_sources": 6,
+        "exported_candidates": 5,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:55Z",
+        "independent_sources": 5,
+        "lost_candidates": 0,
+        "new_candidates": 2,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:00Z",
+        "protocol_counts": {
+          "ss": 5
+        },
+        "retained_candidates": 3,
+        "total_candidates": 5
+      },
+      "EC": {
+        "contributing_sources": 27,
+        "exported_candidates": 28,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:21:34Z",
+        "independent_sources": 26,
+        "lost_candidates": 0,
+        "new_candidates": 20,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:00Z",
+        "protocol_counts": {
+          "ss": 27,
+          "vless": 1
+        },
+        "retained_candidates": 8,
+        "total_candidates": 28
+      },
+      "EE": {
+        "contributing_sources": 401,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:38Z",
+        "independent_sources": 331,
+        "lost_candidates": 0,
+        "new_candidates": 267,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "protocol_counts": {
+          "hysteria2": 1,
+          "ss": 68,
+          "trojan": 102,
+          "vless": 358,
+          "vmess": 45
+        },
+        "retained_candidates": 307,
+        "total_candidates": 574
+      },
+      "EG": {
+        "contributing_sources": 90,
+        "exported_candidates": 49,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 70,
+        "lost_candidates": 0,
+        "new_candidates": 20,
         "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
         "protocol_counts": {
           "ss": 14,
-          "vless": 49
+          "trojan": 5,
+          "vless": 30
         },
-        "retained_candidates": 40,
-        "total_candidates": 63
-      },
-      "AQ": {
-        "contributing_sources": 10,
-        "exported_candidates": 6,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:33Z",
-        "independent_sources": 10,
-        "lost_candidates": 0,
-        "new_candidates": 5,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "vless": 6
-        },
-        "retained_candidates": 1,
-        "total_candidates": 6
-      },
-      "AT": {
-        "contributing_sources": 127,
-        "exported_candidates": 304,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 119,
-        "lost_candidates": 0,
-        "new_candidates": 95,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:55:59Z",
-        "protocol_counts": {
-          "ss": 94,
-          "trojan": 67,
-          "vless": 143
-        },
-        "retained_candidates": 209,
-        "total_candidates": 304
-      },
-      "AU": {
-        "contributing_sources": 110,
-        "exported_candidates": 287,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 96,
-        "lost_candidates": 0,
-        "new_candidates": 119,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
-        "protocol_counts": {
-          "hy2": 3,
-          "hysteria2": 74,
-          "ss": 35,
-          "trojan": 23,
-          "vless": 18,
-          "vmess": 134
-        },
-        "retained_candidates": 168,
-        "total_candidates": 287
-      },
-      "AZ": {
-        "contributing_sources": 19,
-        "exported_candidates": 63,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 19,
-        "lost_candidates": 0,
-        "new_candidates": 21,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:59:31Z",
-        "protocol_counts": {
-          "ss": 52,
-          "vless": 11
-        },
-        "retained_candidates": 42,
-        "total_candidates": 63
-      },
-      "BA": {
-        "contributing_sources": 8,
-        "exported_candidates": 27,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:27:15Z",
-        "independent_sources": 8,
-        "lost_candidates": 0,
-        "new_candidates": 9,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:58Z",
-        "protocol_counts": {
-          "ss": 25,
-          "vless": 2
-        },
-        "retained_candidates": 18,
-        "total_candidates": 27
-      },
-      "BE": {
-        "contributing_sources": 26,
-        "exported_candidates": 34,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:31:16Z",
-        "independent_sources": 25,
-        "lost_candidates": 0,
-        "new_candidates": 10,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:59:31Z",
-        "protocol_counts": {
-          "ss": 20,
-          "vmess": 14
-        },
-        "retained_candidates": 24,
-        "total_candidates": 34
-      },
-      "BG": {
-        "contributing_sources": 131,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 124,
-        "lost_candidates": 0,
-        "new_candidates": 272,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "ss": 269,
-          "vless": 1008,
-          "vmess": 16
-        },
-        "retained_candidates": 1021,
-        "total_candidates": 1293
-      },
-      "BH": {
-        "contributing_sources": 4,
-        "exported_candidates": 16,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:50Z",
-        "independent_sources": 4,
-        "lost_candidates": 0,
-        "new_candidates": 1,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:59Z",
-        "protocol_counts": {
-          "ss": 15,
-          "vmess": 1
-        },
-        "retained_candidates": 15,
-        "total_candidates": 16
-      },
-      "BO": {
-        "contributing_sources": 3,
-        "exported_candidates": 3,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:25:50Z",
-        "independent_sources": 3,
-        "lost_candidates": 0,
-        "new_candidates": 0,
-        "oldest_candidate_last_seen_at": "2026-09-11T22:24:31Z",
-        "protocol_counts": {
-          "ss": 3
-        },
-        "retained_candidates": 3,
-        "total_candidates": 3
-      },
-      "BR": {
-        "contributing_sources": 47,
-        "exported_candidates": 159,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 47,
-        "lost_candidates": 0,
-        "new_candidates": 59,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
-        "protocol_counts": {
-          "ss": 130,
-          "vless": 11,
-          "vmess": 18
-        },
-        "retained_candidates": 100,
-        "total_candidates": 159
-      },
-      "BY": {
-        "contributing_sources": 25,
-        "exported_candidates": 16,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:30:30Z",
-        "independent_sources": 25,
-        "lost_candidates": 0,
-        "new_candidates": 6,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:56Z",
-        "protocol_counts": {
-          "trojan": 13,
-          "vless": 3
-        },
-        "retained_candidates": 10,
-        "total_candidates": 16
-      },
-      "BZ": {
-        "contributing_sources": 9,
-        "exported_candidates": 75,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:54Z",
-        "independent_sources": 9,
-        "lost_candidates": 0,
-        "new_candidates": 24,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:57:34Z",
-        "protocol_counts": {
-          "vmess": 75
-        },
-        "retained_candidates": 51,
-        "total_candidates": 75
-      },
-      "CA": {
-        "contributing_sources": 192,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 179,
-        "lost_candidates": 0,
-        "new_candidates": 874,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:24Z",
-        "protocol_counts": {
-          "hysteria2": 108,
-          "ss": 992,
-          "trojan": 1,
-          "vless": 528,
-          "vmess": 154
-        },
-        "retained_candidates": 909,
-        "total_candidates": 1783
-      },
-      "CH": {
-        "contributing_sources": 151,
-        "exported_candidates": 469,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 134,
-        "lost_candidates": 0,
-        "new_candidates": 128,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
-        "protocol_counts": {
-          "hysteria2": 9,
-          "ss": 32,
-          "trojan": 278,
-          "vless": 150
-        },
-        "retained_candidates": 341,
-        "total_candidates": 469
-      },
-      "CL": {
-        "contributing_sources": 12,
-        "exported_candidates": 9,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:29:57Z",
-        "independent_sources": 10,
-        "lost_candidates": 0,
-        "new_candidates": 1,
-        "oldest_candidate_last_seen_at": "2026-09-11T22:24:04Z",
-        "protocol_counts": {
-          "ss": 6,
-          "vmess": 3
-        },
-        "retained_candidates": 8,
-        "total_candidates": 9
-      },
-      "CN": {
-        "contributing_sources": 111,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 94,
-        "lost_candidates": 0,
-        "new_candidates": 246,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
-        "protocol_counts": {
-          "hysteria2": 3,
-          "ss": 360,
-          "trojan": 148,
-          "vless": 8,
-          "vmess": 127
-        },
-        "retained_candidates": 400,
-        "total_candidates": 646
-      },
-      "CO": {
-        "contributing_sources": 19,
-        "exported_candidates": 15,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:23Z",
-        "independent_sources": 19,
-        "lost_candidates": 0,
-        "new_candidates": 7,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:24:58Z",
-        "protocol_counts": {
-          "ss": 5,
-          "vless": 10
-        },
-        "retained_candidates": 8,
-        "total_candidates": 15
-      },
-      "CR": {
-        "contributing_sources": 12,
-        "exported_candidates": 9,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:27:21Z",
-        "independent_sources": 12,
-        "lost_candidates": 0,
-        "new_candidates": 4,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:40Z",
-        "protocol_counts": {
-          "ss": 9
-        },
-        "retained_candidates": 5,
-        "total_candidates": 9
-      },
-      "CY": {
-        "contributing_sources": 146,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 136,
-        "lost_candidates": 0,
-        "new_candidates": 303,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "ss": 129,
-          "vless": 521,
-          "vmess": 1
-        },
-        "retained_candidates": 348,
-        "total_candidates": 651
-      },
-      "CZ": {
-        "contributing_sources": 102,
-        "exported_candidates": 135,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:34Z",
-        "independent_sources": 80,
-        "lost_candidates": 0,
-        "new_candidates": 46,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "ss": 19,
-          "vless": 74,
-          "vmess": 42
-        },
-        "retained_candidates": 89,
-        "total_candidates": 135
-      },
-      "DE": {
-        "contributing_sources": 336,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 296,
-        "lost_candidates": 0,
-        "new_candidates": 5514,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "hy2": 3,
-          "hysteria2": 292,
-          "ss": 1220,
-          "trojan": 409,
-          "vless": 5459,
-          "vmess": 3356
-        },
-        "retained_candidates": 5225,
-        "total_candidates": 10739
-      },
-      "DK": {
-        "contributing_sources": 105,
-        "exported_candidates": 116,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 84,
-        "lost_candidates": 0,
-        "new_candidates": 28,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
-        "protocol_counts": {
-          "hysteria2": 1,
-          "ss": 61,
-          "trojan": 8,
-          "vless": 27,
-          "vmess": 19
-        },
-        "retained_candidates": 88,
-        "total_candidates": 116
-      },
-      "DZ": {
-        "contributing_sources": 3,
-        "exported_candidates": 3,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:50Z",
-        "independent_sources": 3,
-        "lost_candidates": 0,
-        "new_candidates": 0,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:57:00Z",
-        "protocol_counts": {
-          "ss": 3
-        },
-        "retained_candidates": 3,
-        "total_candidates": 3
-      },
-      "EC": {
-        "contributing_sources": 4,
-        "exported_candidates": 8,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:50Z",
-        "independent_sources": 4,
-        "lost_candidates": 0,
-        "new_candidates": 1,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:57:00Z",
-        "protocol_counts": {
-          "ss": 7,
-          "vless": 1
-        },
-        "retained_candidates": 7,
-        "total_candidates": 8
-      },
-      "EE": {
-        "contributing_sources": 149,
-        "exported_candidates": 307,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 127,
-        "lost_candidates": 0,
-        "new_candidates": 125,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "hysteria2": 1,
-          "ss": 42,
-          "trojan": 56,
-          "vless": 176,
-          "vmess": 32
-        },
-        "retained_candidates": 182,
-        "total_candidates": 307
-      },
-      "EG": {
-        "contributing_sources": 29,
-        "exported_candidates": 29,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 29,
-        "lost_candidates": 0,
-        "new_candidates": 11,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
-        "protocol_counts": {
-          "ss": 9,
-          "trojan": 3,
-          "vless": 17
-        },
-        "retained_candidates": 18,
-        "total_candidates": 29
+        "retained_candidates": 29,
+        "total_candidates": 49
       },
       "ES": {
-        "contributing_sources": 185,
+        "contributing_sources": 532,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 159,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 442,
         "lost_candidates": 0,
-        "new_candidates": 246,
+        "new_candidates": 543,
         "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "ss": 212,
-          "trojan": 33,
-          "vless": 269,
-          "vmess": 22
+          "ss": 438,
+          "trojan": 82,
+          "vless": 510,
+          "vmess": 49
         },
-        "retained_candidates": 290,
-        "total_candidates": 536
+        "retained_candidates": 536,
+        "total_candidates": 1079
       },
       "FI": {
-        "contributing_sources": 182,
+        "contributing_sources": 536,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 160,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 458,
         "lost_candidates": 0,
-        "new_candidates": 607,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "new_candidates": 816,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "hy2": 5,
-          "hysteria2": 466,
-          "ss": 154,
-          "trojan": 34,
-          "vless": 451,
-          "vmess": 209
+          "hysteria2": 708,
+          "ss": 232,
+          "trojan": 48,
+          "vless": 757,
+          "vmess": 390
         },
-        "retained_candidates": 712,
-        "total_candidates": 1319
+        "retained_candidates": 1319,
+        "total_candidates": 2135
       },
       "FR": {
-        "contributing_sources": 242,
+        "contributing_sources": 687,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 224,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 592,
         "lost_candidates": 0,
-        "new_candidates": 1120,
+        "new_candidates": 2281,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
-          "hy2": 1,
-          "hysteria2": 95,
-          "ss": 616,
-          "trojan": 42,
-          "vless": 1420,
-          "vmess": 629
+          "hysteria2": 145,
+          "ss": 1197,
+          "trojan": 89,
+          "vless": 2655,
+          "vmess": 998
         },
-        "retained_candidates": 1683,
-        "total_candidates": 2803
+        "retained_candidates": 2803,
+        "total_candidates": 5084
       },
       "GB": {
-        "contributing_sources": 266,
+        "contributing_sources": 732,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 240,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 634,
         "lost_candidates": 0,
-        "new_candidates": 3054,
+        "new_candidates": 4065,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
-          "hy2": 1,
-          "hysteria2": 36,
-          "ss": 3385,
-          "trojan": 9,
-          "vless": 2200,
-          "vmess": 302
+          "hysteria2": 63,
+          "ss": 5513,
+          "trojan": 26,
+          "vless": 3817,
+          "vmess": 579
         },
-        "retained_candidates": 2879,
-        "total_candidates": 5933
+        "retained_candidates": 5933,
+        "total_candidates": 9998
       },
       "GR": {
-        "contributing_sources": 86,
-        "exported_candidates": 156,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 80,
+        "contributing_sources": 250,
+        "exported_candidates": 287,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 211,
         "lost_candidates": 0,
-        "new_candidates": 71,
+        "new_candidates": 131,
         "oldest_candidate_last_seen_at": "2026-09-11T21:55:43Z",
         "protocol_counts": {
-          "ss": 19,
-          "vless": 137
+          "ss": 31,
+          "vless": 256
         },
-        "retained_candidates": 85,
-        "total_candidates": 156
+        "retained_candidates": 156,
+        "total_candidates": 287
       },
       "GT": {
-        "contributing_sources": 48,
-        "exported_candidates": 33,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 42,
+        "contributing_sources": 125,
+        "exported_candidates": 69,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 105,
         "lost_candidates": 0,
-        "new_candidates": 13,
+        "new_candidates": 36,
         "oldest_candidate_last_seen_at": "2026-09-11T21:57:05Z",
         "protocol_counts": {
-          "vless": 33
+          "vless": 69
         },
-        "retained_candidates": 20,
-        "total_candidates": 33
+        "retained_candidates": 33,
+        "total_candidates": 69
       },
       "HK": {
-        "contributing_sources": 246,
+        "contributing_sources": 649,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:41:50Z",
-        "independent_sources": 207,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:37Z",
+        "independent_sources": 503,
         "lost_candidates": 0,
-        "new_candidates": 1384,
+        "new_candidates": 1796,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:24Z",
         "protocol_counts": {
-          "hy2": 1,
-          "hysteria2": 248,
-          "ss": 95,
-          "trojan": 471,
-          "vless": 579,
-          "vmess": 2082
+          "hysteria2": 306,
+          "ss": 138,
+          "trojan": 821,
+          "vless": 781,
+          "vmess": 3226
         },
-        "retained_candidates": 2092,
-        "total_candidates": 3476
+        "retained_candidates": 3476,
+        "total_candidates": 5272
       },
       "HR": {
-        "contributing_sources": 68,
-        "exported_candidates": 108,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 62,
+        "contributing_sources": 207,
+        "exported_candidates": 259,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 171,
         "lost_candidates": 0,
-        "new_candidates": 25,
+        "new_candidates": 151,
         "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "ss": 15,
-          "trojan": 92,
-          "vless": 1
+          "ss": 38,
+          "trojan": 216,
+          "vless": 5
         },
-        "retained_candidates": 83,
-        "total_candidates": 108
+        "retained_candidates": 108,
+        "total_candidates": 259
       },
       "HU": {
-        "contributing_sources": 32,
-        "exported_candidates": 60,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:25Z",
-        "independent_sources": 32,
+        "contributing_sources": 128,
+        "exported_candidates": 103,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 108,
         "lost_candidates": 0,
-        "new_candidates": 20,
+        "new_candidates": 43,
         "oldest_candidate_last_seen_at": "2026-09-08T21:29:53Z",
         "protocol_counts": {
-          "ss": 26,
-          "trojan": 13,
-          "vless": 21
+          "ss": 44,
+          "trojan": 24,
+          "vless": 35
         },
-        "retained_candidates": 40,
-        "total_candidates": 60
+        "retained_candidates": 60,
+        "total_candidates": 103
       },
       "ID": {
-        "contributing_sources": 68,
-        "exported_candidates": 131,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 67,
+        "contributing_sources": 235,
+        "exported_candidates": 255,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:38Z",
+        "independent_sources": 209,
         "lost_candidates": 0,
-        "new_candidates": 40,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
+        "new_candidates": 124,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:55:44Z",
         "protocol_counts": {
-          "ss": 56,
-          "trojan": 26,
-          "vless": 7,
-          "vmess": 42
+          "ss": 112,
+          "trojan": 63,
+          "vless": 11,
+          "vmess": 69
         },
-        "retained_candidates": 91,
-        "total_candidates": 131
+        "retained_candidates": 131,
+        "total_candidates": 255
       },
       "IE": {
-        "contributing_sources": 92,
-        "exported_candidates": 294,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 85,
+        "contributing_sources": 292,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 229,
         "lost_candidates": 0,
-        "new_candidates": 113,
+        "new_candidates": 262,
         "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "ss": 281,
-          "trojan": 1,
-          "vless": 2,
-          "vmess": 10
+          "ss": 526,
+          "trojan": 4,
+          "vless": 5,
+          "vmess": 21
         },
-        "retained_candidates": 181,
-        "total_candidates": 294
+        "retained_candidates": 294,
+        "total_candidates": 556
       },
       "IL": {
-        "contributing_sources": 64,
-        "exported_candidates": 43,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 49,
+        "contributing_sources": 135,
+        "exported_candidates": 62,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 107,
         "lost_candidates": 0,
-        "new_candidates": 29,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:33Z",
+        "new_candidates": 19,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:04Z",
         "protocol_counts": {
           "hysteria2": 1,
-          "vless": 42
+          "ss": 1,
+          "vless": 60
         },
-        "retained_candidates": 14,
-        "total_candidates": 43
+        "retained_candidates": 43,
+        "total_candidates": 62
       },
       "IM": {
-        "contributing_sources": 8,
-        "exported_candidates": 27,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:23Z",
-        "independent_sources": 8,
+        "contributing_sources": 36,
+        "exported_candidates": 44,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:03Z",
+        "independent_sources": 32,
         "lost_candidates": 0,
-        "new_candidates": 5,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:20Z",
+        "new_candidates": 17,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:30Z",
         "protocol_counts": {
-          "ss": 3,
-          "vless": 7,
-          "vmess": 17
+          "ss": 7,
+          "trojan": 1,
+          "vless": 8,
+          "vmess": 28
         },
-        "retained_candidates": 22,
-        "total_candidates": 27
+        "retained_candidates": 27,
+        "total_candidates": 44
       },
       "IN": {
-        "contributing_sources": 142,
-        "exported_candidates": 215,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 111,
+        "contributing_sources": 361,
+        "exported_candidates": 402,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 286,
         "lost_candidates": 0,
-        "new_candidates": 104,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:24Z",
+        "new_candidates": 187,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
         "protocol_counts": {
-          "hy2": 1,
-          "hysteria2": 62,
-          "ss": 31,
-          "vless": 39,
-          "vmess": 82
+          "hysteria2": 79,
+          "ss": 56,
+          "vless": 57,
+          "vmess": 210
         },
-        "retained_candidates": 111,
-        "total_candidates": 215
+        "retained_candidates": 215,
+        "total_candidates": 402
       },
       "IQ": {
-        "contributing_sources": 30,
-        "exported_candidates": 26,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 30,
+        "contributing_sources": 111,
+        "exported_candidates": 56,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:25Z",
+        "independent_sources": 90,
         "lost_candidates": 0,
-        "new_candidates": 15,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:20Z",
+        "new_candidates": 30,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:01:26Z",
         "protocol_counts": {
-          "ss": 5,
-          "vless": 21
+          "ss": 8,
+          "vless": 48
         },
-        "retained_candidates": 11,
-        "total_candidates": 26
+        "retained_candidates": 26,
+        "total_candidates": 56
       },
       "IR": {
-        "contributing_sources": 127,
+        "contributing_sources": 390,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 126,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 344,
         "lost_candidates": 0,
-        "new_candidates": 836,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "new_candidates": 1404,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
         "protocol_counts": {
           "hysteria2": 2,
-          "ss": 183,
-          "trojan": 37,
-          "vless": 1076,
-          "vmess": 505
+          "ss": 335,
+          "trojan": 125,
+          "vless": 1668,
+          "vmess": 1077
         },
-        "retained_candidates": 967,
-        "total_candidates": 1803
+        "retained_candidates": 1803,
+        "total_candidates": 3207
       },
       "IS": {
-        "contributing_sources": 8,
-        "exported_candidates": 14,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:25:21Z",
-        "independent_sources": 8,
+        "contributing_sources": 22,
+        "exported_candidates": 40,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:19:08Z",
+        "independent_sources": 18,
         "lost_candidates": 0,
-        "new_candidates": 0,
+        "new_candidates": 26,
         "oldest_candidate_last_seen_at": "2026-09-11T21:22:51Z",
         "protocol_counts": {
           "hysteria2": 2,
-          "ss": 6,
-          "trojan": 3,
+          "ss": 27,
+          "trojan": 8,
           "vless": 3
         },
         "retained_candidates": 14,
-        "total_candidates": 14
+        "total_candidates": 40
       },
       "IT": {
-        "contributing_sources": 181,
+        "contributing_sources": 496,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 154,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 421,
         "lost_candidates": 0,
-        "new_candidates": 392,
+        "new_candidates": 638,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
-          "ss": 276,
-          "vless": 659,
-          "vmess": 14
+          "ss": 464,
+          "trojan": 2,
+          "vless": 1093,
+          "vmess": 28
         },
-        "retained_candidates": 557,
-        "total_candidates": 949
+        "retained_candidates": 949,
+        "total_candidates": 1587
       },
       "JM": {
-        "contributing_sources": 2,
-        "exported_candidates": 2,
-        "freshest_candidate_last_seen_at": "2026-09-11T21:57:04Z",
-        "independent_sources": 2,
-        "lost_candidates": 0,
-        "new_candidates": 0,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
-        "protocol_counts": {
-          "trojan": 1,
-          "vmess": 1
-        },
-        "retained_candidates": 2,
-        "total_candidates": 2
-      },
-      "JO": {
-        "contributing_sources": 5,
-        "exported_candidates": 13,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:25:21Z",
-        "independent_sources": 5,
-        "lost_candidates": 0,
-        "new_candidates": 0,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
-        "protocol_counts": {
-          "trojan": 6,
-          "vless": 7
-        },
-        "retained_candidates": 13,
-        "total_candidates": 13
-      },
-      "JP": {
-        "contributing_sources": 234,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 196,
-        "lost_candidates": 0,
-        "new_candidates": 960,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
-        "protocol_counts": {
-          "hy2": 3,
-          "hysteria2": 48,
-          "ss": 319,
-          "trojan": 156,
-          "vless": 801,
-          "vmess": 290
-        },
-        "retained_candidates": 657,
-        "total_candidates": 1617
-      },
-      "KE": {
-        "contributing_sources": 17,
-        "exported_candidates": 13,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:26:36Z",
-        "independent_sources": 17,
-        "lost_candidates": 0,
-        "new_candidates": 2,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:30Z",
-        "protocol_counts": {
-          "ss": 4,
-          "vless": 2,
-          "vmess": 7
-        },
-        "retained_candidates": 11,
-        "total_candidates": 13
-      },
-      "KG": {
-        "contributing_sources": 10,
-        "exported_candidates": 9,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:23Z",
-        "independent_sources": 10,
-        "lost_candidates": 0,
-        "new_candidates": 2,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
-        "protocol_counts": {
-          "trojan": 3,
-          "vless": 2,
-          "vmess": 4
-        },
-        "retained_candidates": 7,
-        "total_candidates": 9
-      },
-      "KR": {
-        "contributing_sources": 164,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 146,
-        "lost_candidates": 0,
-        "new_candidates": 336,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
-        "protocol_counts": {
-          "hy2": 1,
-          "hysteria2": 185,
-          "ss": 199,
-          "trojan": 33,
-          "vless": 96,
-          "vmess": 129
-        },
-        "retained_candidates": 307,
-        "total_candidates": 643
-      },
-      "KW": {
-        "contributing_sources": 5,
-        "exported_candidates": 4,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:23Z",
-        "independent_sources": 5,
-        "lost_candidates": 0,
-        "new_candidates": 2,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:55:50Z",
-        "protocol_counts": {
-          "vmess": 4
-        },
-        "retained_candidates": 2,
-        "total_candidates": 4
-      },
-      "KZ": {
-        "contributing_sources": 123,
-        "exported_candidates": 238,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 114,
-        "lost_candidates": 0,
-        "new_candidates": 102,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "hysteria2": 8,
-          "ss": 42,
-          "vless": 96,
-          "vmess": 92
-        },
-        "retained_candidates": 136,
-        "total_candidates": 238
-      },
-      "LT": {
-        "contributing_sources": 119,
-        "exported_candidates": 279,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 112,
-        "lost_candidates": 0,
-        "new_candidates": 136,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:55:42Z",
-        "protocol_counts": {
-          "hysteria2": 2,
-          "ss": 93,
-          "trojan": 46,
-          "vless": 138
-        },
-        "retained_candidates": 143,
-        "total_candidates": 279
-      },
-      "LU": {
-        "contributing_sources": 80,
-        "exported_candidates": 118,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 79,
-        "lost_candidates": 0,
-        "new_candidates": 34,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
-        "protocol_counts": {
-          "ss": 2,
-          "trojan": 106,
-          "vless": 10
-        },
-        "retained_candidates": 84,
-        "total_candidates": 118
-      },
-      "LV": {
-        "contributing_sources": 160,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 134,
-        "lost_candidates": 0,
-        "new_candidates": 214,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:21:09Z",
-        "protocol_counts": {
-          "ss": 143,
-          "vless": 368,
-          "vmess": 42
-        },
-        "retained_candidates": 339,
-        "total_candidates": 553
-      },
-      "MA": {
         "contributing_sources": 3,
         "exported_candidates": 3,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:50Z",
+        "freshest_candidate_last_seen_at": "2026-09-11T23:15:43Z",
         "independent_sources": 3,
         "lost_candidates": 0,
         "new_candidates": 1,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:57:09Z",
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
         "protocol_counts": {
-          "ss": 3
+          "trojan": 1,
+          "vmess": 2
         },
         "retained_candidates": 2,
         "total_candidates": 3
       },
-      "MD": {
-        "contributing_sources": 102,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:34Z",
-        "independent_sources": 100,
-        "lost_candidates": 0,
-        "new_candidates": 448,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
-        "protocol_counts": {
-          "ss": 500,
-          "trojan": 6,
-          "vless": 1295,
-          "vmess": 15
-        },
-        "retained_candidates": 1368,
-        "total_candidates": 1816
-      },
-      "MH": {
-        "contributing_sources": 36,
-        "exported_candidates": 82,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 35,
-        "lost_candidates": 0,
-        "new_candidates": 30,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "ss": 15,
-          "vless": 67
-        },
-        "retained_candidates": 52,
-        "total_candidates": 82
-      },
-      "MK": {
-        "contributing_sources": 7,
-        "exported_candidates": 22,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:27:15Z",
-        "independent_sources": 7,
-        "lost_candidates": 0,
-        "new_candidates": 7,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:57:58Z",
-        "protocol_counts": {
-          "ss": 20,
-          "vless": 2
-        },
-        "retained_candidates": 15,
-        "total_candidates": 22
-      },
-      "MN": {
-        "contributing_sources": 10,
-        "exported_candidates": 7,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:25:21Z",
-        "independent_sources": 10,
-        "lost_candidates": 0,
-        "new_candidates": 1,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
-        "protocol_counts": {
-          "trojan": 7
-        },
-        "retained_candidates": 6,
-        "total_candidates": 7
-      },
-      "MO": {
-        "contributing_sources": 10,
-        "exported_candidates": 33,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:32Z",
-        "independent_sources": 10,
-        "lost_candidates": 0,
-        "new_candidates": 3,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
-        "protocol_counts": {
-          "trojan": 18,
-          "vless": 5,
-          "vmess": 10
-        },
-        "retained_candidates": 30,
-        "total_candidates": 33
-      },
-      "MT": {
+      "JO": {
         "contributing_sources": 12,
-        "exported_candidates": 12,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 12,
+        "exported_candidates": 23,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:21:10Z",
+        "independent_sources": 10,
         "lost_candidates": 0,
-        "new_candidates": 6,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:21:09Z",
-        "protocol_counts": {
-          "ss": 1,
-          "vless": 11
-        },
-        "retained_candidates": 6,
-        "total_candidates": 12
-      },
-      "MX": {
-        "contributing_sources": 62,
-        "exported_candidates": 79,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 59,
-        "lost_candidates": 0,
-        "new_candidates": 24,
+        "new_candidates": 10,
         "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
         "protocol_counts": {
-          "ss": 35,
-          "trojan": 4,
-          "vless": 20,
-          "vmess": 20
+          "trojan": 14,
+          "vless": 9
         },
-        "retained_candidates": 55,
-        "total_candidates": 79
+        "retained_candidates": 13,
+        "total_candidates": 23
       },
-      "MY": {
-        "contributing_sources": 161,
-        "exported_candidates": 361,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 145,
+      "JP": {
+        "contributing_sources": 655,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 548,
         "lost_candidates": 0,
-        "new_candidates": 212,
+        "new_candidates": 991,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
         "protocol_counts": {
-          "hysteria2": 3,
-          "ss": 47,
-          "trojan": 37,
-          "vless": 115,
-          "vmess": 159
+          "hysteria2": 68,
+          "ss": 572,
+          "trojan": 247,
+          "vless": 1224,
+          "vmess": 497
         },
-        "retained_candidates": 149,
-        "total_candidates": 361
+        "retained_candidates": 1617,
+        "total_candidates": 2608
       },
-      "NG": {
-        "contributing_sources": 5,
-        "exported_candidates": 6,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:50Z",
-        "independent_sources": 5,
+      "KE": {
+        "contributing_sources": 35,
+        "exported_candidates": 25,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:03Z",
+        "independent_sources": 32,
         "lost_candidates": 0,
-        "new_candidates": 1,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:57:59Z",
+        "new_candidates": 12,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:30Z",
         "protocol_counts": {
-          "ss": 5,
-          "vless": 1
+          "ss": 13,
+          "vless": 2,
+          "vmess": 10
         },
-        "retained_candidates": 5,
-        "total_candidates": 6
+        "retained_candidates": 13,
+        "total_candidates": 25
       },
-      "NL": {
-        "contributing_sources": 307,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 264,
+      "KG": {
+        "contributing_sources": 22,
+        "exported_candidates": 14,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:03Z",
+        "independent_sources": 19,
         "lost_candidates": 0,
-        "new_candidates": 2365,
+        "new_candidates": 5,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
+        "protocol_counts": {
+          "trojan": 5,
+          "vless": 2,
+          "vmess": 7
+        },
+        "retained_candidates": 9,
+        "total_candidates": 14
+      },
+      "KR": {
+        "contributing_sources": 449,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 366,
+        "lost_candidates": 0,
+        "new_candidates": 446,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
         "protocol_counts": {
           "hy2": 1,
-          "hysteria2": 319,
-          "ss": 1329,
-          "trojan": 43,
-          "vless": 3107,
-          "vmess": 202
+          "hysteria2": 230,
+          "ss": 388,
+          "trojan": 55,
+          "vless": 161,
+          "vmess": 254
         },
-        "retained_candidates": 2636,
-        "total_candidates": 5001
+        "retained_candidates": 643,
+        "total_candidates": 1089
       },
-      "NO": {
-        "contributing_sources": 121,
-        "exported_candidates": 179,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 95,
+      "KW": {
+        "contributing_sources": 11,
+        "exported_candidates": 7,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:03Z",
+        "independent_sources": 9,
         "lost_candidates": 0,
-        "new_candidates": 100,
-        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
+        "new_candidates": 3,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:55:50Z",
         "protocol_counts": {
-          "ss": 29,
-          "vless": 146,
-          "vmess": 4
+          "vmess": 7
+        },
+        "retained_candidates": 4,
+        "total_candidates": 7
+      },
+      "KZ": {
+        "contributing_sources": 373,
+        "exported_candidates": 455,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 318,
+        "lost_candidates": 0,
+        "new_candidates": 217,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:30:11Z",
+        "protocol_counts": {
+          "hysteria2": 14,
+          "ss": 92,
+          "vless": 183,
+          "vmess": 166
+        },
+        "retained_candidates": 238,
+        "total_candidates": 455
+      },
+      "LT": {
+        "contributing_sources": 322,
+        "exported_candidates": 444,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:35Z",
+        "independent_sources": 271,
+        "lost_candidates": 0,
+        "new_candidates": 165,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:55:42Z",
+        "protocol_counts": {
+          "hysteria2": 2,
+          "ss": 142,
+          "trojan": 56,
+          "vless": 244
+        },
+        "retained_candidates": 279,
+        "total_candidates": 444
+      },
+      "LU": {
+        "contributing_sources": 276,
+        "exported_candidates": 315,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 236,
+        "lost_candidates": 0,
+        "new_candidates": 197,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:43Z",
+        "protocol_counts": {
+          "ss": 11,
+          "trojan": 269,
+          "vless": 35
+        },
+        "retained_candidates": 118,
+        "total_candidates": 315
+      },
+      "LV": {
+        "contributing_sources": 414,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 343,
+        "lost_candidates": 0,
+        "new_candidates": 403,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
+        "protocol_counts": {
+          "ss": 294,
+          "vless": 597,
+          "vmess": 65
+        },
+        "retained_candidates": 553,
+        "total_candidates": 956
+      },
+      "MA": {
+        "contributing_sources": 8,
+        "exported_candidates": 9,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:04Z",
+        "independent_sources": 8,
+        "lost_candidates": 0,
+        "new_candidates": 6,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:09Z",
+        "protocol_counts": {
+          "ss": 9
+        },
+        "retained_candidates": 3,
+        "total_candidates": 9
+      },
+      "MD": {
+        "contributing_sources": 336,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 295,
+        "lost_candidates": 0,
+        "new_candidates": 1272,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
+        "protocol_counts": {
+          "ss": 789,
+          "trojan": 8,
+          "vless": 2264,
+          "vmess": 27
+        },
+        "retained_candidates": 1816,
+        "total_candidates": 3088
+      },
+      "MH": {
+        "contributing_sources": 129,
+        "exported_candidates": 119,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 102,
+        "lost_candidates": 0,
+        "new_candidates": 37,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "protocol_counts": {
+          "ss": 19,
+          "vless": 100
+        },
+        "retained_candidates": 82,
+        "total_candidates": 119
+      },
+      "MK": {
+        "contributing_sources": 37,
+        "exported_candidates": 59,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:20:44Z",
+        "independent_sources": 34,
+        "lost_candidates": 0,
+        "new_candidates": 37,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:58Z",
+        "protocol_counts": {
+          "ss": 57,
+          "vless": 2
+        },
+        "retained_candidates": 22,
+        "total_candidates": 59
+      },
+      "MN": {
+        "contributing_sources": 25,
+        "exported_candidates": 12,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 23,
+        "lost_candidates": 0,
+        "new_candidates": 5,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:58:01Z",
+        "protocol_counts": {
+          "trojan": 12
+        },
+        "retained_candidates": 7,
+        "total_candidates": 12
+      },
+      "MO": {
+        "contributing_sources": 18,
+        "exported_candidates": 57,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:03Z",
+        "independent_sources": 15,
+        "lost_candidates": 0,
+        "new_candidates": 24,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:58Z",
+        "protocol_counts": {
+          "trojan": 34,
+          "vless": 5,
+          "vmess": 18
+        },
+        "retained_candidates": 33,
+        "total_candidates": 57
+      },
+      "MT": {
+        "contributing_sources": 41,
+        "exported_candidates": 16,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:02Z",
+        "independent_sources": 27,
+        "lost_candidates": 0,
+        "new_candidates": 4,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:21:09Z",
+        "protocol_counts": {
+          "ss": 1,
+          "vless": 15
+        },
+        "retained_candidates": 12,
+        "total_candidates": 16
+      },
+      "MX": {
+        "contributing_sources": 169,
+        "exported_candidates": 136,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:02Z",
+        "independent_sources": 146,
+        "lost_candidates": 0,
+        "new_candidates": 57,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:04Z",
+        "protocol_counts": {
+          "ss": 69,
+          "trojan": 5,
+          "vless": 32,
+          "vmess": 30
         },
         "retained_candidates": 79,
-        "total_candidates": 179
+        "total_candidates": 136
+      },
+      "MY": {
+        "contributing_sources": 422,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 352,
+        "lost_candidates": 0,
+        "new_candidates": 229,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
+        "protocol_counts": {
+          "hysteria2": 3,
+          "ss": 85,
+          "trojan": 60,
+          "vless": 182,
+          "vmess": 260
+        },
+        "retained_candidates": 361,
+        "total_candidates": 590
+      },
+      "NG": {
+        "contributing_sources": 10,
+        "exported_candidates": 11,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:55Z",
+        "independent_sources": 9,
+        "lost_candidates": 0,
+        "new_candidates": 5,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:57:59Z",
+        "protocol_counts": {
+          "ss": 10,
+          "vless": 1
+        },
+        "retained_candidates": 6,
+        "total_candidates": 11
+      },
+      "NL": {
+        "contributing_sources": 829,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 676,
+        "lost_candidates": 0,
+        "new_candidates": 4149,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
+        "protocol_counts": {
+          "hysteria2": 543,
+          "ss": 2334,
+          "trojan": 89,
+          "vless": 5826,
+          "vmess": 358
+        },
+        "retained_candidates": 5001,
+        "total_candidates": 9150
+      },
+      "NO": {
+        "contributing_sources": 320,
+        "exported_candidates": 331,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 258,
+        "lost_candidates": 0,
+        "new_candidates": 152,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:10Z",
+        "protocol_counts": {
+          "ss": 69,
+          "vless": 255,
+          "vmess": 7
+        },
+        "retained_candidates": 179,
+        "total_candidates": 331
       },
       "NZ": {
-        "contributing_sources": 28,
-        "exported_candidates": 56,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:23Z",
-        "independent_sources": 28,
+        "contributing_sources": 93,
+        "exported_candidates": 81,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:24:34Z",
+        "independent_sources": 82,
         "lost_candidates": 0,
-        "new_candidates": 36,
+        "new_candidates": 25,
         "oldest_candidate_last_seen_at": "2026-09-11T21:56:05Z",
         "protocol_counts": {
           "ss": 5,
-          "trojan": 12,
-          "vless": 39
+          "trojan": 27,
+          "vless": 49
         },
-        "retained_candidates": 20,
-        "total_candidates": 56
+        "retained_candidates": 56,
+        "total_candidates": 81
       },
       "PA": {
-        "contributing_sources": 5,
-        "exported_candidates": 10,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:27:39Z",
-        "independent_sources": 5,
+        "contributing_sources": 29,
+        "exported_candidates": 28,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:20:51Z",
+        "independent_sources": 28,
         "lost_candidates": 0,
-        "new_candidates": 2,
+        "new_candidates": 18,
         "oldest_candidate_last_seen_at": "2026-09-11T22:24:04Z",
         "protocol_counts": {
-          "ss": 8,
-          "vless": 2
+          "ss": 24,
+          "vless": 4
         },
-        "retained_candidates": 8,
-        "total_candidates": 10
+        "retained_candidates": 10,
+        "total_candidates": 28
       },
       "PH": {
-        "contributing_sources": 30,
-        "exported_candidates": 47,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 30,
+        "contributing_sources": 75,
+        "exported_candidates": 78,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:07Z",
+        "independent_sources": 63,
         "lost_candidates": 0,
-        "new_candidates": 17,
+        "new_candidates": 31,
         "oldest_candidate_last_seen_at": "2026-09-08T21:30:13Z",
         "protocol_counts": {
-          "ss": 17,
+          "ss": 27,
           "vless": 3,
-          "vmess": 27
+          "vmess": 48
         },
-        "retained_candidates": 30,
-        "total_candidates": 47
+        "retained_candidates": 47,
+        "total_candidates": 78
       },
       "PK": {
-        "contributing_sources": 5,
-        "exported_candidates": 6,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:27:39Z",
-        "independent_sources": 5,
+        "contributing_sources": 30,
+        "exported_candidates": 34,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:23:38Z",
+        "independent_sources": 28,
         "lost_candidates": 0,
-        "new_candidates": 1,
+        "new_candidates": 28,
         "oldest_candidate_last_seen_at": "2026-09-11T22:24:03Z",
         "protocol_counts": {
-          "ss": 3,
-          "trojan": 2,
-          "vless": 1
+          "ss": 13,
+          "trojan": 10,
+          "vless": 11
         },
-        "retained_candidates": 5,
-        "total_candidates": 6
+        "retained_candidates": 6,
+        "total_candidates": 34
       },
       "PL": {
-        "contributing_sources": 216,
+        "contributing_sources": 591,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 189,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 509,
         "lost_candidates": 0,
-        "new_candidates": 713,
+        "new_candidates": 1622,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
-          "hysteria2": 88,
-          "ss": 449,
-          "vless": 1192,
-          "vmess": 93
+          "hysteria2": 121,
+          "ss": 882,
+          "vless": 2300,
+          "vmess": 141
         },
-        "retained_candidates": 1109,
-        "total_candidates": 1822
+        "retained_candidates": 1822,
+        "total_candidates": 3444
       },
       "PR": {
-        "contributing_sources": 3,
-        "exported_candidates": 7,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:24:50Z",
-        "independent_sources": 3,
+        "contributing_sources": 12,
+        "exported_candidates": 22,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:18:55Z",
+        "independent_sources": 11,
         "lost_candidates": 0,
-        "new_candidates": 0,
+        "new_candidates": 15,
         "oldest_candidate_last_seen_at": "2026-09-11T21:57:59Z",
         "protocol_counts": {
-          "ss": 7
+          "ss": 22
         },
         "retained_candidates": 7,
-        "total_candidates": 7
+        "total_candidates": 22
       },
       "QA": {
         "contributing_sources": 2,
@@ -1257,251 +1250,249 @@
         "freshest_candidate_last_seen_at": "2026-09-11T22:39:05Z",
         "independent_sources": 2,
         "lost_candidates": 0,
-        "new_candidates": 2,
+        "new_candidates": 0,
         "oldest_candidate_last_seen_at": "2026-09-11T22:27:45Z",
         "protocol_counts": {
           "vless": 3
         },
-        "retained_candidates": 1,
+        "retained_candidates": 3,
         "total_candidates": 3
       },
       "RO": {
-        "contributing_sources": 119,
-        "exported_candidates": 448,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 111,
+        "contributing_sources": 426,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 352,
         "lost_candidates": 0,
-        "new_candidates": 249,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:29:53Z",
+        "new_candidates": 334,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "hy2": 4,
-          "hysteria2": 325,
-          "ss": 45,
-          "trojan": 1,
-          "vless": 64,
-          "vmess": 9
+          "hysteria2": 507,
+          "ss": 84,
+          "trojan": 4,
+          "vless": 168,
+          "vmess": 19
         },
-        "retained_candidates": 199,
-        "total_candidates": 448
+        "retained_candidates": 448,
+        "total_candidates": 782
       },
       "RS": {
-        "contributing_sources": 62,
+        "contributing_sources": 190,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:00Z",
-        "independent_sources": 62,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:43Z",
+        "independent_sources": 175,
         "lost_candidates": 0,
-        "new_candidates": 197,
+        "new_candidates": 535,
         "oldest_candidate_last_seen_at": "2026-09-09T05:20:25Z",
         "protocol_counts": {
-          "ss": 298,
-          "vless": 865
+          "ss": 350,
+          "vless": 1348
         },
-        "retained_candidates": 966,
-        "total_candidates": 1163
+        "retained_candidates": 1163,
+        "total_candidates": 1698
       },
       "RU": {
-        "contributing_sources": 273,
+        "contributing_sources": 756,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:41:55Z",
-        "independent_sources": 230,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 612,
         "lost_candidates": 0,
-        "new_candidates": 998,
+        "new_candidates": 2537,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
-          "hysteria2": 185,
-          "ss": 398,
-          "trojan": 16,
-          "vless": 1842,
-          "vmess": 279
+          "hysteria2": 233,
+          "ss": 675,
+          "trojan": 32,
+          "vless": 3878,
+          "vmess": 439
         },
-        "retained_candidates": 1722,
-        "total_candidates": 2720
+        "retained_candidates": 2720,
+        "total_candidates": 5257
       },
       "SA": {
-        "contributing_sources": 17,
-        "exported_candidates": 16,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:16Z",
-        "independent_sources": 17,
+        "contributing_sources": 46,
+        "exported_candidates": 38,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:21:34Z",
+        "independent_sources": 45,
         "lost_candidates": 0,
-        "new_candidates": 9,
+        "new_candidates": 22,
         "oldest_candidate_last_seen_at": "2026-09-11T21:56:05Z",
         "protocol_counts": {
-          "vless": 16
-        },
-        "retained_candidates": 7,
-        "total_candidates": 16
-      },
-      "SC": {
-        "contributing_sources": 210,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 180,
-        "lost_candidates": 0,
-        "new_candidates": 393,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "hysteria2": 1,
-          "ss": 146,
-          "trojan": 158,
-          "vless": 500,
-          "vmess": 91
-        },
-        "retained_candidates": 503,
-        "total_candidates": 896
-      },
-      "SE": {
-        "contributing_sources": 125,
-        "exported_candidates": 288,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 118,
-        "lost_candidates": 0,
-        "new_candidates": 122,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:24Z",
-        "protocol_counts": {
-          "hysteria2": 29,
-          "ss": 36,
-          "trojan": 2,
-          "vless": 207,
-          "vmess": 14
-        },
-        "retained_candidates": 166,
-        "total_candidates": 288
-      },
-      "SG": {
-        "contributing_sources": 207,
-        "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 189,
-        "lost_candidates": 0,
-        "new_candidates": 768,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
-        "protocol_counts": {
-          "hy2": 1,
-          "hysteria2": 365,
-          "ss": 192,
-          "trojan": 101,
-          "vless": 498,
-          "vmess": 262
-        },
-        "retained_candidates": 651,
-        "total_candidates": 1419
-      },
-      "SI": {
-        "contributing_sources": 18,
-        "exported_candidates": 50,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:41:48Z",
-        "independent_sources": 18,
-        "lost_candidates": 0,
-        "new_candidates": 8,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:56:11Z",
-        "protocol_counts": {
-          "ss": 20,
-          "vless": 30
-        },
-        "retained_candidates": 42,
-        "total_candidates": 50
-      },
-      "SK": {
-        "contributing_sources": 15,
-        "exported_candidates": 22,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:52Z",
-        "independent_sources": 15,
-        "lost_candidates": 0,
-        "new_candidates": 6,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:59:31Z",
-        "protocol_counts": {
-          "ss": 15,
-          "vless": 7
+          "ss": 1,
+          "vless": 37
         },
         "retained_candidates": 16,
-        "total_candidates": 22
+        "total_candidates": 38
+      },
+      "SC": {
+        "contributing_sources": 560,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 460,
+        "lost_candidates": 0,
+        "new_candidates": 878,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:30:11Z",
+        "protocol_counts": {
+          "hysteria2": 1,
+          "ss": 242,
+          "trojan": 375,
+          "vless": 1005,
+          "vmess": 151
+        },
+        "retained_candidates": 896,
+        "total_candidates": 1774
+      },
+      "SE": {
+        "contributing_sources": 385,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 315,
+        "lost_candidates": 0,
+        "new_candidates": 226,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:24Z",
+        "protocol_counts": {
+          "hysteria2": 38,
+          "ss": 66,
+          "trojan": 5,
+          "vless": 387,
+          "vmess": 18
+        },
+        "retained_candidates": 288,
+        "total_candidates": 514
+      },
+      "SG": {
+        "contributing_sources": 588,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 504,
+        "lost_candidates": 0,
+        "new_candidates": 789,
+        "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
+        "protocol_counts": {
+          "hysteria2": 430,
+          "ss": 302,
+          "trojan": 188,
+          "vless": 763,
+          "vmess": 525
+        },
+        "retained_candidates": 1419,
+        "total_candidates": 2208
+      },
+      "SI": {
+        "contributing_sources": 94,
+        "exported_candidates": 99,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 72,
+        "lost_candidates": 0,
+        "new_candidates": 49,
+        "oldest_candidate_last_seen_at": "2026-09-11T21:56:11Z",
+        "protocol_counts": {
+          "ss": 53,
+          "vless": 46
+        },
+        "retained_candidates": 50,
+        "total_candidates": 99
+      },
+      "SK": {
+        "contributing_sources": 55,
+        "exported_candidates": 39,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:02Z",
+        "independent_sources": 45,
+        "lost_candidates": 0,
+        "new_candidates": 17,
+        "oldest_candidate_last_seen_at": "2026-09-11T22:24:31Z",
+        "protocol_counts": {
+          "ss": 28,
+          "vless": 11
+        },
+        "retained_candidates": 22,
+        "total_candidates": 39
       },
       "TH": {
-        "contributing_sources": 73,
-        "exported_candidates": 60,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 59,
+        "contributing_sources": 191,
+        "exported_candidates": 94,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 149,
         "lost_candidates": 0,
         "new_candidates": 34,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
         "protocol_counts": {
-          "ss": 13,
-          "vmess": 47
+          "ss": 18,
+          "vmess": 76
         },
-        "retained_candidates": 26,
-        "total_candidates": 60
+        "retained_candidates": 60,
+        "total_candidates": 94
       },
       "TR": {
-        "contributing_sources": 162,
+        "contributing_sources": 465,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 154,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:35Z",
+        "independent_sources": 386,
         "lost_candidates": 0,
-        "new_candidates": 284,
+        "new_candidates": 563,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
           "hysteria2": 2,
-          "ss": 58,
-          "trojan": 9,
-          "vless": 301,
-          "vmess": 287
+          "ss": 111,
+          "trojan": 15,
+          "vless": 595,
+          "vmess": 497
         },
-        "retained_candidates": 373,
-        "total_candidates": 657
+        "retained_candidates": 657,
+        "total_candidates": 1220
       },
       "TW": {
-        "contributing_sources": 142,
+        "contributing_sources": 430,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:39:20Z",
-        "independent_sources": 131,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:39Z",
+        "independent_sources": 371,
         "lost_candidates": 0,
-        "new_candidates": 367,
+        "new_candidates": 471,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
         "protocol_counts": {
-          "hy2": 2,
-          "hysteria2": 231,
-          "ss": 313,
-          "trojan": 10,
-          "vless": 51,
-          "vmess": 107
+          "hysteria2": 277,
+          "ss": 471,
+          "trojan": 137,
+          "vless": 86,
+          "vmess": 214
         },
-        "retained_candidates": 347,
-        "total_candidates": 714
+        "retained_candidates": 714,
+        "total_candidates": 1185
       },
       "UA": {
-        "contributing_sources": 25,
-        "exported_candidates": 22,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 24,
+        "contributing_sources": 97,
+        "exported_candidates": 40,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:25:20Z",
+        "independent_sources": 86,
         "lost_candidates": 0,
-        "new_candidates": 14,
+        "new_candidates": 18,
         "oldest_candidate_last_seen_at": "2026-09-11T21:56:15Z",
         "protocol_counts": {
-          "ss": 5,
+          "ss": 19,
           "vless": 6,
-          "vmess": 11
+          "vmess": 15
         },
-        "retained_candidates": 8,
-        "total_candidates": 22
+        "retained_candidates": 22,
+        "total_candidates": 40
       },
       "US": {
-        "contributing_sources": 388,
+        "contributing_sources": 1063,
         "exported_candidates": 500,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:41:50Z",
-        "independent_sources": 340,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:44Z",
+        "independent_sources": 871,
         "lost_candidates": 0,
-        "new_candidates": 7626,
+        "new_candidates": 12087,
         "oldest_candidate_last_seen_at": "2026-09-08T21:27:23Z",
         "protocol_counts": {
-          "hy2": 11,
-          "hysteria2": 574,
-          "ss": 2310,
-          "trojan": 1950,
-          "vless": 6950,
-          "vmess": 1166
+          "hy2": 1,
+          "hysteria2": 900,
+          "ss": 5758,
+          "trojan": 3850,
+          "vless": 12085,
+          "vmess": 2454
         },
-        "retained_candidates": 5335,
-        "total_candidates": 12961
+        "retained_candidates": 12961,
+        "total_candidates": 25048
       },
       "UY": {
         "contributing_sources": 1,
@@ -1518,269 +1509,323 @@
         "total_candidates": 1
       },
       "UZ": {
-        "contributing_sources": 47,
-        "exported_candidates": 40,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:38:56Z",
-        "independent_sources": 41,
-        "lost_candidates": 0,
-        "new_candidates": 23,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
-        "protocol_counts": {
-          "vless": 40
-        },
-        "retained_candidates": 17,
-        "total_candidates": 40
-      },
-      "VG": {
-        "contributing_sources": 2,
-        "exported_candidates": 2,
-        "freshest_candidate_last_seen_at": "2026-09-11T21:58:23Z",
-        "independent_sources": 2,
-        "lost_candidates": 0,
-        "new_candidates": 2,
-        "oldest_candidate_last_seen_at": "2026-09-11T21:58:23Z",
-        "protocol_counts": {
-          "vmess": 2
-        },
-        "retained_candidates": 0,
-        "total_candidates": 2
-      },
-      "VN": {
-        "contributing_sources": 26,
-        "exported_candidates": 56,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:41:48Z",
-        "independent_sources": 26,
+        "contributing_sources": 119,
+        "exported_candidates": 64,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 104,
         "lost_candidates": 0,
         "new_candidates": 24,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:43Z",
+        "protocol_counts": {
+          "ss": 1,
+          "vless": 63
+        },
+        "retained_candidates": 40,
+        "total_candidates": 64
+      },
+      "VG": {
+        "contributing_sources": 8,
+        "exported_candidates": 4,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:23:36Z",
+        "independent_sources": 6,
+        "lost_candidates": 0,
+        "new_candidates": 2,
+        "oldest_candidate_last_seen_at": "2026-09-11T23:14:51Z",
+        "protocol_counts": {
+          "vmess": 4
+        },
+        "retained_candidates": 2,
+        "total_candidates": 4
+      },
+      "VN": {
+        "contributing_sources": 48,
+        "exported_candidates": 91,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:26:02Z",
+        "independent_sources": 39,
+        "lost_candidates": 0,
+        "new_candidates": 35,
         "oldest_candidate_last_seen_at": "2026-09-09T05:22:31Z",
         "protocol_counts": {
-          "trojan": 9,
-          "vmess": 47
+          "trojan": 17,
+          "vmess": 74
         },
-        "retained_candidates": 32,
-        "total_candidates": 56
+        "retained_candidates": 56,
+        "total_candidates": 91
       },
       "ZA": {
-        "contributing_sources": 113,
-        "exported_candidates": 367,
-        "freshest_candidate_last_seen_at": "2026-09-11T22:40:37Z",
-        "independent_sources": 106,
+        "contributing_sources": 340,
+        "exported_candidates": 500,
+        "freshest_candidate_last_seen_at": "2026-09-11T23:27:33Z",
+        "independent_sources": 295,
         "lost_candidates": 0,
-        "new_candidates": 131,
-        "oldest_candidate_last_seen_at": "2026-09-08T21:27:50Z",
+        "new_candidates": 275,
+        "oldest_candidate_last_seen_at": "2026-09-09T05:20:34Z",
         "protocol_counts": {
-          "ss": 255,
-          "vless": 23,
-          "vmess": 89
+          "ss": 473,
+          "vless": 37,
+          "vmess": 132
         },
-        "retained_candidates": 236,
-        "total_candidates": 367
+        "retained_candidates": 367,
+        "total_candidates": 642
       }
     }
   },
-  "generated_at": "2026-09-11T22:42:40Z",
+  "generated_at": "2026-09-11T23:35:06Z",
   "geo": {
-    "cache_entries_added_shard_sum": 118,
-    "cache_entries_after_shard_sum": 22070,
-    "cache_entries_before_shard_sum": 21952,
-    "cache_hits": 25003,
-    "cache_misses": 47459,
-    "cap_skipped": 47259,
+    "cache_entries_added_shard_sum": 352,
+    "cache_entries_after_shard_sum": 56692,
+    "cache_entries_before_shard_sum": 56340,
+    "cache_hits": 211696,
+    "cache_misses": 460524,
+    "cap_skipped": 460024,
     "configured_max_new_per_shard": 25,
-    "lookup_attempted": 200,
-    "lookup_budget": 200,
-    "lookup_failed": 80,
-    "lookup_success": 120,
-    "persistent_cache_entries": 2817,
-    "resolved_calls": 72462,
+    "lookup_attempted": 500,
+    "lookup_budget": 500,
+    "lookup_failed": 114,
+    "lookup_success": 386,
+    "persistent_cache_entries": 2967,
+    "resolved_calls": 672220,
     "telemetry_complete": true,
-    "unique_resolved_ips_shard_sum": 24989
+    "unique_resolved_ips_shard_sum": 215365
   },
   "geo_shadow": {
-    "agreement_rate_when_both_known": 0.7904083836646534,
-    "available_shards": 8,
-    "both_unknown": 1,
+    "agreement_rate_when_both_known": 0.8311086910201473,
+    "available_shards": 20,
+    "both_unknown": 312,
     "init_failed_shards": 0,
-    "legacy_known_shadow_known_agree": 19761,
-    "legacy_known_shadow_known_disagree": 5240,
-    "legacy_known_shadow_unknown": 122,
+    "legacy_known_shadow_known_agree": 175526,
+    "legacy_known_shadow_known_disagree": 35669,
+    "legacy_known_shadow_unknown": 887,
     "legacy_unknown_shadow_country_counts": {
-      "AE": 148,
-      "AL": 9,
-      "AM": 20,
+      "AE": 2273,
+      "AG": 1,
+      "AL": 149,
+      "AM": 231,
       "AQ": 1,
-      "AR": 82,
-      "AT": 42,
-      "AU": 80,
-      "AZ": 1,
-      "BE": 29,
-      "BG": 65,
-      "BR": 254,
-      "BY": 4,
-      "BZ": 19,
-      "CA": 472,
-      "CH": 65,
-      "CN": 259,
-      "CO": 18,
-      "CR": 11,
-      "CW": 6,
-      "CY": 44,
-      "CZ": 105,
-      "DE": 1449,
-      "DK": 3,
-      "DO": 1,
-      "EE": 109,
-      "EG": 2,
-      "ES": 116,
-      "FI": 335,
-      "FR": 567,
-      "GB": 1399,
-      "GR": 29,
-      "HK": 635,
-      "HU": 10,
-      "ID": 5,
-      "IE": 21,
-      "IL": 11,
-      "IM": 18,
-      "IN": 65,
-      "IQ": 10,
-      "IR": 140,
-      "IT": 78,
-      "JP": 1328,
-      "KR": 650,
-      "KZ": 97,
-      "LT": 307,
-      "LU": 8,
-      "LV": 66,
-      "MD": 17,
-      "MH": 16,
-      "MK": 3,
-      "MN": 1,
-      "MX": 2,
-      "MY": 6,
-      "NL": 1467,
-      "NO": 197,
-      "NZ": 8,
-      "PE": 1,
-      "PL": 234,
-      "PT": 3,
-      "RO": 404,
-      "RS": 12,
-      "RU": 2369,
-      "SC": 821,
-      "SE": 301,
-      "SG": 928,
-      "SI": 11,
-      "SK": 10,
-      "TH": 22,
-      "TJ": 1,
-      "TR": 192,
-      "TW": 352,
-      "UA": 71,
-      "US": 30488,
-      "UZ": 8,
-      "VG": 27,
-      "VN": 159,
-      "ZA": 14
+      "AR": 197,
+      "AT": 934,
+      "AU": 4195,
+      "AZ": 121,
+      "BA": 25,
+      "BD": 4,
+      "BE": 622,
+      "BG": 1507,
+      "BH": 13,
+      "BR": 750,
+      "BY": 111,
+      "BZ": 116,
+      "CA": 4972,
+      "CH": 3470,
+      "CL": 47,
+      "CN": 2876,
+      "CO": 72,
+      "CR": 692,
+      "CW": 26,
+      "CY": 855,
+      "CZ": 1385,
+      "DE": 28930,
+      "DK": 152,
+      "DO": 16,
+      "DZ": 5,
+      "EE": 1753,
+      "ES": 941,
+      "FI": 7525,
+      "FR": 17012,
+      "GB": 15955,
+      "GE": 33,
+      "GI": 34,
+      "GR": 265,
+      "GT": 4,
+      "HK": 9948,
+      "HR": 110,
+      "HU": 431,
+      "ID": 80,
+      "IE": 1048,
+      "IL": 177,
+      "IM": 147,
+      "IN": 969,
+      "IQ": 130,
+      "IR": 8587,
+      "IS": 179,
+      "IT": 970,
+      "JO": 38,
+      "JP": 12727,
+      "KE": 28,
+      "KR": 8997,
+      "KZ": 1216,
+      "LA": 1,
+      "LI": 16,
+      "LT": 5020,
+      "LU": 287,
+      "LV": 1424,
+      "MD": 268,
+      "ME": 20,
+      "MH": 72,
+      "MM": 5,
+      "MN": 6,
+      "MO": 2,
+      "MT": 52,
+      "MX": 51,
+      "MY": 112,
+      "NG": 4,
+      "NL": 18004,
+      "NO": 1521,
+      "NP": 7,
+      "NZ": 84,
+      "OM": 23,
+      "PA": 6,
+      "PE": 27,
+      "PH": 28,
+      "PK": 27,
+      "PL": 4635,
+      "PS": 2,
+      "PT": 71,
+      "QA": 11,
+      "RO": 2406,
+      "RS": 903,
+      "RU": 27370,
+      "SA": 42,
+      "SC": 12689,
+      "SE": 4905,
+      "SG": 13607,
+      "SI": 82,
+      "SK": 204,
+      "TH": 262,
+      "TJ": 7,
+      "TR": 3359,
+      "TW": 4072,
+      "UA": 527,
+      "US": 211592,
+      "UZ": 166,
+      "VG": 334,
+      "VI": 6,
+      "VN": 1134,
+      "ZA": 321
     },
-    "legacy_unknown_shadow_known": 47338,
-    "potential_geo_known_occurrences": 72461,
-    "potential_geo_unknown_occurrences": 1138,
+    "legacy_unknown_shadow_known": 459826,
+    "potential_geo_known_occurrences": 671908,
+    "potential_geo_unknown_occurrences": 72867,
     "provider": "sapics-server-country",
-    "release": "sha256:710e8e37d68bee1edc17a0dc145f89245eeab9ecdf66fa915bbc7d38052571b3",
-    "requested_shards": 8,
-    "shadow_calls": 72462,
+    "release": "sha256:6529eaeb0517d452a77c0cbb8561c889396e1729250278135fc77d3b1ddd5ae2",
+    "requested_shards": 20,
+    "shadow_calls": 672220,
     "shadow_country_counts": {
-      "AE": 318,
-      "AL": 12,
-      "AM": 45,
-      "AQ": 1,
-      "AR": 82,
-      "AT": 91,
-      "AU": 278,
-      "AZ": 8,
-      "BD": 5,
-      "BE": 29,
-      "BG": 116,
-      "BR": 331,
-      "BY": 4,
-      "BZ": 36,
-      "CA": 980,
-      "CH": 136,
-      "CN": 363,
-      "CO": 19,
-      "CR": 11,
-      "CW": 6,
-      "CY": 157,
-      "CZ": 152,
-      "DE": 3739,
-      "DK": 9,
-      "DO": 1,
-      "EE": 307,
-      "EG": 3,
-      "ES": 325,
-      "FI": 687,
-      "FR": 1808,
-      "GB": 4586,
-      "GR": 29,
-      "HK": 1300,
-      "HU": 27,
-      "ID": 23,
-      "IE": 81,
-      "IL": 17,
-      "IM": 21,
-      "IN": 114,
-      "IQ": 13,
-      "IR": 193,
-      "IT": 265,
-      "JP": 1956,
-      "KG": 1,
-      "KR": 943,
-      "KW": 1,
-      "KZ": 273,
-      "LT": 771,
-      "LU": 22,
-      "LV": 191,
-      "MD": 38,
-      "MH": 27,
-      "MK": 3,
-      "MN": 1,
-      "MO": 1,
-      "MT": 12,
-      "MX": 9,
-      "MY": 75,
-      "NL": 4107,
-      "NO": 413,
-      "NZ": 9,
-      "PE": 1,
-      "PH": 2,
-      "PL": 646,
-      "PT": 6,
-      "QA": 2,
-      "RO": 675,
-      "RS": 22,
-      "RU": 4034,
-      "SA": 5,
-      "SC": 1032,
-      "SE": 404,
-      "SG": 1598,
-      "SI": 21,
-      "SK": 17,
-      "TH": 30,
-      "TJ": 1,
-      "TR": 332,
-      "TW": 674,
-      "UA": 74,
-      "US": 36879,
-      "UZ": 16,
-      "VG": 39,
-      "VN": 180,
-      "ZA": 68
+      "AE": 4096,
+      "AG": 1,
+      "AL": 207,
+      "AM": 432,
+      "AQ": 11,
+      "AR": 197,
+      "AT": 1705,
+      "AU": 5696,
+      "AZ": 253,
+      "BA": 82,
+      "BD": 94,
+      "BE": 696,
+      "BG": 3255,
+      "BH": 47,
+      "BR": 1041,
+      "BY": 203,
+      "BZ": 218,
+      "CA": 10059,
+      "CH": 4922,
+      "CL": 60,
+      "CN": 4551,
+      "CO": 102,
+      "CR": 713,
+      "CW": 26,
+      "CY": 2224,
+      "CZ": 1695,
+      "DE": 57440,
+      "DK": 262,
+      "DO": 16,
+      "DZ": 8,
+      "EC": 7,
+      "EE": 3021,
+      "EG": 2,
+      "ES": 2791,
+      "FI": 13208,
+      "FR": 32307,
+      "GB": 34659,
+      "GE": 33,
+      "GI": 34,
+      "GR": 323,
+      "GT": 4,
+      "HK": 13125,
+      "HR": 146,
+      "HU": 599,
+      "ID": 456,
+      "IE": 1511,
+      "IL": 210,
+      "IM": 190,
+      "IN": 1602,
+      "IQ": 136,
+      "IR": 12183,
+      "IS": 211,
+      "IT": 1902,
+      "JM": 1,
+      "JO": 53,
+      "JP": 16670,
+      "KE": 50,
+      "KG": 12,
+      "KR": 10789,
+      "KW": 6,
+      "KZ": 1753,
+      "LA": 1,
+      "LI": 16,
+      "LT": 7538,
+      "LU": 1061,
+      "LV": 2184,
+      "MA": 6,
+      "MD": 3602,
+      "ME": 20,
+      "MH": 239,
+      "MK": 75,
+      "MM": 5,
+      "MN": 26,
+      "MO": 50,
+      "MT": 93,
+      "MX": 146,
+      "MY": 450,
+      "NG": 4,
+      "NL": 34377,
+      "NO": 1915,
+      "NP": 7,
+      "NZ": 209,
+      "OM": 23,
+      "PA": 37,
+      "PE": 27,
+      "PH": 96,
+      "PK": 56,
+      "PL": 9724,
+      "PS": 2,
+      "PT": 85,
+      "QA": 11,
+      "RO": 4557,
+      "RS": 2743,
+      "RU": 37419,
+      "SA": 88,
+      "SC": 16103,
+      "SE": 6114,
+      "SG": 18275,
+      "SI": 207,
+      "SK": 255,
+      "TH": 300,
+      "TJ": 7,
+      "TR": 5238,
+      "TW": 5537,
+      "UA": 611,
+      "US": 260413,
+      "UZ": 257,
+      "VG": 352,
+      "VI": 6,
+      "VN": 1212,
+      "ZA": 936
     },
-    "shadow_known": 72339,
+    "shadow_known": 671021,
     "shadow_lookup_failed": 0,
-    "shadow_unknown": 123,
-    "shadow_unknown_no_record": 123,
+    "shadow_unknown": 1199,
+    "shadow_unknown_no_record": 1199,
     "telemetry_complete": true
   },
   "invariants": {
@@ -1796,21 +1841,21 @@
     "shadow_legacy_unknown_resolved_partition": true
   },
   "nodes": {
-    "geo_known": 25123,
-    "geo_unknown": 48476,
-    "global_deduplicated": 217429,
-    "invalid": 548,
-    "parsed": 73599,
-    "raw_items": 74390,
-    "resolvable_endpoints": 72462,
-    "unresolved_endpoints": 1137
+    "geo_known": 212082,
+    "geo_unknown": 532693,
+    "global_deduplicated": 465650,
+    "invalid": 19370,
+    "parsed": 744775,
+    "raw_items": 805264,
+    "resolvable_endpoints": 672220,
+    "unresolved_endpoints": 72555
   },
   "run": {
     "complete": true,
     "duplicate_shards": [],
-    "expected_shards": 8,
-    "shards_seen": 8,
-    "shards_with_telemetry": 8
+    "expected_shards": 20,
+    "shards_seen": 20,
+    "shards_with_telemetry": 20
   },
   "schema": "subscription-source-coverage-metrics-v1",
   "semantics": {
@@ -1822,13 +1867,13 @@
     "unique_resolved_ips_shard_sum": "sum_of_per_shard_unique_counts_cross_shard_duplicates_possible"
   },
   "sources": {
-    "active_successful": 767,
-    "checked": 320,
-    "contributing": 591,
+    "active_successful": 1989,
+    "checked": 1600,
+    "contributing": 1654,
     "eligible": 6389,
-    "failed": 90,
-    "indexed_persistent": 791,
-    "success": 230,
+    "failed": 378,
+    "indexed_persistent": 2013,
+    "success": 1222,
     "total": 7011
   }
 }

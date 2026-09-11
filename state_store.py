@@ -145,6 +145,10 @@ def dump_global_nodes(path: Path, payload: dict, legacy_path: Path | None = None
         legacy_path.unlink()
 
 
+def snapshot_source_index(path: Path, output: Path, legacy_path: Path | None = None) -> None:
+    _dump_json(output, load_source_index(path, legacy_path))
+
+
 def snapshot_global_nodes(path: Path, output: Path, legacy_path: Path | None = None) -> None:
     _dump_json(output, load_global_nodes(path, legacy_path))
 
@@ -152,14 +156,23 @@ def snapshot_global_nodes(path: Path, output: Path, legacy_path: Path | None = N
 def main() -> int:
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="command", required=True)
-    snap = sub.add_parser("snapshot-global-nodes")
-    snap.add_argument("--path", default="exports/nodes_deduplicated")
-    snap.add_argument("--legacy", default="exports/nodes_deduplicated.json")
-    snap.add_argument("--output", required=True)
+
+    global_snap = sub.add_parser("snapshot-global-nodes")
+    global_snap.add_argument("--path", default="exports/nodes_deduplicated")
+    global_snap.add_argument("--legacy", default="exports/nodes_deduplicated.json")
+    global_snap.add_argument("--output", required=True)
+
+    source_snap = sub.add_parser("snapshot-source-index")
+    source_snap.add_argument("--path", default="data/node_index")
+    source_snap.add_argument("--legacy", default="data/node_index.json")
+    source_snap.add_argument("--output", required=True)
     args = p.parse_args()
 
     if args.command == "snapshot-global-nodes":
         snapshot_global_nodes(Path(args.path), Path(args.output), Path(args.legacy))
+        return 0
+    if args.command == "snapshot-source-index":
+        snapshot_source_index(Path(args.path), Path(args.output), Path(args.legacy))
         return 0
     raise SystemExit("unknown command")
 

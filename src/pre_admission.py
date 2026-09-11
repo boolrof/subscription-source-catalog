@@ -423,17 +423,31 @@ class GeoResolver:
         self.timeout = timeout
         self._lock = threading.Lock()
         self._new = 0
+        self._resolved_calls = 0
+        self._unique_resolved_ips: set[str] = set()
+        self._cache_hits = 0
+        self._cache_misses = 0
+        self._lookup_attempted = 0
+        self._lookup_success = 0
+        self._lookup_failed = 0
+        self._cap_skipped = 0
 
     def country(self, ip: str | None) -> str | None:
         if not ip or not _global_ip(ip):
             return None
         key = hashlib.sha256(("geo:" + ip).encode("utf-8")).hexdigest()[:24]
         with self._lock:
+            self._resolved_calls += 1
+            self._unique_resolved_ips.add(ip)
             if key in self.cache:
+                self._cache_hits += 1
                 return self.cache[key] or None
+            self._cache_misses += 1
             if self._new >= self.max_new:
+                self._cap_skipped += 1
                 return None
             self._new += 1
+            self._lookup_attempted += 1
         try:
             req = urllib.request.Request("https://api.country.is/" + urllib.parse.quote(ip, safe=":"), headers={"User-Agent": "subscription-source-catalog/compute-v4"})
             with urllib.request.urlopen(req, timeout=self.timeout) as response:
@@ -443,10 +457,26 @@ class GeoResolver:
                 country = ""
         except Exception:
             country = ""
-        if country:
-            with self._lock:
+        with self._lock:
+            if country:
                 self.cache[key] = country
+                self._lookup_success += 1
+            else:
+                self._lookup_failed += 1
         return country or None
+
+    def metrics(self) -> dict[str, int]:
+        with self._lock:
+            return {
+                "resolved_calls": self._resolved_calls,
+                "unique_resolved_ips": len(self._unique_resolved_ips),
+                "cache_hits": self._cache_hits,
+                "cache_misses": self._cache_misses,
+                "lookup_attempted": self._lookup_attempted,
+                "lookup_success": self._lookup_success,
+                "lookup_failed": self._lookup_failed,
+                "cap_skipped": self._cap_skipped,
+            }
 
 
 def source_score(stats: dict, *, content_changed: bool, duplicate: bool = False) -> int:
@@ -501,11 +531,47 @@ def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolv
         return {"source_id": sid, "url": url, "precheck": {"fetch_status": "failed", "checked_at": checked, "error": type(exc).__name__, "quality_score": 0}, "nodes": []}
 
 
-def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout: float, workers: int, geo_cache: dict[str, str], geo_max_new: int) -> list[dict]:
+def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout: float, workers: int, geo_cache: dict[str, str], geo_max_new: int, metrics_out: dict | None = None) -> list[dict]:
     eligible = [x for x in items if x.get("status") in {"active", "stale"} and x.get("url")]
     eligible.sort(key=lambda x: ((x.get("precheck") or {}).get("checked_at") or "", x["url"]))
+    cache_before = len(geo_cache)
     geo = GeoResolver(geo_cache, max_new=geo_max_new)
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         futures = [pool.submit(inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
         out = [future.result() for future in as_completed(futures)]
-    return sorted(out, key=lambda x: x["source_id"])
+    out = sorted(out, key=lambda x: x["source_id"])
+    if metrics_out is not None:
+        success_rows = [row for row in out if (row.get("precheck") or {}).get("fetch_status") == "success"]
+        raw_items = sum(int((row.get("precheck") or {}).get("raw_items") or 0) for row in success_rows)
+        parsed = sum(int((row.get("precheck") or {}).get("valid_nodes") or 0) for row in success_rows)
+        invalid = sum(int((row.get("precheck") or {}).get("invalid_items") or 0) for row in success_rows)
+        resolvable = sum(int((row.get("precheck") or {}).get("resolvable_endpoints") or 0) for row in success_rows)
+        unresolved = sum(int((row.get("precheck") or {}).get("unresolved_endpoints") or 0) for row in success_rows)
+        geo_known = sum(bool(node.get("endpoint_country")) for row in success_rows for node in (row.get("nodes") or []))
+        geo_metrics = geo.metrics()
+        geo_metrics.update({
+            "max_new": int(geo_max_new),
+            "cache_entries_before": cache_before,
+            "cache_entries_after": len(geo_cache),
+            "cache_entries_added": max(0, len(geo_cache) - cache_before),
+        })
+        metrics_out.update({
+            "sources": {
+                "assigned": len(items),
+                "eligible": len(eligible),
+                "processed": len(out),
+                "success": len(success_rows),
+                "failed": len(out) - len(success_rows),
+            },
+            "nodes": {
+                "raw_items": raw_items,
+                "parsed": parsed,
+                "invalid": invalid,
+                "resolvable_endpoints": resolvable,
+                "unresolved_endpoints": unresolved,
+                "geo_known": int(geo_known),
+                "geo_unknown": parsed - int(geo_known),
+            },
+            "geo": geo_metrics,
+        })
+    return out

@@ -1,7 +1,7 @@
 {
   "country": "BH",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 15,
+  "exported_candidates": 16,
   "nodes": [
     {
       "independent_source_count": 1,
@@ -38,6 +38,15 @@
       "protocol": "ss",
       "source_count": 1,
       "source_id": "24d62e450a6c5a1ffabaf333"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T22:24:04Z",
+      "node_digest": "4297fa8ed00b0099f09954b9bedeccc5687676e2913a301acd6ec871f8af3c43",
+      "pre_score": 90,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "1144c34b185d19c3d6c6c4c6"
     },
     {
       "independent_source_count": 1,
@@ -141,5 +150,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 15
+  "total_candidates": 16
 }

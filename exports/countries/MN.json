@@ -1,8 +1,17 @@
 {
   "country": "MN",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 6,
+  "exported_candidates": 7,
   "nodes": [
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-11T22:24:16Z",
+      "node_digest": "0aab83e38a3649ca2799957ac8edd8925275c97b8d2b2843ee5a5b02dcb17c41",
+      "pre_score": 104,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "0ead919d3f421d989660dc75"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-11T22:24:29Z",
@@ -60,5 +69,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 6
+  "total_candidates": 7
 }

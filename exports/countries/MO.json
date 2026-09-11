@@ -1,8 +1,26 @@
 {
   "country": "MO",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 30,
+  "exported_candidates": 33,
   "nodes": [
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-11T22:24:16Z",
+      "node_digest": "8a044f0365a0cb4f53f16a7e2f16e0e13d8890b889b6b319d269793a39c5e8ad",
+      "pre_score": 104,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "0ead919d3f421d989660dc75"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-11T22:24:16Z",
+      "node_digest": "f9eb6750d0394810331a848576f65b5046b62b3c22e0bba3565601cc71ad1b4d",
+      "pre_score": 104,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "0ead919d3f421d989660dc75"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-11T22:24:23Z",
@@ -83,6 +101,15 @@
       "protocol": "trojan",
       "source_count": 1,
       "source_id": "e45e834e687d94ff4c02a8ac"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T22:38:32Z",
+      "node_digest": "ee299634448906c30d9bbc71575fb0fdfc1cf4b644e173e575d5e1b1f8184c65",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "4ce585133003514c153a20c5"
     },
     {
       "independent_source_count": 1,
@@ -276,5 +303,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 30
+  "total_candidates": 33
 }

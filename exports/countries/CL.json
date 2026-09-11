@@ -1,7 +1,7 @@
 {
   "country": "CL",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 8,
+  "exported_candidates": 9,
   "nodes": [
     {
       "independent_source_count": 2,
@@ -11,6 +11,15 @@
       "protocol": "ss",
       "source_count": 2,
       "source_id": "34d660b3274860d12b39ac1e"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-11T22:27:15Z",
+      "node_digest": "c3efc40095e2ff01171558b6106243c446f84192e85dfe6ffeb38e4259084e20",
+      "pre_score": 94,
+      "protocol": "ss",
+      "source_count": 2,
+      "source_id": "b76d669ae40946689f14c51a"
     },
     {
       "independent_source_count": 1,
@@ -78,5 +87,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 8
+  "total_candidates": 9
 }

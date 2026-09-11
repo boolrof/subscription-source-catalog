@@ -1,8 +1,26 @@
 {
   "country": "AQ",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 1,
+  "exported_candidates": 6,
   "nodes": [
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-11T22:24:16Z",
+      "node_digest": "0c20766df0ad224d5541fbd904afbf7172357dd29565ded783017d651963d32c",
+      "pre_score": 104,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "0ead919d3f421d989660dc75"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-08T21:27:23Z",
+      "node_digest": "761b476e51d3d2b0d2bfcee698f44b8269ea51ec7d68f3795e4d405a14dce6c5",
+      "pre_score": 99,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "201195a141976612de9d6885"
+    },
     {
       "independent_source_count": 2,
       "last_seen_at": "2026-09-11T21:58:10Z",
@@ -11,9 +29,36 @@
       "protocol": "vless",
       "source_count": 2,
       "source_id": "55d02aa8791bd1e7de2f4f61"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-11T22:24:33Z",
+      "node_digest": "82436c2d2d6a8b871317c5912c14b62be5f26605d99de7e4f9069e0e664b0fad",
+      "pre_score": 94,
+      "protocol": "vless",
+      "source_count": 3,
+      "source_id": "d0e8aba64c02a599d0b653d0"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T21:56:20Z",
+      "node_digest": "36cc7e7a8bd14275cfe3e15cc08d5a86b2e7d92b0715f3803266762b1c65ea58",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "64c9c3d043ef106ca17a2400"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T22:24:05Z",
+      "node_digest": "affcfa5137db33d6bf35cbc74a3ef0b3ae9c516bd4c3ca1017513a4b022c361d",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "cf4aff3616efc1d954c2ed7f"
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 1
+  "total_candidates": 6
 }

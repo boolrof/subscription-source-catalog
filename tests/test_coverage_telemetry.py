@@ -163,6 +163,9 @@ class CoverageTelemetryTests(unittest.TestCase):
                             "cache_entries_before": 10,
                             "cache_entries_after": 10,
                             "cache_entries_added": 0,
+                            "shadow_requested": False,
+                            "shadow_available": False,
+                            "shadow_init_failed": False,
                         }
                     },
                 }
@@ -179,7 +182,10 @@ class CoverageTelemetryTests(unittest.TestCase):
                 expected_shards=2,
             )
             self.assertTrue(metrics["geo"]["telemetry_complete"])
-            self.assertTrue(all(value is True for value in metrics["invariants"].values()))
+            for key in ("nodes_partition", "geo_cache_partition", "geo_lookup_partition", "geo_known_partition", "geo_unknown_partition"):
+                self.assertIs(metrics["invariants"][key], True)
+            self.assertFalse(metrics["geo_shadow"]["telemetry_complete"])
+            self.assertIsNone(metrics["invariants"]["shadow_calls_match_resolvable"])
             self.assertEqual(metrics["countries"]["new_country_codes"], [])
             self.assertEqual(metrics["countries"]["lost_country_codes"], ["BE"])
             nl = metrics["countries"]["per_country"]["NL"]
@@ -193,6 +199,46 @@ class CoverageTelemetryTests(unittest.TestCase):
             self.assertNotIn(retained_digest, rendered)
             self.assertNotIn(new_digest, rendered)
             self.assertNotIn("hashed-cache-key", rendered)
+
+    def test_shadow_aggregation_reports_recovery_and_agreement(self):
+        shards = {}
+        for shard in (0, 1):
+            shards[shard] = {
+                "metrics": {
+                    "geo": {
+                        "shadow_requested": True,
+                        "shadow_available": True,
+                        "shadow_init_failed": False,
+                        "shadow_provider": "sapics-server-country",
+                        "shadow_release": "sha256:abc",
+                        "shadow_calls": 5,
+                        "shadow_known": 4,
+                        "shadow_unknown": 1,
+                        "shadow_lookup_failed": 0,
+                        "legacy_known_shadow_known_agree": 2,
+                        "legacy_known_shadow_known_disagree": 1,
+                        "legacy_known_shadow_unknown": 0,
+                        "legacy_unknown_shadow_known": 1,
+                        "both_unknown": 1,
+                        "shadow_country_counts": {"NL": 2, "US": 2},
+                        "legacy_unknown_shadow_country_counts": {"NL": 1},
+                    }
+                }
+            }
+        shadow, complete = coverage_metrics._shadow_counters(
+            shards,
+            expected_shards=2,
+            duplicates=set(),
+            run_nodes={"geo_known": 6, "geo_unknown": 4, "resolvable_endpoints": 10},
+        )
+        self.assertTrue(complete)
+        self.assertEqual(shadow["provider"], "sapics-server-country")
+        self.assertEqual(shadow["release"], "sha256:abc")
+        self.assertEqual(shadow["legacy_unknown_shadow_known"], 2)
+        self.assertEqual(shadow["potential_geo_known_occurrences"], 8)
+        self.assertEqual(shadow["potential_geo_unknown_occurrences"], 2)
+        self.assertEqual(shadow["legacy_unknown_shadow_country_counts"], {"NL": 2})
+        self.assertAlmostEqual(shadow["agreement_rate_when_both_known"], 4 / 6)
 
     def test_incomplete_shard_telemetry_uses_null_not_zero(self):
         with tempfile.TemporaryDirectory() as td:
@@ -227,6 +273,8 @@ class CoverageTelemetryTests(unittest.TestCase):
             self.assertFalse(metrics["geo"]["telemetry_complete"])
             self.assertIsNone(metrics["geo"]["lookup_failed"])
             self.assertIsNone(metrics["invariants"]["geo_lookup_partition"])
+            self.assertFalse(metrics["geo_shadow"]["telemetry_complete"])
+            self.assertIsNone(metrics["geo_shadow"]["shadow_known"])
 
 
 if __name__ == "__main__":

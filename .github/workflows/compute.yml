@@ -14,8 +14,11 @@ on:
       - 'compute.py'
       - 'coverage_metrics.py'
       - 'merge_compute.py'
+      - 'requirements-compute.txt'
+      - 'src/geoip_shadow.py'
       - 'src/pre_admission.py'
       - 'src/security.py'
+      - 'tests/test_geoip_shadow.py'
       - 'tests/test_pre_admission.py'
       - 'tests/test_compute_merge.py'
       - 'tests/test_coverage_telemetry.py'
@@ -31,8 +34,56 @@ permissions:
   actions: read
 
 jobs:
-  shard:
+  prepare-geoip-shadow:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    outputs:
+      available: ${{ steps.prepare.outputs.available }}
+    steps:
+      - name: Download and verify server-country MMDB
+        id: prepare
+        shell: bash
+        run: |
+          set -u
+          mkdir -p geoip-shadow
+          DATA_URL='https://github.com/sapics/ip-location-db/releases/download/latest/server-country.mmdb'
+          SUM_URL='https://github.com/sapics/ip-location-db/releases/download/checksum/server-country.mmdb.sha256'
+          available=false
+          if curl --fail --location --silent --show-error --retry 3 --retry-all-errors \
+              --connect-timeout 15 --max-time 90 --max-filesize 20000000 \
+              --proto '=https' --tlsv1.2 "$DATA_URL" -o geoip-shadow/server-country.mmdb \
+            && curl --fail --location --silent --show-error --retry 3 --retry-all-errors \
+              --connect-timeout 15 --max-time 30 --max-filesize 4096 \
+              --proto '=https' --tlsv1.2 "$SUM_URL" -o geoip-shadow/server-country.mmdb.sha256; then
+            expected="$(awk 'NF {print tolower($1); exit}' geoip-shadow/server-country.mmdb.sha256)"
+            actual="$(sha256sum geoip-shadow/server-country.mmdb | awk '{print tolower($1)}')"
+            bytes="$(stat -c '%s' geoip-shadow/server-country.mmdb)"
+            if [[ "$expected" =~ ^[0-9a-f]{64}$ ]] \
+              && [[ "$actual" == "$expected" ]] \
+              && (( bytes >= 1000000 && bytes <= 20000000 )); then
+              printf 'sha256:%s\n' "$actual" > geoip-shadow/release.txt
+              available=true
+            fi
+          fi
+          if [[ "$available" != true ]]; then
+            rm -f geoip-shadow/server-country.mmdb geoip-shadow/server-country.mmdb.sha256 geoip-shadow/release.txt
+            echo 'Shadow GeoIP unavailable; legacy compute will continue unchanged.'
+          fi
+          echo "available=$available" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: steps.prepare.outputs.available == 'true'
+        with:
+          name: geoip-shadow
+          path: |
+            geoip-shadow/server-country.mmdb
+            geoip-shadow/release.txt
+          retention-days: 1
+          if-no-files-found: error
+
+  shard:
+    needs: prepare-geoip-shadow
+    if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success')
     strategy:
       fail-fast: false
       matrix:
@@ -46,17 +97,36 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
+      - name: Install local MMDB reader
+        if: needs.prepare-geoip-shadow.outputs.available == 'true'
+        run: python -m pip install --disable-pip-version-check -r requirements-compute.txt
+      - uses: actions/download-artifact@v4
+        if: needs.prepare-geoip-shadow.outputs.available == 'true'
+        with:
+          name: geoip-shadow
+          path: geoip-shadow
       - name: Unit tests
         run: python -m unittest discover -s tests -v
       - name: Passive pre-admission shard
-        run: >-
-          python compute.py
-          --shard ${{ matrix.shard }}
-          --shards 8
-          --max-sources 40
-          --workers 2
-          --geo-max-new 25
-          --output compute-artifacts/shard-${{ matrix.shard }}.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          shadow_args=()
+          if [[ -s geoip-shadow/server-country.mmdb && -s geoip-shadow/release.txt ]]; then
+            shadow_args=(
+              --geo-shadow-mmdb geoip-shadow/server-country.mmdb
+              --geo-shadow-provider sapics-server-country
+              --geo-shadow-release "$(cat geoip-shadow/release.txt)"
+            )
+          fi
+          python compute.py \
+            --shard "${{ matrix.shard }}" \
+            --shards 8 \
+            --max-sources 40 \
+            --workers 2 \
+            --geo-max-new 25 \
+            "${shadow_args[@]}" \
+            --output "compute-artifacts/shard-${{ matrix.shard }}.json"
       - uses: actions/upload-artifact@v4
         with:
           name: compute-shard-${{ matrix.shard }}

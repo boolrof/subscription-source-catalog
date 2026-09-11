@@ -5,6 +5,8 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
+from state_store import dump_global_nodes, dump_source_index, load_global_nodes, load_source_index
+
 
 def load(path: Path, default):
     if not path.exists():
@@ -148,13 +150,15 @@ def build_handoff_v4(country, ranked, selected):
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--data", default="data/sources.json")
-    p.add_argument("--node-index", default="data/node_index.json")
+    p.add_argument("--node-index", default="data/node_index")
+    p.add_argument("--node-index-legacy", default="data/node_index.json")
     p.add_argument("--geo-cache", default="data/geo_cache.json")
     p.add_argument("--artifacts", required=True)
     p.add_argument("--handoff", default="exports/country_handoff.json")
     p.add_argument("--handoff-v4", default="exports/country_handoff_v4.json")
     p.add_argument("--prechecked", default="exports/prechecked_sources.json")
-    p.add_argument("--nodes-deduplicated", default="exports/nodes_deduplicated.json")
+    p.add_argument("--nodes-deduplicated", default="exports/nodes_deduplicated")
+    p.add_argument("--nodes-deduplicated-legacy", default="exports/nodes_deduplicated.json")
     p.add_argument("--countries-dir", default="exports/countries")
     p.add_argument("--top-per-country", type=int, default=30)
     p.add_argument("--country-export-limit", type=int, default=500)
@@ -164,7 +168,9 @@ def main() -> int:
     catalog_path = Path(args.data)
     catalog = load(catalog_path, {"schema": "vgm-subscription-catalog-v1", "sources": []})
     by_url = {s["url"]: s for s in catalog.get("sources", [])}
-    node_index = load(Path(args.node_index), {"schema": "subscription-source-node-index-v2", "sources": {}})
+    node_index_path = Path(args.node_index)
+    node_index_legacy = Path(args.node_index_legacy)
+    node_index = load_source_index(node_index_path, node_index_legacy)
     index_sources = node_index.setdefault("sources", {})
     geo_cache = load(Path(args.geo_cache), {})
 
@@ -204,7 +210,7 @@ def main() -> int:
 
     catalog["sources"] = sorted(by_url.values(), key=lambda s: s["url"])
     dump(catalog_path, catalog)
-    dump(Path(args.node_index), node_index)
+    dump_source_index(node_index_path, node_index, node_index_legacy)
     dump(Path(args.geo_cache), dict(sorted(geo_cache.items())))
 
     safe_sources = []
@@ -216,16 +222,19 @@ def main() -> int:
         safe_sources.append({"source_id": sid, "repository": s.get("repository"), "status": s.get("status"), "format_hint": s.get("format_hint"), "precheck": pre})
     dump(Path(args.prechecked), {"schema": "subscription-source-prechecked-v3", "sources": sorted(safe_sources, key=lambda x: (-int((x["precheck"] or {}).get("quality_score") or 0), x["source_id"]))})
 
-    previous_nodes = load(Path(args.nodes_deduplicated), {})
+    nodes_path = Path(args.nodes_deduplicated)
+    nodes_legacy = Path(args.nodes_deduplicated_legacy)
+    previous_nodes = load_global_nodes(nodes_path, nodes_legacy)
     nodes, source_meta = build_global_nodes(catalog, index_sources, previous_nodes)
-    dump(Path(args.nodes_deduplicated), {
+    global_payload = {
         "schema": "subscription-source-global-node-index-v3",
         "digest_semantics": "sha256_public_candidate_selection_digest_not_vgm_canonical_fingerprint",
         "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
         "dedup_semantics": "one_row_per_node_digest_across_current_successful_active_sources",
         "protocol_diversity_policy": "no_protocol_caps_or_protocol_popularity_penalties",
         "nodes": nodes,
-    })
+    }
+    dump_global_nodes(nodes_path, global_payload, nodes_legacy)
 
     countries = defaultdict(list)
     for row in nodes:
@@ -256,7 +265,6 @@ def main() -> int:
             "total_candidates": len(ranked), "exported_candidates": len(safe_ranked), "nodes": safe_ranked,
         })
 
-    # Keep the established v3 handoff unchanged while private VGM migrates.
     dump(Path(args.handoff), {
         "schema": "subscription-source-country-handoff-v3",
         "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",

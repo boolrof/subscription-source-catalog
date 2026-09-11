@@ -13,6 +13,7 @@ on:
       - '.github/workflows/compute.yml'
       - 'compute.py'
       - 'coverage_metrics.py'
+      - 'coverage_shadow_consensus.py'
       - 'merge_compute.py'
       - 'state_store.py'
       - 'requirements-compute.txt'
@@ -20,6 +21,8 @@ on:
       - 'src/pre_admission.py'
       - 'src/security.py'
       - 'tests/test_geoip_shadow.py'
+      - 'tests/test_geoip_dual_shadow.py'
+      - 'tests/test_shadow_consensus_metrics.py'
       - 'tests/test_pre_admission.py'
       - 'tests/test_compute_merge.py'
       - 'tests/test_state_store.py'
@@ -39,9 +42,10 @@ jobs:
   prepare-geoip-shadow:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 6
     outputs:
       available: ${{ steps.prepare.outputs.available }}
+      secondary_available: ${{ steps.prepare_secondary.outputs.available }}
     steps:
       - name: Download and verify server-country MMDB
         id: prepare
@@ -70,9 +74,41 @@ jobs:
           fi
           if [[ "$available" != true ]]; then
             rm -f geoip-shadow/server-country.mmdb geoip-shadow/server-country.mmdb.sha256 geoip-shadow/release.txt
-            echo 'Shadow GeoIP unavailable; legacy compute will continue unchanged.'
+            echo 'Primary shadow GeoIP unavailable; legacy compute will continue unchanged.'
           fi
           echo "available=$available" >> "$GITHUB_OUTPUT"
+
+      - name: Download DB-IP Country Lite secondary shadow
+        id: prepare_secondary
+        shell: bash
+        run: |
+          set -u
+          mkdir -p geoip-shadow
+          available=false
+          for ym in "$(date -u +%Y-%m)" "$(date -u -d '1 month ago' +%Y-%m)"; do
+            url="https://download.db-ip.com/free/dbip-country-lite-${ym}.mmdb.gz"
+            rm -f geoip-shadow/dbip-country-lite.mmdb.gz geoip-shadow/dbip-country-lite.mmdb
+            if curl --fail --location --silent --show-error --retry 3 --retry-all-errors \
+                --connect-timeout 15 --max-time 90 --max-filesize 20000000 \
+                --proto '=https' --tlsv1.2 "$url" -o geoip-shadow/dbip-country-lite.mmdb.gz \
+              && gzip -t geoip-shadow/dbip-country-lite.mmdb.gz \
+              && gzip -dc geoip-shadow/dbip-country-lite.mmdb.gz > geoip-shadow/dbip-country-lite.mmdb; then
+              bytes="$(stat -c '%s' geoip-shadow/dbip-country-lite.mmdb)"
+              if (( bytes >= 1000000 && bytes <= 20000000 )); then
+                actual="$(sha256sum geoip-shadow/dbip-country-lite.mmdb | awk '{print tolower($1)}')"
+                printf 'dbip-country-lite-%s sha256:%s\n' "$ym" "$actual" > geoip-shadow/dbip-release.txt
+                available=true
+                break
+              fi
+            fi
+          done
+          rm -f geoip-shadow/dbip-country-lite.mmdb.gz
+          if [[ "$available" != true ]]; then
+            rm -f geoip-shadow/dbip-country-lite.mmdb geoip-shadow/dbip-release.txt
+            echo 'Secondary DB-IP shadow unavailable; primary shadow validation will continue unchanged.'
+          fi
+          echo "available=$available" >> "$GITHUB_OUTPUT"
+
       - uses: actions/upload-artifact@v4
         if: steps.prepare.outputs.available == 'true'
         with:
@@ -80,6 +116,8 @@ jobs:
           path: |
             geoip-shadow/server-country.mmdb
             geoip-shadow/release.txt
+            geoip-shadow/dbip-country-lite.mmdb
+            geoip-shadow/dbip-release.txt
           retention-days: 1
           if-no-files-found: error
 
@@ -115,11 +153,19 @@ jobs:
         run: |
           set -euo pipefail
           shadow_args=()
+          secondary_shadow_args=()
           if [[ -s geoip-shadow/server-country.mmdb && -s geoip-shadow/release.txt ]]; then
             shadow_args=(
               --geo-shadow-mmdb geoip-shadow/server-country.mmdb
               --geo-shadow-provider sapics-server-country
               --geo-shadow-release "$(cat geoip-shadow/release.txt)"
+            )
+          fi
+          if [[ -s geoip-shadow/dbip-country-lite.mmdb && -s geoip-shadow/dbip-release.txt ]]; then
+            secondary_shadow_args=(
+              --geo-shadow-secondary-mmdb geoip-shadow/dbip-country-lite.mmdb
+              --geo-shadow-secondary-provider dbip-country-lite
+              --geo-shadow-secondary-release "$(cat geoip-shadow/dbip-release.txt)"
             )
           fi
           python compute.py \
@@ -129,6 +175,7 @@ jobs:
             --workers 2 \
             --geo-max-new 25 \
             "${shadow_args[@]}" \
+            "${secondary_shadow_args[@]}" \
             --output "compute-artifacts/shard-${{ matrix.shard }}.json"
       - uses: actions/upload-artifact@v4
         with:
@@ -183,6 +230,11 @@ jobs:
           --node-index "$RUNNER_TEMP/node-index-current.json"
           --nodes-deduplicated "$RUNNER_TEMP/nodes-current.json"
           --previous-nodes "$RUNNER_TEMP/nodes-before.json"
+          --expected-shards 20
+      - name: Add dual-MMDB shadow consensus telemetry
+        run: >-
+          python coverage_shadow_consensus.py
+          --artifacts compute-results
           --expected-shards 20
       - name: Verify persisted state shards stay bounded
         shell: bash

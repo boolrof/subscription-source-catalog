@@ -22,7 +22,9 @@ The optional secondary GeoIP shadow-validation path uses the **DB-IP Country Lit
 - Project use: local, offline, aggregate-only comparison against the legacy passive GeoIP resolver and the Sapics shadow dataset
 - Attribution: [IP Geolocation by DB-IP](https://db-ip.com)
 
-The DB-IP database is not committed to this repository. GitHub Actions obtains the current monthly file directly from `download.db-ip.com` over HTTPS, validates gzip/MMDB readability and sane size, records a SHA-256 release identifier, shares the file only as a short-lived Actions artifact, and discards it after the run. If the file cannot be downloaded or validated, the secondary shadow is simply disabled for that run.
+The DB-IP database is not committed to this repository. GitHub Actions obtains the current monthly file directly from `download.db-ip.com` over HTTPS, validates gzip integrity and sane decompressed size before the MMDB reader opens it, records a SHA-256 release identifier, shares the file only as a short-lived Actions artifact, and discards it after the run. If the file cannot be downloaded or read, the secondary shadow is simply disabled for that run.
+
+If DB-IP data is later promoted from observation-only telemetry into user-facing country results, the consuming UI/publication must preserve the attribution required by the DB-IP Lite license.
 
 ## Privacy and authority
 

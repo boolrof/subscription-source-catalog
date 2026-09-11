@@ -33,6 +33,7 @@ def main() -> int:
         if int(source_id(s.get("url", "")), 16) % args.shards == args.shard
     ]
     geo_cache = load_json(Path(args.geo_cache), {})
+    metrics = {}
     results = inspect_many(
         sources,
         max_sources=args.max_sources,
@@ -41,6 +42,7 @@ def main() -> int:
         workers=args.workers,
         geo_cache=geo_cache,
         geo_max_new=args.geo_max_new,
+        metrics_out=metrics,
     )
     payload = {
         "schema": "subscription-source-compute-shard-v2",
@@ -48,15 +50,22 @@ def main() -> int:
         "shards": args.shards,
         "results": results,
         "geo_cache": geo_cache,
+        "metrics": metrics,
     }
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({
         "shard": args.shard,
-        "eligible": len(sources),
+        "assigned": metrics.get("sources", {}).get("assigned", len(sources)),
+        "eligible": metrics.get("sources", {}).get("eligible", 0),
         "processed": len(results),
         "success": sum(r["precheck"].get("fetch_status") == "success" for r in results),
+        "failed": metrics.get("sources", {}).get("failed", 0),
+        "geo_known": metrics.get("nodes", {}).get("geo_known", 0),
+        "geo_unknown": metrics.get("nodes", {}).get("geo_unknown", 0),
+        "geo_lookup_failed": metrics.get("geo", {}).get("lookup_failed", 0),
+        "geo_cap_skipped": metrics.get("geo", {}).get("cap_skipped", 0),
     }, sort_keys=True))
     return 0
 

@@ -14,6 +14,7 @@ on:
       - 'compute.py'
       - 'coverage_metrics.py'
       - 'merge_compute.py'
+      - 'state_store.py'
       - 'requirements-compute.txt'
       - 'src/geoip_shadow.py'
       - 'src/pre_admission.py'
@@ -21,6 +22,7 @@ on:
       - 'tests/test_geoip_shadow.py'
       - 'tests/test_pre_admission.py'
       - 'tests/test_compute_merge.py'
+      - 'tests/test_state_store.py'
       - 'tests/test_coverage_telemetry.py'
       - 'tests/test_country_ranking_retrieval_source.py'
       - 'tests/test_security.py'
@@ -138,7 +140,7 @@ jobs:
   merge:
     needs: shard
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
         with:
@@ -152,12 +154,11 @@ jobs:
           path: compute-results
           merge-multiple: false
       - name: Snapshot previous global node index
-        run: |
-          if [ -f exports/nodes_deduplicated.json ]; then
-            cp exports/nodes_deduplicated.json "$RUNNER_TEMP/nodes-before.json"
-          else
-            printf '{"nodes":[]}\n' > "$RUNNER_TEMP/nodes-before.json"
-          fi
+        run: >-
+          python state_store.py snapshot-global-nodes
+          --path exports/nodes_deduplicated
+          --legacy exports/nodes_deduplicated.json
+          --output "$RUNNER_TEMP/nodes-before.json"
       - name: Merge, globally deduplicate, and rank safe compute outputs
         run: >-
           python merge_compute.py
@@ -165,25 +166,48 @@ jobs:
           --top-per-country 30
           --country-export-limit 500
           --max-per-source 5
+      - name: Materialize local telemetry snapshots
+        run: |
+          python state_store.py snapshot-source-index \
+            --path data/node_index \
+            --legacy data/node_index.json \
+            --output "$RUNNER_TEMP/node-index-current.json"
+          python state_store.py snapshot-global-nodes \
+            --path exports/nodes_deduplicated \
+            --legacy exports/nodes_deduplicated.json \
+            --output "$RUNNER_TEMP/nodes-current.json"
       - name: Build aggregate coverage telemetry
         run: >-
           python coverage_metrics.py
           --artifacts compute-results
+          --node-index "$RUNNER_TEMP/node-index-current.json"
+          --nodes-deduplicated "$RUNNER_TEMP/nodes-current.json"
           --previous-nodes "$RUNNER_TEMP/nodes-before.json"
           --expected-shards 20
+      - name: Verify persisted state shards stay bounded
+        shell: bash
+        run: |
+          set -euo pipefail
+          max_bytes=50000000
+          while IFS= read -r -d '' file; do
+            bytes="$(stat -c '%s' "$file")"
+            if (( bytes > max_bytes )); then
+              echo "Generated state shard exceeds ${max_bytes} bytes: $file ($bytes)" >&2
+              exit 1
+            fi
+          done < <(find data/node_index exports/nodes_deduplicated -type f -name '*.json' -print0)
       - name: Snapshot generated data hashes
         run: |
           {
             sha256sum \
               data/sources.json \
-              data/node_index.json \
               data/geo_cache.json \
               exports/prechecked_sources.json \
-              exports/nodes_deduplicated.json \
               exports/country_handoff.json \
               exports/country_handoff_v4.json \
               exports/coverage_metrics.json
-            find exports/countries -maxdepth 1 -type f -name '*.json' -print0 \
+            find data/node_index exports/nodes_deduplicated exports/countries \
+              -type f -name '*.json' -print0 \
               | sort -z \
               | xargs -0 sha256sum
           } > "$RUNNER_TEMP/catalog-generated.sha256"
@@ -195,11 +219,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/sources.json data/node_index.json data/geo_cache.json \
-            exports/prechecked_sources.json exports/nodes_deduplicated.json \
-            exports/country_handoff.json exports/country_handoff_v4.json \
-            exports/coverage_metrics.json
-          git add -A exports/countries
+          git add data/sources.json data/geo_cache.json \
+            exports/prechecked_sources.json exports/country_handoff.json \
+            exports/country_handoff_v4.json exports/coverage_metrics.json
+          git add -A -- data/node_index data/node_index.json \
+            exports/nodes_deduplicated exports/nodes_deduplicated.json \
+            exports/countries
           if git diff --cached --quiet; then
             echo "No compute changes."
           else

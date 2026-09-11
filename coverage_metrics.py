@@ -18,12 +18,12 @@ def dump(path: Path, value):
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def utc_now() -> str:
+def utc_now():
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
-def source_id_for(source: dict) -> str:
-    return source.get("source_id") or hashlib.sha256(source["url"].encode("utf-8")).hexdigest()[:24]
+def source_id_for(source):
+    return source.get("source_id") or hashlib.sha256(source["url"].encode()).hexdigest()[:24]
 
 
 def _artifact_state(artifacts: Path) -> tuple[dict[int, dict], set[int]]:
@@ -132,6 +132,70 @@ def _geo_counters(shards: dict[int, dict], expected_shards: int, duplicates: set
     }, True
 
 
+def _shadow_counters(shards: dict[int, dict], expected_shards: int, duplicates: set[int], run_nodes: dict) -> tuple[dict, bool]:
+    geos = [((payload.get("metrics") or {}).get("geo") or {}) for payload in shards.values()]
+    requested_shards = sum(bool(row.get("shadow_requested")) for row in geos)
+    available_shards = sum(bool(row.get("shadow_available")) for row in geos)
+    init_failed_shards = sum(bool(row.get("shadow_init_failed")) for row in geos)
+    complete = (
+        len(shards) == expected_shards
+        and not duplicates
+        and requested_shards == expected_shards
+        and available_shards == expected_shards
+    )
+
+    providers = sorted({str(row.get("shadow_provider")) for row in geos if row.get("shadow_provider")})
+    releases = sorted({str(row.get("shadow_release")) for row in geos if row.get("shadow_release")})
+    base = {
+        "requested_shards": requested_shards,
+        "available_shards": available_shards,
+        "init_failed_shards": init_failed_shards,
+        "telemetry_complete": complete,
+        "provider": providers[0] if len(providers) == 1 else None,
+        "release": releases[0] if len(releases) == 1 else None,
+    }
+    metric_keys = [
+        "shadow_calls",
+        "shadow_known",
+        "shadow_unknown",
+        "shadow_lookup_failed",
+        "legacy_known_shadow_known_agree",
+        "legacy_known_shadow_known_disagree",
+        "legacy_known_shadow_unknown",
+        "legacy_unknown_shadow_known",
+        "both_unknown",
+    ]
+    if not complete:
+        return {
+            **base,
+            **{key: None for key in metric_keys},
+            "shadow_unknown_no_record": None,
+            "agreement_rate_when_both_known": None,
+            "potential_geo_known_occurrences": None,
+            "potential_geo_unknown_occurrences": None,
+            "shadow_country_counts": None,
+            "legacy_unknown_shadow_country_counts": None,
+        }, False
+
+    sums = {key: sum(int(row.get(key) or 0) for row in geos) for key in metric_keys}
+    shadow_country_counts: Counter[str] = Counter()
+    recovered_country_counts: Counter[str] = Counter()
+    for row in geos:
+        shadow_country_counts.update({str(k): int(v or 0) for k, v in (row.get("shadow_country_counts") or {}).items()})
+        recovered_country_counts.update({str(k): int(v or 0) for k, v in (row.get("legacy_unknown_shadow_country_counts") or {}).items()})
+    both_known = sums["legacy_known_shadow_known_agree"] + sums["legacy_known_shadow_known_disagree"]
+    return {
+        **base,
+        **sums,
+        "shadow_unknown_no_record": max(0, sums["shadow_unknown"] - sums["shadow_lookup_failed"]),
+        "agreement_rate_when_both_known": (sums["legacy_known_shadow_known_agree"] / both_known) if both_known else None,
+        "potential_geo_known_occurrences": int(run_nodes["geo_known"]) + sums["legacy_unknown_shadow_known"],
+        "potential_geo_unknown_occurrences": max(0, int(run_nodes["geo_unknown"]) - sums["legacy_unknown_shadow_known"]),
+        "shadow_country_counts": dict(sorted(shadow_country_counts.items())),
+        "legacy_unknown_shadow_country_counts": dict(sorted(recovered_country_counts.items())),
+    }, True
+
+
 def _country_digest_sets(nodes: list[dict]) -> dict[str, set[str]]:
     out: dict[str, set[str]] = defaultdict(set)
     for row in nodes:
@@ -205,6 +269,7 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
     shards, duplicate_shards = _artifact_state(artifacts)
     run_sources, run_nodes = _run_counters(shards)
     geo, geo_complete = _geo_counters(shards, expected_shards, duplicate_shards, len(persistent_geo))
+    shadow, shadow_complete = _shadow_counters(shards, expected_shards, duplicate_shards, run_nodes)
 
     sources = catalog.get("sources") or []
     active_successful = sum(
@@ -219,6 +284,11 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
         "geo_lookup_partition": None,
         "geo_known_partition": None,
         "geo_unknown_partition": None,
+        "shadow_calls_match_resolvable": None,
+        "shadow_known_unknown_partition": None,
+        "shadow_comparison_partition": None,
+        "shadow_legacy_known_partition": None,
+        "shadow_legacy_unknown_resolved_partition": None,
     }
     if geo_complete:
         invariants.update({
@@ -226,6 +296,27 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
             "geo_lookup_partition": geo["lookup_attempted"] == geo["lookup_success"] + geo["lookup_failed"],
             "geo_known_partition": run_nodes["geo_known"] == geo["cache_hits"] + geo["lookup_success"],
             "geo_unknown_partition": run_nodes["geo_unknown"] == run_nodes["unresolved_endpoints"] + geo["lookup_failed"] + geo["cap_skipped"],
+        })
+    if shadow_complete:
+        comparison_total = (
+            shadow["legacy_known_shadow_known_agree"]
+            + shadow["legacy_known_shadow_known_disagree"]
+            + shadow["legacy_known_shadow_unknown"]
+            + shadow["legacy_unknown_shadow_known"]
+            + shadow["both_unknown"]
+        )
+        invariants.update({
+            "shadow_calls_match_resolvable": shadow["shadow_calls"] == run_nodes["resolvable_endpoints"],
+            "shadow_known_unknown_partition": shadow["shadow_known"] + shadow["shadow_unknown"] == shadow["shadow_calls"],
+            "shadow_comparison_partition": comparison_total == shadow["shadow_calls"],
+            "shadow_legacy_known_partition": (
+                shadow["legacy_known_shadow_known_agree"]
+                + shadow["legacy_known_shadow_known_disagree"]
+                + shadow["legacy_known_shadow_unknown"]
+            ) == run_nodes["geo_known"],
+            "shadow_legacy_unknown_resolved_partition": (
+                shadow["legacy_unknown_shadow_known"] + shadow["both_unknown"]
+            ) == (geo["lookup_failed"] + geo["cap_skipped"] if geo_complete else -1),
         })
 
     return {
@@ -236,6 +327,7 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
             "run_node_counters": "current_compute_artifact_node_occurrences_before_global_dedup",
             "global_deduplicated": "current_successful_active_sources_only_one_row_per_node_digest",
             "unique_resolved_ips_shard_sum": "sum_of_per_shard_unique_counts_cross_shard_duplicates_possible",
+            "geo_shadow": "observation_only_never_used_for_current_node_country_ranking_or_handoff",
             "privacy": "aggregate_only_no_ip_no_endpoint_no_uri_no_credentials_no_node_digest_no_source_id",
         },
         "run": {
@@ -258,6 +350,7 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
             "global_deduplicated": len(current_nodes),
         },
         "geo": geo,
+        "geo_shadow": shadow,
         "countries": _country_metrics(catalog, current_nodes, old_nodes, countries_dir),
         "invariants": invariants,
     }
@@ -296,6 +389,8 @@ def main() -> int:
         "geo_unknown": metrics["nodes"]["geo_unknown"],
         "countries": metrics["countries"]["observed_country_codes"],
         "telemetry_complete": metrics["geo"]["telemetry_complete"],
+        "geo_shadow_complete": metrics["geo_shadow"]["telemetry_complete"],
+        "legacy_unknown_shadow_known": metrics["geo_shadow"].get("legacy_unknown_shadow_known"),
     }, sort_keys=True))
     return 0
 

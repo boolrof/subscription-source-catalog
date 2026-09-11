@@ -1,8 +1,17 @@
 {
   "country": "AZ",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 4,
+  "exported_candidates": 6,
   "nodes": [
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T05:20:54Z",
+      "node_digest": "8a0c26c9ae944efcb50c5a9667e503240c65dc828d8cb9707370e2df7ad0bd8e",
+      "pre_score": 100,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "24d62e450a6c5a1ffabaf333"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-10T16:42:59Z",
@@ -20,6 +29,15 @@
       "protocol": "ss",
       "source_count": 1,
       "source_id": "2798987278c918910957e0e9"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T05:20:54Z",
+      "node_digest": "e88ad6b0dd3bc7acffac4321651729be665449145e01d9f54a8c59c54b77bddc",
+      "pre_score": 100,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "24d62e450a6c5a1ffabaf333"
     },
     {
       "independent_source_count": 1,
@@ -42,5 +60,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 4
+  "total_candidates": 6
 }

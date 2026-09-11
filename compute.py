@@ -23,6 +23,9 @@ def main() -> int:
     p.add_argument("--timeout", type=float, default=8.0)
     p.add_argument("--workers", type=int, default=2)
     p.add_argument("--geo-max-new", type=int, default=25)
+    p.add_argument("--geo-shadow-mmdb")
+    p.add_argument("--geo-shadow-provider", default="dbip-country-lite")
+    p.add_argument("--geo-shadow-release")
     args = p.parse_args()
 
     if not (0 <= args.shard < args.shards <= 32):
@@ -34,16 +37,67 @@ def main() -> int:
     ]
     geo_cache = load_json(Path(args.geo_cache), {})
     metrics = {}
-    results = inspect_many(
-        sources,
-        max_sources=args.max_sources,
-        max_bytes=args.max_bytes,
-        timeout=args.timeout,
-        workers=args.workers,
-        geo_cache=geo_cache,
-        geo_max_new=args.geo_max_new,
-        metrics_out=metrics,
-    )
+
+    shadow = None
+    shadow_requested = bool(args.geo_shadow_mmdb)
+    if shadow_requested:
+        try:
+            from src.geoip_shadow import DBIPShadowResolver, inspect_many_shadow
+
+            shadow = DBIPShadowResolver(
+                args.geo_shadow_mmdb,
+                provider=args.geo_shadow_provider,
+                release=args.geo_shadow_release,
+            )
+            results = inspect_many_shadow(
+                sources,
+                max_sources=args.max_sources,
+                max_bytes=args.max_bytes,
+                timeout=args.timeout,
+                workers=args.workers,
+                geo_cache=geo_cache,
+                geo_max_new=args.geo_max_new,
+                shadow=shadow,
+                metrics_out=metrics,
+            )
+        except Exception:
+            results = inspect_many(
+                sources,
+                max_sources=args.max_sources,
+                max_bytes=args.max_bytes,
+                timeout=args.timeout,
+                workers=args.workers,
+                geo_cache=geo_cache,
+                geo_max_new=args.geo_max_new,
+                metrics_out=metrics,
+            )
+            metrics.setdefault("geo", {}).update({
+                "shadow_requested": True,
+                "shadow_available": False,
+                "shadow_init_failed": True,
+                "shadow_provider": args.geo_shadow_provider,
+                "shadow_release": args.geo_shadow_release or "unknown",
+            })
+        finally:
+            if shadow is not None:
+                shadow.close()
+    else:
+        results = inspect_many(
+            sources,
+            max_sources=args.max_sources,
+            max_bytes=args.max_bytes,
+            timeout=args.timeout,
+            workers=args.workers,
+            geo_cache=geo_cache,
+            geo_max_new=args.geo_max_new,
+            metrics_out=metrics,
+        )
+        metrics.setdefault("geo", {}).update({
+            "shadow_requested": False,
+            "shadow_available": False,
+            "shadow_init_failed": False,
+        })
+
     payload = {
         "schema": "subscription-source-compute-shard-v2",
         "shard": args.shard,
@@ -66,6 +120,8 @@ def main() -> int:
         "geo_unknown": metrics.get("nodes", {}).get("geo_unknown", 0),
         "geo_lookup_failed": metrics.get("geo", {}).get("lookup_failed", 0),
         "geo_cap_skipped": metrics.get("geo", {}).get("cap_skipped", 0),
+        "geo_shadow_available": metrics.get("geo", {}).get("shadow_available", False),
+        "legacy_unknown_shadow_known": metrics.get("geo", {}).get("legacy_unknown_shadow_known"),
     }, sort_keys=True))
     return 0
 

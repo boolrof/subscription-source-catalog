@@ -21,4 +21,4 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
       - name: Compile
-        run: python -m compileall -q src run.py compute.py merge_compute.py coverage_metrics.py
+        run: python -m compileall -q src run.py compute.py merge_compute.py coverage_metrics.py coverage_shadow_consensus.py

@@ -17,6 +17,7 @@ on:
       - 'src/security.py'
       - 'tests/test_pre_admission.py'
       - 'tests/test_compute_merge.py'
+      - 'tests/test_country_ranking_retrieval_source.py'
       - 'tests/test_security.py'
 
 concurrency:
@@ -84,8 +85,25 @@ jobs:
           --top-per-country 30
           --country-export-limit 500
           --max-per-source 5
+      - name: Snapshot generated data hashes
+        run: |
+          {
+            sha256sum \
+              data/sources.json \
+              data/node_index.json \
+              data/geo_cache.json \
+              exports/prechecked_sources.json \
+              exports/nodes_deduplicated.json \
+              exports/country_handoff.json \
+              exports/country_handoff_v4.json
+            find exports/countries -maxdepth 1 -type f -name '*.json' -print0 \
+              | sort -z \
+              | xargs -0 sha256sum
+          } > "$RUNNER_TEMP/catalog-generated.sha256"
       - name: Validate generated data
         run: python -m unittest discover -s tests -v
+      - name: Verify tests did not mutate generated data
+        run: sha256sum -c "$RUNNER_TEMP/catalog-generated.sha256"
       - name: Commit meaningful compute changes
         run: |
           git config user.name "github-actions[bot]"

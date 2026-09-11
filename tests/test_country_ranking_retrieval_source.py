@@ -41,6 +41,7 @@ class CountryRankingRetrievalSourceTests(unittest.TestCase):
                 }],
             }), encoding="utf-8")
             countries = root / "countries"
+            handoff_v4 = root / "handoff-v4.json"
             argv = [
                 "merge_compute.py",
                 "--data", str(data),
@@ -48,12 +49,14 @@ class CountryRankingRetrievalSourceTests(unittest.TestCase):
                 "--geo-cache", str(root / "geo.json"),
                 "--artifacts", str(artifacts),
                 "--handoff", str(root / "handoff.json"),
+                "--handoff-v4", str(handoff_v4),
                 "--prechecked", str(root / "prechecked.json"),
                 "--nodes-deduplicated", str(root / "dedup.json"),
                 "--countries-dir", str(countries),
             ]
             with mock.patch("sys.argv", argv):
                 self.assertEqual(merge_compute.main(), 0)
+            self.assertTrue(handoff_v4.exists())
             payload = json.loads((countries / "NL.json").read_text(encoding="utf-8"))
             self.assertEqual(payload["schema"], "subscription-source-country-ranking-v3")
             self.assertEqual(payload["source_id_semantics"], "preferred_public_retrieval_source_id_only_no_credentials")

@@ -75,12 +75,30 @@ class LocalMMDBShadowResolver:
 
 
 class ShadowingGeoResolver:
-    """Delegate authoritative passive GeoIP to the legacy resolver and observe local MMDB in parallel."""
+    """Delegate authoritative passive GeoIP to legacy and observe up to two local MMDBs."""
 
-    def __init__(self, cache: dict[str, str], *, max_new: int, timeout: float, shadow: LocalMMDBShadowResolver):
+    def __init__(
+        self,
+        cache: dict[str, str],
+        *,
+        max_new: int,
+        timeout: float,
+        shadow: LocalMMDBShadowResolver,
+        secondary_shadow: LocalMMDBShadowResolver | None = None,
+        secondary_requested: bool = False,
+        secondary_init_failed: bool = False,
+        secondary_provider: str | None = None,
+        secondary_release: str | None = None,
+    ):
         self.legacy = p.GeoResolver(cache, max_new=max_new, timeout=timeout)
         self.shadow = shadow
+        self.secondary_shadow = secondary_shadow
+        self.secondary_requested = bool(secondary_requested)
+        self.secondary_init_failed = bool(secondary_init_failed)
+        self.secondary_provider = secondary_provider
+        self.secondary_release = secondary_release
         self._lock = threading.Lock()
+
         self._shadow_calls = 0
         self._shadow_known = 0
         self._shadow_unknown = 0
@@ -93,12 +111,37 @@ class ShadowingGeoResolver:
         self._legacy_unknown_shadow_country_counts: Counter[str] = Counter()
         self._shadow_country_counts: Counter[str] = Counter()
 
+        self._secondary_shadow_calls = 0
+        self._secondary_shadow_known = 0
+        self._secondary_shadow_unknown = 0
+        self._secondary_shadow_lookup_failed = 0
+        self._legacy_known_secondary_known_agree = 0
+        self._legacy_known_secondary_known_disagree = 0
+        self._legacy_known_secondary_unknown = 0
+        self._legacy_unknown_secondary_known = 0
+        self._legacy_unknown_secondary_unknown = 0
+        self._primary_secondary_both_known_agree = 0
+        self._primary_secondary_both_known_disagree = 0
+        self._primary_known_secondary_unknown = 0
+        self._primary_unknown_secondary_known = 0
+        self._both_shadows_unknown = 0
+        self._legacy_unknown_shadow_consensus_known = 0
+        self._legacy_unknown_shadow_consensus_conflict = 0
+        self._secondary_shadow_country_counts: Counter[str] = Counter()
+        self._legacy_unknown_secondary_country_counts: Counter[str] = Counter()
+        self._legacy_unknown_shadow_consensus_country_counts: Counter[str] = Counter()
+
     def country(self, ip: str | None) -> str | None:
         legacy_country = self.legacy.country(ip)
         if not ip or not p._global_ip(ip):
             return legacy_country
 
         shadow_country, failed = self.shadow.lookup(ip)
+        secondary_country = None
+        secondary_failed = False
+        if self.secondary_shadow is not None:
+            secondary_country, secondary_failed = self.secondary_shadow.lookup(ip)
+
         with self._lock:
             self._shadow_calls += 1
             if shadow_country:
@@ -121,6 +164,46 @@ class ShadowingGeoResolver:
                 self._legacy_unknown_shadow_country_counts[shadow_country] += 1
             else:
                 self._both_unknown += 1
+
+            if self.secondary_shadow is not None:
+                self._secondary_shadow_calls += 1
+                if secondary_country:
+                    self._secondary_shadow_known += 1
+                    self._secondary_shadow_country_counts[secondary_country] += 1
+                else:
+                    self._secondary_shadow_unknown += 1
+                if secondary_failed:
+                    self._secondary_shadow_lookup_failed += 1
+
+                if legacy_country and secondary_country:
+                    if legacy_country == secondary_country:
+                        self._legacy_known_secondary_known_agree += 1
+                    else:
+                        self._legacy_known_secondary_known_disagree += 1
+                elif legacy_country:
+                    self._legacy_known_secondary_unknown += 1
+                elif secondary_country:
+                    self._legacy_unknown_secondary_known += 1
+                    self._legacy_unknown_secondary_country_counts[secondary_country] += 1
+                else:
+                    self._legacy_unknown_secondary_unknown += 1
+
+                if shadow_country and secondary_country:
+                    if shadow_country == secondary_country:
+                        self._primary_secondary_both_known_agree += 1
+                        if not legacy_country:
+                            self._legacy_unknown_shadow_consensus_known += 1
+                            self._legacy_unknown_shadow_consensus_country_counts[shadow_country] += 1
+                    else:
+                        self._primary_secondary_both_known_disagree += 1
+                        if not legacy_country:
+                            self._legacy_unknown_shadow_consensus_conflict += 1
+                elif shadow_country:
+                    self._primary_known_secondary_unknown += 1
+                elif secondary_country:
+                    self._primary_unknown_secondary_known += 1
+                else:
+                    self._both_shadows_unknown += 1
         return legacy_country
 
     def metrics(self) -> dict:
@@ -143,7 +226,34 @@ class ShadowingGeoResolver:
                 "both_unknown": self._both_unknown,
                 "shadow_country_counts": dict(sorted(self._shadow_country_counts.items())),
                 "legacy_unknown_shadow_country_counts": dict(sorted(self._legacy_unknown_shadow_country_counts.items())),
+                "secondary_shadow_requested": self.secondary_requested,
+                "secondary_shadow_available": self.secondary_shadow is not None,
+                "secondary_shadow_init_failed": self.secondary_init_failed,
+                "secondary_shadow_provider": self.secondary_shadow.provider if self.secondary_shadow is not None else self.secondary_provider,
+                "secondary_shadow_release": self.secondary_shadow.release if self.secondary_shadow is not None else self.secondary_release,
             })
+            if self.secondary_shadow is not None:
+                metrics.update({
+                    "secondary_shadow_calls": self._secondary_shadow_calls,
+                    "secondary_shadow_known": self._secondary_shadow_known,
+                    "secondary_shadow_unknown": self._secondary_shadow_unknown,
+                    "secondary_shadow_lookup_failed": self._secondary_shadow_lookup_failed,
+                    "legacy_known_secondary_known_agree": self._legacy_known_secondary_known_agree,
+                    "legacy_known_secondary_known_disagree": self._legacy_known_secondary_known_disagree,
+                    "legacy_known_secondary_unknown": self._legacy_known_secondary_unknown,
+                    "legacy_unknown_secondary_known": self._legacy_unknown_secondary_known,
+                    "legacy_unknown_secondary_unknown": self._legacy_unknown_secondary_unknown,
+                    "primary_secondary_both_known_agree": self._primary_secondary_both_known_agree,
+                    "primary_secondary_both_known_disagree": self._primary_secondary_both_known_disagree,
+                    "primary_known_secondary_unknown": self._primary_known_secondary_unknown,
+                    "primary_unknown_secondary_known": self._primary_unknown_secondary_known,
+                    "both_shadows_unknown": self._both_shadows_unknown,
+                    "legacy_unknown_shadow_consensus_known": self._legacy_unknown_shadow_consensus_known,
+                    "legacy_unknown_shadow_consensus_conflict": self._legacy_unknown_shadow_consensus_conflict,
+                    "secondary_shadow_country_counts": dict(sorted(self._secondary_shadow_country_counts.items())),
+                    "legacy_unknown_secondary_country_counts": dict(sorted(self._legacy_unknown_secondary_country_counts.items())),
+                    "legacy_unknown_shadow_consensus_country_counts": dict(sorted(self._legacy_unknown_shadow_consensus_country_counts.items())),
+                })
         return metrics
 
 
@@ -157,13 +267,28 @@ def inspect_many_shadow(
     geo_cache: dict[str, str],
     geo_max_new: int,
     shadow: LocalMMDBShadowResolver,
+    secondary_shadow: LocalMMDBShadowResolver | None = None,
+    secondary_requested: bool = False,
+    secondary_init_failed: bool = False,
+    secondary_provider: str | None = None,
+    secondary_release: str | None = None,
     metrics_out: dict | None = None,
 ) -> list[dict]:
-    """Mirror pre_admission.inspect_many while keeping shadow data out of node facts."""
+    """Mirror pre_admission.inspect_many while keeping all shadow data out of node facts."""
     eligible = [x for x in items if x.get("status") in {"active", "stale"} and x.get("url")]
     eligible.sort(key=lambda x: ((x.get("precheck") or {}).get("checked_at") or "", x["url"]))
     cache_before = len(geo_cache)
-    geo = ShadowingGeoResolver(geo_cache, max_new=geo_max_new, timeout=4.0, shadow=shadow)
+    geo = ShadowingGeoResolver(
+        geo_cache,
+        max_new=geo_max_new,
+        timeout=4.0,
+        shadow=shadow,
+        secondary_shadow=secondary_shadow,
+        secondary_requested=secondary_requested,
+        secondary_init_failed=secondary_init_failed,
+        secondary_provider=secondary_provider,
+        secondary_release=secondary_release,
+    )
     with p.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         futures = [pool.submit(p.inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
         out = [future.result() for future in p.as_completed(futures)]

@@ -9,18 +9,37 @@ from typing import Any
 from src import pre_admission as p
 
 
-class DBIPShadowResolver:
-    """Read a local DB-IP Country Lite MMDB without affecting primary GeoIP decisions."""
+def _country_from_record(record: Any) -> str | None:
+    """Extract an ISO alpha-2 country code from common country-MMDB schemas."""
+    if not isinstance(record, dict):
+        return None
+    country = record.get("country") if isinstance(record.get("country"), dict) else {}
+    registered = record.get("registered_country") if isinstance(record.get("registered_country"), dict) else {}
+    candidates = (
+        record.get("country_code"),
+        country.get("iso_code"),
+        country.get("isoCode"),
+        registered.get("iso_code"),
+    )
+    for value in candidates:
+        code = str(value or "").strip().upper()
+        if re.fullmatch(r"[A-Z]{2}", code):
+            return code
+    return None
+
+
+class LocalMMDBShadowResolver:
+    """Read a local country MMDB without affecting primary GeoIP decisions."""
 
     def __init__(
         self,
         database: str | Path | None = None,
         *,
-        provider: str = "dbip-country-lite",
+        provider: str = "local-country-mmdb",
         release: str | None = None,
         reader: Any | None = None,
     ):
-        self.provider = str(provider or "dbip-country-lite")
+        self.provider = str(provider or "local-country-mmdb")
         self.release = str(release or "unknown")
         self._owned_reader = reader is None
         if reader is None:
@@ -42,11 +61,7 @@ class DBIPShadowResolver:
             if cached is not None:
                 return cached
             try:
-                record = self._reader.get(ip) or {}
-                country = str(((record.get("country") or {}).get("iso_code")) or "").upper()
-                if not re.fullmatch(r"[A-Z]{2}", country):
-                    country = ""
-                result = (country or None, False)
+                result = (_country_from_record(self._reader.get(ip) or {}), False)
             except Exception:
                 result = (None, True)
             self._cache[ip] = result
@@ -60,9 +75,9 @@ class DBIPShadowResolver:
 
 
 class ShadowingGeoResolver:
-    """Delegate authoritative passive GeoIP to the legacy resolver and observe DB-IP in parallel."""
+    """Delegate authoritative passive GeoIP to the legacy resolver and observe local MMDB in parallel."""
 
-    def __init__(self, cache: dict[str, str], *, max_new: int, timeout: float, shadow: DBIPShadowResolver):
+    def __init__(self, cache: dict[str, str], *, max_new: int, timeout: float, shadow: LocalMMDBShadowResolver):
         self.legacy = p.GeoResolver(cache, max_new=max_new, timeout=timeout)
         self.shadow = shadow
         self._lock = threading.Lock()
@@ -141,7 +156,7 @@ def inspect_many_shadow(
     workers: int,
     geo_cache: dict[str, str],
     geo_max_new: int,
-    shadow: DBIPShadowResolver,
+    shadow: LocalMMDBShadowResolver,
     metrics_out: dict | None = None,
 ) -> list[dict]:
     """Mirror pre_admission.inspect_many while keeping shadow data out of node facts."""

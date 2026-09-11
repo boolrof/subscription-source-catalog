@@ -86,10 +86,11 @@ jobs:
     if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success')
     strategy:
       fail-fast: false
+      max-parallel: 20
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v7
         with:
@@ -121,8 +122,8 @@ jobs:
           fi
           python compute.py \
             --shard "${{ matrix.shard }}" \
-            --shards 8 \
-            --max-sources 40 \
+            --shards 20 \
+            --max-sources 80 \
             --workers 2 \
             --geo-max-new 25 \
             "${shadow_args[@]}" \
@@ -137,7 +138,7 @@ jobs:
   merge:
     needs: shard
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
         with:
@@ -169,7 +170,7 @@ jobs:
           python coverage_metrics.py
           --artifacts compute-results
           --previous-nodes "$RUNNER_TEMP/nodes-before.json"
-          --expected-shards 8
+          --expected-shards 20
       - name: Snapshot generated data hashes
         run: |
           {

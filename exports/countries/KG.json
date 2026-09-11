@@ -1,7 +1,7 @@
 {
   "country": "KG",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 6,
+  "exported_candidates": 7,
   "nodes": [
     {
       "independent_source_count": 1,
@@ -14,8 +14,17 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T13:45:24Z",
-      "node_digest": "f16d8d9a8ccbd2e0ac4005fda5a03c647ee5249489d44a74f2e0fcd1ccc6e19f",
+      "last_seen_at": "2026-09-11T21:22:05Z",
+      "node_digest": "dc11a5a829cb3b0c4dc0cde17c2579163753725d58db658e4aa84f40d87bd031",
+      "pre_score": 93,
+      "protocol": "trojan",
+      "source_count": 1,
+      "source_id": "7cd2627be76f0fe7dbb8325d"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T21:27:56Z",
+      "node_digest": "7105cdbff37ad22783d00fdb2f6db68da681440f07030619109de90575de1181",
       "pre_score": 93,
       "protocol": "vmess",
       "source_count": 1,
@@ -23,7 +32,7 @@
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-11T16:47:39Z",
+      "last_seen_at": "2026-09-11T21:22:48Z",
       "node_digest": "d230f0c2aa85683cbbb8cf0baff7f892891dec0e73f720e8652ae383fbc977a0",
       "pre_score": 91,
       "protocol": "trojan",
@@ -32,7 +41,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T16:46:21Z",
+      "last_seen_at": "2026-09-11T21:22:48Z",
       "node_digest": "b2b3b72eee3da1ff17ccb95589d51e548583522729dd4d476e19843bee0ffc8d",
       "pre_score": 74,
       "protocol": "vless",
@@ -41,7 +50,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T16:46:21Z",
+      "last_seen_at": "2026-09-11T21:22:48Z",
       "node_digest": "ce9c300f0b47bf4d4c219eb246ba0f43581740e20cbd36d13f2fc8ea28d5bc5b",
       "pre_score": 74,
       "protocol": "vless",
@@ -50,7 +59,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T16:46:21Z",
+      "last_seen_at": "2026-09-11T21:22:48Z",
       "node_digest": "d9e3d74f891da514f0492bfe1f977cc93abec79d58e0f0df8cf4998d9ccd7aa6",
       "pre_score": 74,
       "protocol": "vmess",
@@ -60,5 +69,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 6
+  "total_candidates": 7
 }

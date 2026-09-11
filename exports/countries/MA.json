@@ -1,11 +1,20 @@
 {
   "country": "MA",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 1,
+  "exported_candidates": 2,
   "nodes": [
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T21:20:51Z",
+      "last_seen_at": "2026-09-11T21:55:44Z",
+      "node_digest": "bea8eb4846eb4f286cc51f8415606ed51e8a9d476f9a4d1ade98fecfa13e3565",
+      "pre_score": 100,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "2798987278c918910957e0e9"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-11T21:57:09Z",
       "node_digest": "a40df7ea7177e1d7fb3fcb839844b743db609dcf0a708ede77718c663bd729a9",
       "pre_score": 71,
       "protocol": "ss",
@@ -15,5 +24,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 1
+  "total_candidates": 2
 }

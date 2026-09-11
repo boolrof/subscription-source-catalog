@@ -24,7 +24,7 @@ def main() -> int:
     p.add_argument("--workers", type=int, default=2)
     p.add_argument("--geo-max-new", type=int, default=25)
     p.add_argument("--geo-shadow-mmdb")
-    p.add_argument("--geo-shadow-provider", default="dbip-country-lite")
+    p.add_argument("--geo-shadow-provider", default="local-country-mmdb")
     p.add_argument("--geo-shadow-release")
     args = p.parse_args()
 
@@ -40,15 +40,23 @@ def main() -> int:
 
     shadow = None
     shadow_requested = bool(args.geo_shadow_mmdb)
+    shadow_init_failed = False
     if shadow_requested:
         try:
-            from src.geoip_shadow import DBIPShadowResolver, inspect_many_shadow
+            from src.geoip_shadow import LocalMMDBShadowResolver
 
-            shadow = DBIPShadowResolver(
+            shadow = LocalMMDBShadowResolver(
                 args.geo_shadow_mmdb,
                 provider=args.geo_shadow_provider,
                 release=args.geo_shadow_release,
             )
+        except Exception:
+            shadow_init_failed = True
+
+    if shadow is not None:
+        from src.geoip_shadow import inspect_many_shadow
+
+        try:
             results = inspect_many_shadow(
                 sources,
                 max_sources=args.max_sources,
@@ -60,27 +68,8 @@ def main() -> int:
                 shadow=shadow,
                 metrics_out=metrics,
             )
-        except Exception:
-            results = inspect_many(
-                sources,
-                max_sources=args.max_sources,
-                max_bytes=args.max_bytes,
-                timeout=args.timeout,
-                workers=args.workers,
-                geo_cache=geo_cache,
-                geo_max_new=args.geo_max_new,
-                metrics_out=metrics,
-            )
-            metrics.setdefault("geo", {}).update({
-                "shadow_requested": True,
-                "shadow_available": False,
-                "shadow_init_failed": True,
-                "shadow_provider": args.geo_shadow_provider,
-                "shadow_release": args.geo_shadow_release or "unknown",
-            })
         finally:
-            if shadow is not None:
-                shadow.close()
+            shadow.close()
     else:
         results = inspect_many(
             sources,
@@ -93,9 +82,11 @@ def main() -> int:
             metrics_out=metrics,
         )
         metrics.setdefault("geo", {}).update({
-            "shadow_requested": False,
+            "shadow_requested": shadow_requested,
             "shadow_available": False,
-            "shadow_init_failed": False,
+            "shadow_init_failed": shadow_init_failed,
+            "shadow_provider": args.geo_shadow_provider if shadow_requested else None,
+            "shadow_release": (args.geo_shadow_release or "unknown") if shadow_requested else None,
         })
 
     payload = {

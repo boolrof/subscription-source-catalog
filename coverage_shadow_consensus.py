@@ -79,6 +79,26 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
         "legacy_unknown_shadow_consensus_known",
         "legacy_unknown_shadow_consensus_conflict",
     ]
+    unique_keys = [
+        "unique_resolved_ips",
+        "unique_legacy_known_shadow_known_agree",
+        "unique_legacy_known_shadow_known_disagree",
+        "unique_legacy_known_shadow_unknown",
+        "unique_legacy_unknown_shadow_known",
+        "unique_both_unknown",
+        "unique_legacy_known_secondary_known_agree",
+        "unique_legacy_known_secondary_known_disagree",
+        "unique_legacy_known_secondary_unknown",
+        "unique_legacy_unknown_secondary_known",
+        "unique_legacy_unknown_secondary_unknown",
+        "unique_primary_secondary_both_known_agree",
+        "unique_primary_secondary_both_known_disagree",
+        "unique_primary_known_secondary_unknown",
+        "unique_primary_unknown_secondary_known",
+        "unique_both_shadows_unknown",
+        "unique_legacy_unknown_shadow_consensus_known",
+        "unique_legacy_unknown_shadow_consensus_conflict",
+    ]
     if not complete:
         secondary = {
             **base,
@@ -97,6 +117,7 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
             "legacy_unknown_shadow_consensus_country_counts": None,
             "primary_secondary_conflict_pair_counts": None,
             "legacy_unknown_shadow_consensus_conflict_pair_counts": None,
+            "unique_ip_shard_sum": None,
         }
         invariants = {
             "secondary_shadow_calls_match_resolvable": None,
@@ -107,18 +128,29 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
             "consensus_subset_of_legacy_unknown": None,
             "primary_secondary_conflict_pairs_match_disagree": None,
             "legacy_unknown_consensus_conflict_pairs_match_conflict": None,
+            "unique_primary_legacy_partition": None,
+            "unique_secondary_legacy_partition": None,
+            "unique_primary_secondary_partition": None,
+            "unique_consensus_subset_of_legacy_unknown": None,
+            "unique_primary_secondary_conflict_pairs_match_disagree": None,
+            "unique_legacy_unknown_consensus_conflict_pairs_match_conflict": None,
         }
         return secondary, consensus, invariants
 
     sums = {key: sum(int(row.get(key) or 0) for row in geos) for key in keys}
+    unique_sums = {key: sum(int(row.get(key) or 0) for row in geos) for key in unique_keys}
     legacy_both_known = sums["legacy_known_secondary_known_agree"] + sums["legacy_known_secondary_known_disagree"]
     local_both_known = sums["primary_secondary_both_known_agree"] + sums["primary_secondary_both_known_disagree"]
+    unique_local_both_known = unique_sums["unique_primary_secondary_both_known_agree"] + unique_sums["unique_primary_secondary_both_known_disagree"]
     nodes = base_metrics.get("nodes") or {}
     legacy_geo_unknown = int(nodes.get("geo_unknown") or 0)
     resolvable = int(nodes.get("resolvable_endpoints") or 0)
     legacy_geo_known = int(nodes.get("geo_known") or 0)
     primary_secondary_conflict_pairs = _counter_sum(geos, "primary_secondary_conflict_pair_counts")
     legacy_unknown_conflict_pairs = _counter_sum(geos, "legacy_unknown_shadow_consensus_conflict_pair_counts")
+    unique_primary_secondary_conflict_pairs = _counter_sum(geos, "unique_primary_secondary_conflict_pair_counts")
+    unique_legacy_unknown_conflict_pairs = _counter_sum(geos, "unique_legacy_unknown_shadow_consensus_conflict_pair_counts")
+    unique_legacy_unknown = unique_sums["unique_legacy_unknown_secondary_known"] + unique_sums["unique_legacy_unknown_secondary_unknown"]
 
     secondary = {
         **base,
@@ -139,6 +171,35 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
         "legacy_unknown_shadow_consensus_country_counts": _counter_sum(geos, "legacy_unknown_shadow_consensus_country_counts"),
         "primary_secondary_conflict_pair_counts": primary_secondary_conflict_pairs,
         "legacy_unknown_shadow_consensus_conflict_pair_counts": legacy_unknown_conflict_pairs,
+        "unique_ip_shard_sum": {
+            "counting_unit": "sum_of_per_shard_unique_resolved_ip_counts_cross_shard_duplicates_possible",
+            "resolved_ips": unique_sums["unique_resolved_ips"],
+            "legacy_known_primary_agree": unique_sums["unique_legacy_known_shadow_known_agree"],
+            "legacy_known_primary_disagree": unique_sums["unique_legacy_known_shadow_known_disagree"],
+            "legacy_known_primary_unknown": unique_sums["unique_legacy_known_shadow_unknown"],
+            "legacy_unknown_primary_known": unique_sums["unique_legacy_unknown_shadow_known"],
+            "legacy_unknown_primary_unknown": unique_sums["unique_both_unknown"],
+            "legacy_known_secondary_agree": unique_sums["unique_legacy_known_secondary_known_agree"],
+            "legacy_known_secondary_disagree": unique_sums["unique_legacy_known_secondary_known_disagree"],
+            "legacy_known_secondary_unknown": unique_sums["unique_legacy_known_secondary_unknown"],
+            "legacy_unknown_secondary_known": unique_sums["unique_legacy_unknown_secondary_known"],
+            "legacy_unknown_secondary_unknown": unique_sums["unique_legacy_unknown_secondary_unknown"],
+            "primary_secondary_both_known_agree": unique_sums["unique_primary_secondary_both_known_agree"],
+            "primary_secondary_both_known_disagree": unique_sums["unique_primary_secondary_both_known_disagree"],
+            "primary_known_secondary_unknown": unique_sums["unique_primary_known_secondary_unknown"],
+            "primary_unknown_secondary_known": unique_sums["unique_primary_unknown_secondary_known"],
+            "both_shadows_unknown": unique_sums["unique_both_shadows_unknown"],
+            "primary_secondary_agreement_rate_when_both_known": (
+                unique_sums["unique_primary_secondary_both_known_agree"] / unique_local_both_known
+            ) if unique_local_both_known else None,
+            "legacy_unknown_shadow_consensus_known": unique_sums["unique_legacy_unknown_shadow_consensus_known"],
+            "legacy_unknown_shadow_consensus_conflict": unique_sums["unique_legacy_unknown_shadow_consensus_conflict"],
+            "consensus_recovery_rate_of_legacy_unknown": (
+                unique_sums["unique_legacy_unknown_shadow_consensus_known"] / unique_legacy_unknown
+            ) if unique_legacy_unknown else None,
+            "primary_secondary_conflict_pair_counts": unique_primary_secondary_conflict_pairs,
+            "legacy_unknown_shadow_consensus_conflict_pair_counts": unique_legacy_unknown_conflict_pairs,
+        },
     }
     invariants = {
         "secondary_shadow_calls_match_resolvable": sums["secondary_shadow_calls"] == resolvable,
@@ -155,6 +216,40 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
         "consensus_subset_of_legacy_unknown": sums["legacy_unknown_shadow_consensus_known"] + sums["legacy_unknown_shadow_consensus_conflict"] <= legacy_geo_unknown,
         "primary_secondary_conflict_pairs_match_disagree": sum(primary_secondary_conflict_pairs.values()) == sums["primary_secondary_both_known_disagree"],
         "legacy_unknown_consensus_conflict_pairs_match_conflict": sum(legacy_unknown_conflict_pairs.values()) == sums["legacy_unknown_shadow_consensus_conflict"],
+        "unique_primary_legacy_partition": unique_sums["unique_resolved_ips"] == (
+            unique_sums["unique_legacy_known_shadow_known_agree"]
+            + unique_sums["unique_legacy_known_shadow_known_disagree"]
+            + unique_sums["unique_legacy_known_shadow_unknown"]
+            + unique_sums["unique_legacy_unknown_shadow_known"]
+            + unique_sums["unique_both_unknown"]
+        ),
+        "unique_secondary_legacy_partition": unique_sums["unique_resolved_ips"] == (
+            unique_sums["unique_legacy_known_secondary_known_agree"]
+            + unique_sums["unique_legacy_known_secondary_known_disagree"]
+            + unique_sums["unique_legacy_known_secondary_unknown"]
+            + unique_sums["unique_legacy_unknown_secondary_known"]
+            + unique_sums["unique_legacy_unknown_secondary_unknown"]
+        ),
+        "unique_primary_secondary_partition": unique_sums["unique_resolved_ips"] == (
+            unique_sums["unique_primary_secondary_both_known_agree"]
+            + unique_sums["unique_primary_secondary_both_known_disagree"]
+            + unique_sums["unique_primary_known_secondary_unknown"]
+            + unique_sums["unique_primary_unknown_secondary_known"]
+            + unique_sums["unique_both_shadows_unknown"]
+        ),
+        "unique_consensus_subset_of_legacy_unknown": (
+            unique_sums["unique_legacy_unknown_shadow_consensus_known"]
+            + unique_sums["unique_legacy_unknown_shadow_consensus_conflict"]
+            <= unique_legacy_unknown
+        ),
+        "unique_primary_secondary_conflict_pairs_match_disagree": (
+            sum(unique_primary_secondary_conflict_pairs.values())
+            == unique_sums["unique_primary_secondary_both_known_disagree"]
+        ),
+        "unique_legacy_unknown_consensus_conflict_pairs_match_conflict": (
+            sum(unique_legacy_unknown_conflict_pairs.values())
+            == unique_sums["unique_legacy_unknown_shadow_consensus_conflict"]
+        ),
     }
     return secondary, consensus, invariants
 
@@ -182,12 +277,14 @@ def main() -> int:
     metrics.setdefault("invariants", {}).update(invariants)
     metrics.setdefault("semantics", {})["geo_shadow_consensus"] = "observation_only_two_local_mmdbs_agree_legacy_country_ranking_unchanged"
     metrics.setdefault("semantics", {})["geo_shadow_conflict_pairs"] = "aggregate_occurrence_weighted_country_code_pairs_only_no_ip_endpoint_uri_or_source_identifiers"
+    metrics.setdefault("semantics", {})["geo_shadow_unique_ip_shard_sum"] = "aggregate_only_sum_of_per_shard_unique_ip_classifications_cross_shard_duplicates_possible_raw_ips_never_exported"
     dump(metrics_path, metrics)
     print(json.dumps({
         "secondary_complete": secondary["telemetry_complete"],
         "consensus_complete": consensus["telemetry_complete"],
         "legacy_unknown_consensus_known": consensus.get("legacy_unknown_shadow_consensus_known"),
         "legacy_unknown_consensus_conflict": consensus.get("legacy_unknown_shadow_consensus_conflict"),
+        "unique_ip_shard_sum": (consensus.get("unique_ip_shard_sum") or {}).get("resolved_ips"),
     }, sort_keys=True))
     return 0
 

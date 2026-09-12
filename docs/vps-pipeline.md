@@ -65,6 +65,8 @@ The pipeline is intentionally sequential across the 20 logical shards for the fi
 
 ## GitHub Actions boundary
 
-The repository's remaining `.github/workflows/ci.yml` is conventional development CI only: unit tests and Python compilation. It has no scheduled trigger and does not execute `run.py`, `compute.py`, source discovery, third-party subscription fetching, GeoIP dataset downloads, catalog merge, generated-state commits or pushes.
+All GitHub Actions workflow files are removed during the current account restriction/reinstatement review. The catalog does not rely on GitHub-hosted runners for any operational workload.
+
+If Actions access is restored later, only conventional software-development CI may be reintroduced: unit tests, compilation/static validation and security-boundary tests. It must not execute `run.py`, `compute.py`, source discovery, third-party subscription fetching, GeoIP dataset downloads, catalog merge, generated-state commits or pushes.
 
 This boundary should remain explicit in future changes.

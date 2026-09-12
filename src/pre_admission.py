@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+from src.geo_resolver_batch import BatchedGeoResolver
+
 APPROVED_PROTOCOLS = {"vless", "vmess", "trojan", "ss", "hysteria2"}
 SCHEME_ALIASES = {"hy2": "hysteria2", "hysteria2": "hysteria2"}
 URI_SCAN_RE = re.compile(r"(?i)(?:vless|vmess|trojan|ss|hysteria2|hy2)://[^\s<>\"'`]+")
@@ -503,10 +505,14 @@ def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolv
         countries: dict[str, int] = {}
         safe_nodes = []
         resolvable = unresolved = 0
-        for node in nodes:
+        endpoint_ips = [node.endpoint_ip for node in nodes]
+        if hasattr(geo, "countries"):
+            endpoint_countries = geo.countries(endpoint_ips)
+        else:
+            endpoint_countries = [geo.country(ip) for ip in endpoint_ips]
+        for node, country in zip(nodes, endpoint_countries):
             resolvable += bool(node.endpoint_ip)
             unresolved += not bool(node.endpoint_ip)
-            country = geo.country(node.endpoint_ip)
             if country:
                 countries[country] = countries.get(country, 0) + 1
             safe_nodes.append(node.safe(sid, country))
@@ -535,7 +541,7 @@ def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout
     eligible = [x for x in items if x.get("status") in {"active", "stale"} and x.get("url")]
     eligible.sort(key=lambda x: ((x.get("precheck") or {}).get("checked_at") or "", x["url"]))
     cache_before = len(geo_cache)
-    geo = GeoResolver(geo_cache, max_new=geo_max_new)
+    geo = BatchedGeoResolver(geo_cache, max_new=geo_max_new)
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
         futures = [pool.submit(inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
         out = [future.result() for future in as_completed(futures)]

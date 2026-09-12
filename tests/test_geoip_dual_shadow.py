@@ -35,6 +35,9 @@ class DualShadowTests(unittest.TestCase):
         self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict"], 0)
         self.assertEqual(metrics["primary_secondary_conflict_pair_counts"], {})
         self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict_pair_counts"], {})
+        self.assertEqual(metrics["unique_resolved_ips"], 1)
+        self.assertEqual(metrics["unique_primary_secondary_both_known_agree"], 1)
+        self.assertEqual(metrics["unique_legacy_unknown_shadow_consensus_known"], 1)
 
     @patch("src.geoip_shadow.p._global_ip", return_value=True)
     def test_conflict_is_observed_but_never_promoted(self, _global):
@@ -46,7 +49,31 @@ class DualShadowTests(unittest.TestCase):
         self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict"], 1)
         self.assertEqual(metrics["primary_secondary_conflict_pair_counts"], {"AU->US": 1})
         self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 1})
+        self.assertEqual(metrics["unique_primary_secondary_both_known_disagree"], 1)
+        self.assertEqual(metrics["unique_primary_secondary_conflict_pair_counts"], {"AU->US": 1})
         self.assertNotIn("test-ip", json.dumps(metrics, sort_keys=True))
+
+    @patch("src.geoip_shadow.p._global_ip", return_value=True)
+    def test_unique_ip_metrics_do_not_amplify_repeated_hot_endpoint(self, _global):
+        resolver = self.resolver({"country_code": "AU"}, {"country": {"iso_code": "US"}})
+        self.assertIsNone(resolver.country("hot-ip"))
+        self.assertIsNone(resolver.country("hot-ip"))
+        self.assertIsNone(resolver.country("other-ip"))
+        metrics = resolver.metrics()
+
+        self.assertEqual(metrics["primary_secondary_both_known_disagree"], 3)
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict"], 3)
+        self.assertEqual(metrics["primary_secondary_conflict_pair_counts"], {"AU->US": 3})
+
+        self.assertEqual(metrics["unique_resolved_ips"], 2)
+        self.assertEqual(metrics["unique_primary_secondary_both_known_disagree"], 2)
+        self.assertEqual(metrics["unique_legacy_unknown_shadow_consensus_conflict"], 2)
+        self.assertEqual(metrics["unique_primary_secondary_conflict_pair_counts"], {"AU->US": 2})
+        self.assertEqual(metrics["unique_legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 2})
+
+        serialized = json.dumps(metrics, sort_keys=True)
+        self.assertNotIn("hot-ip", serialized)
+        self.assertNotIn("other-ip", serialized)
 
 
 if __name__ == "__main__":

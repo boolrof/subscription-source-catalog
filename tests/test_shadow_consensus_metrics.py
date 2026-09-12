@@ -32,6 +32,26 @@ class ShadowConsensusMetricsTests(unittest.TestCase):
             "legacy_unknown_shadow_consensus_country_counts": {"AU": 2},
             "primary_secondary_conflict_pair_counts": {"AU->US": 1},
             "legacy_unknown_shadow_consensus_conflict_pair_counts": {"AU->US": 1},
+            "unique_resolved_ips": 6,
+            "unique_legacy_known_shadow_known_agree": 2,
+            "unique_legacy_known_shadow_known_disagree": 1,
+            "unique_legacy_known_shadow_unknown": 0,
+            "unique_legacy_unknown_shadow_known": 3,
+            "unique_both_unknown": 0,
+            "unique_legacy_known_secondary_known_agree": 2,
+            "unique_legacy_known_secondary_known_disagree": 1,
+            "unique_legacy_known_secondary_unknown": 0,
+            "unique_legacy_unknown_secondary_known": 2,
+            "unique_legacy_unknown_secondary_unknown": 1,
+            "unique_primary_secondary_both_known_agree": 3,
+            "unique_primary_secondary_both_known_disagree": 1,
+            "unique_primary_known_secondary_unknown": 1,
+            "unique_primary_unknown_secondary_known": 1,
+            "unique_both_shadows_unknown": 0,
+            "unique_legacy_unknown_shadow_consensus_known": 1,
+            "unique_legacy_unknown_shadow_consensus_conflict": 1,
+            "unique_primary_secondary_conflict_pair_counts": {"AU->US": 1},
+            "unique_legacy_unknown_shadow_consensus_conflict_pair_counts": {"AU->US": 1},
         }
         shards = {0: {"metrics": {"geo": geo}}}
         base_metrics = {"nodes": {
@@ -51,6 +71,14 @@ class ShadowConsensusMetricsTests(unittest.TestCase):
         self.assertEqual(consensus["counting_unit"], "resolved_endpoint_occurrence_before_global_dedup")
         self.assertEqual(consensus["primary_secondary_conflict_pair_counts"], {"AU->US": 1})
         self.assertEqual(consensus["legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 1})
+
+        unique = consensus["unique_ip_shard_sum"]
+        self.assertEqual(unique["resolved_ips"], 6)
+        self.assertEqual(unique["counting_unit"], "sum_of_per_shard_unique_resolved_ip_counts_cross_shard_duplicates_possible")
+        self.assertAlmostEqual(unique["primary_secondary_agreement_rate_when_both_known"], 3 / 4)
+        self.assertAlmostEqual(unique["consensus_recovery_rate_of_legacy_unknown"], 1 / 3)
+        self.assertEqual(unique["primary_secondary_conflict_pair_counts"], {"AU->US": 1})
+        self.assertEqual(unique["legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 1})
         self.assertTrue(all(invariants.values()))
 
     def test_incomplete_secondary_shadow_uses_null_conflict_pairs(self):
@@ -68,8 +96,11 @@ class ShadowConsensusMetricsTests(unittest.TestCase):
         self.assertFalse(consensus["telemetry_complete"])
         self.assertIsNone(consensus["primary_secondary_conflict_pair_counts"])
         self.assertIsNone(consensus["legacy_unknown_shadow_consensus_conflict_pair_counts"])
+        self.assertIsNone(consensus["unique_ip_shard_sum"])
         self.assertIsNone(invariants["primary_secondary_conflict_pairs_match_disagree"])
         self.assertIsNone(invariants["legacy_unknown_consensus_conflict_pairs_match_conflict"])
+        self.assertIsNone(invariants["unique_primary_secondary_partition"])
+        self.assertIsNone(invariants["unique_primary_secondary_conflict_pairs_match_disagree"])
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ sanitized generated metadata
 GitHub repository
 ```
 
-GitHub Actions предназначены только для conventional software-development CI репозитория: unit tests, compile/static validation и security-boundary tests. Scheduled discovery, third-party subscription fetching и catalog computation в GitHub Actions не выполняются.
+Scheduled discovery, third-party subscription fetching и catalog computation в GitHub Actions не выполняются.
 
 ## Поддерживаемые протоколы поиска
 
@@ -108,7 +108,7 @@ SOURCES.md
 
 ## GitHub Actions
 
-В репозитории остаётся только обычный CI разработки ПО. CI не выполняет scheduled discovery, массовые обращения к third-party subscription/source URL или catalog compute.
+GitHub Actions workflows временно полностью удалены на период account restriction/reinstatement review. После снятия ограничения Actions могут быть возвращены только для conventional software-development CI: unit tests, compile/static validation и security-boundary tests. Сетевой catalog workload обратно в Actions не возвращается.
 
 ## VPS execution
 

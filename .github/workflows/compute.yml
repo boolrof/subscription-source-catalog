@@ -128,9 +128,9 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+        group: [0, 1, 2, 3]
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v7
         with:
@@ -146,9 +146,15 @@ jobs:
         with:
           name: geoip-shadow
           path: geoip-shadow
+      - name: Initialize group diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p compute-artifacts
+          printf 'group=%s\nstate=setup\n' "${{ matrix.group }}" > compute-artifacts/group-status.txt
       - name: Unit tests
         run: python -m unittest discover -s tests -v
-      - name: Passive pre-admission shard
+      - name: Passive pre-admission logical shards
         shell: bash
         run: |
           set -euo pipefail
@@ -168,19 +174,37 @@ jobs:
               --geo-shadow-secondary-release "$(cat geoip-shadow/dbip-release.txt)"
             )
           fi
-          python compute.py \
-            --shard "${{ matrix.shard }}" \
-            --shards 20 \
-            --max-sources 80 \
-            --workers 2 \
-            --geo-max-new 25 \
-            "${shadow_args[@]}" \
-            "${secondary_shadow_args[@]}" \
-            --output "compute-artifacts/shard-${{ matrix.shard }}.json"
+          group=${{ matrix.group }}
+          status_file="compute-artifacts/group-status.txt"
+          printf 'group=%s\nstate=running\n' "$group" > "$status_file"
+          completed=()
+          for round in 0 1 2 3 4; do
+            shard=$(( group + round * 4 ))
+            echo "=== logical shard ${shard}/19 (physical group ${group}) ==="
+            if ! python compute.py \
+              --shard "$shard" \
+              --shards 20 \
+              --max-sources 80 \
+              --workers 2 \
+              --geo-max-new 25 \
+              "${shadow_args[@]}" \
+              "${secondary_shadow_args[@]}" \
+              --output "compute-artifacts/shard-${shard}.json"; then
+              printf 'group=%s\nstate=failed\nfailed_shard=%s\ncompleted_shards=%s\n' \
+                "$group" "$shard" "${completed[*]:-}" > "$status_file"
+              exit 1
+            fi
+            completed+=("$shard")
+          done
+          printf 'group=%s\nstate=complete\ncompleted_shards=%s\n' \
+            "$group" "${completed[*]}" > "$status_file"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: compute-shard-${{ matrix.shard }}
-          path: compute-artifacts/shard-${{ matrix.shard }}.json
+          name: compute-shard-group-${{ matrix.group }}
+          path: |
+            compute-artifacts/shard-*.json
+            compute-artifacts/group-status.txt
           retention-days: 1
           if-no-files-found: error
 
@@ -200,6 +224,25 @@ jobs:
           pattern: compute-shard-*
           path: compute-results
           merge-multiple: false
+      - name: Verify all logical shard artifacts are present
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PYVERIFY'
+          from pathlib import Path
+          from coverage_shadow_consensus import artifact_state
+
+          shards, duplicates = artifact_state(Path("compute-results"))
+          expected = set(range(20))
+          seen = set(shards)
+          if duplicates or seen != expected:
+              missing = sorted(expected - seen)
+              extra = sorted(seen - expected)
+              raise SystemExit(
+                  f"incomplete logical shard artifacts: missing={missing} extra={extra} duplicates={sorted(duplicates)}"
+              )
+          print("verified logical shards 0..19")
+          PYVERIFY
       - name: Snapshot previous global node index
         run: >-
           python state_store.py snapshot-global-nodes

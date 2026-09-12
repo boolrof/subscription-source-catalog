@@ -2,18 +2,35 @@ name: One-shot Catalog Compute Dispatch
 
 on:
   schedule:
-    - cron: '21 6 12 9 *'
+    - cron: '30 6 12 9 *'
 
 permissions:
   actions: write
-  contents: read
+  contents: write
+
+concurrency:
+  group: one-shot-catalog-compute-dispatch
+  cancel-in-progress: false
 
 jobs:
   dispatch:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 3
     steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
       - name: Dispatch Catalog Compute on main
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run compute.yml --ref main
+      - name: Remove one-shot dispatcher
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/one-shot-compute-dispatch.yml
+          git commit -m "ops(actions): remove one-shot compute dispatcher [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -2,13 +2,11 @@
 
 Публичный каталог источников и кандидатов для VPN Global Monitor.
 
-Репозиторий автоматически находит и обрабатывает публичные subscription/source URL, извлекает поддерживаемые proxy URI, выполняет безопасную предварительную дедупликацию и пассивную геолокацию endpoint, а затем публикует ограниченные метаданные для приватного query engine.
+Репозиторий содержит код каталога, документацию и безопасные generated metadata. Сетевой discovery и catalog compute выполняются на инфраструктуре владельца проекта, а не на GitHub-hosted Actions.
 
 ## Назначение
 
-Каталог уменьшает объём работы, который приходится выполнять приватному VPS.
-
-Он отвечает за дешёвые операции:
+Каталог выполняет:
 
 ```text
 public source discovery
@@ -23,6 +21,24 @@ public source discovery
 ```
 
 Каталог не определяет, работает ли узел фактически. Он также не является источником истины для страны выхода.
+
+## Execution boundary
+
+Внешние сетевые workloads выполняются вне GitHub Actions:
+
+```text
+owner-operated VPS
+  ↓
+discovery + third-party fetch + catalog compute
+  ↓
+validation + privacy/security checks
+  ↓
+sanitized generated metadata
+  ↓
+GitHub repository
+```
+
+GitHub Actions предназначены только для conventional software-development CI репозитория: unit tests, compile/static validation и security-boundary tests. Scheduled discovery, third-party subscription fetching и catalog computation в GitHub Actions не выполняются.
 
 ## Поддерживаемые протоколы поиска
 
@@ -78,31 +94,25 @@ Legacy handoff может временно существовать только
 
 ## Generated state
 
-Каталог хранит generated state и exports, используемые последующими workflow и VGM:
+Каталог хранит generated state и exports:
 
 ```text
 data/sources.json
-data/node_index.json
+data/node_index/
 data/geo_cache.json
 exports/
 SOURCES.md
 ```
 
-Эти файлы являются машинным состоянием каталога, а не ручной документацией. Их изменение выполняется workflow/compute pipeline.
+Эти файлы являются машинным состоянием каталога, а не ручной документацией. Их изменение выполняет owner-operated catalog pipeline после локальной валидации.
 
 ## GitHub Actions
 
-### Discovery
+В репозитории остаётся только обычный CI разработки ПО. CI не выполняет scheduled discovery, массовые обращения к third-party subscription/source URL или catalog compute.
 
-Периодически ищет и проверяет новые публичные источники в пределах заданного budget.
+## VPS execution
 
-### Compute
-
-Пересчитывает node index, country ranking и safe handoff exports.
-
-### CI
-
-Проверяет parser, security boundary, deterministic compute contracts и отсутствие запрещённых данных.
+Reference deployment contract находится в `deploy/vps/` и `docs/vps-pipeline.md`. Runtime script устанавливается в `/usr/local/bin`; systemd запускает его независимо от SSH/Termius-сессии. Секреты хранятся только на VPS и не коммитятся в репозиторий.
 
 ## Безопасность
 
@@ -130,7 +140,9 @@ public catalog → safe metadata → private VGM
 ```text
 Internet
   ↓
-Subscription Source Catalog
+owner-operated Catalog Pipeline
+  ↓ sanitized metadata
+Subscription Source Catalog (GitHub)
   ↓ safe candidate metadata
 VPN Global Monitor Query Planner
   ↓

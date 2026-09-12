@@ -1,7 +1,11 @@
-# Catalog Compute trigger policy
+# Catalog execution trigger policy
 
-Catalog Compute v2 normally runs after a successful `Scheduled Discovery` workflow and can also be invoked manually through `workflow_dispatch`.
+Catalog discovery and compute are owner-operated VPS workloads. They are not triggered by GitHub Actions.
 
-For code changes to the compute implementation itself, the workflow may also run on pushes to `main` that modify only the compute workflow or compute implementation/test files. Generated catalog/data commits are deliberately excluded from those push path filters so the compute job cannot trigger itself recursively.
+The VPS scheduler invokes the repository's catalog pipeline independently of GitHub-hosted runners. The pipeline performs discovery, third-party fetches, passive GeoIP work, logical shard computation, merge, validation and sanitized generated-state publication.
 
-This code-change trigger provides an immediate operational smoke of the passive pre-admission pipeline after reviewed changes are merged.
+GitHub Actions are limited to conventional software-development CI. The remaining CI workflow may run unit tests and compilation/static validation on pushes and pull requests, but it must not execute catalog discovery/compute or use GitHub-hosted runners as a general network-compute platform.
+
+Generated catalog commits include `[skip ci]` as an additional noise-reduction signal, but compliance does not depend on that marker: the CI workflow itself must remain free of catalog network workloads.
+
+Operational scheduling, first-run procedure, rollback and publication boundaries are documented in `docs/vps-pipeline.md`.

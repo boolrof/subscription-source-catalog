@@ -133,6 +133,29 @@ class ShadowingGeoResolver:
         self._primary_secondary_conflict_pair_counts: Counter[str] = Counter()
         self._legacy_unknown_shadow_consensus_conflict_pair_counts: Counter[str] = Counter()
 
+        # Raw IPs remain process-local and are never exported. These counters let us
+        # distinguish broad provider disagreement from a few very hot repeated IPs.
+        self._unique_seen_ips: set[str] = set()
+        self._unique_legacy_known_shadow_known_agree = 0
+        self._unique_legacy_known_shadow_known_disagree = 0
+        self._unique_legacy_known_shadow_unknown = 0
+        self._unique_legacy_unknown_shadow_known = 0
+        self._unique_both_unknown = 0
+        self._unique_legacy_known_secondary_known_agree = 0
+        self._unique_legacy_known_secondary_known_disagree = 0
+        self._unique_legacy_known_secondary_unknown = 0
+        self._unique_legacy_unknown_secondary_known = 0
+        self._unique_legacy_unknown_secondary_unknown = 0
+        self._unique_primary_secondary_both_known_agree = 0
+        self._unique_primary_secondary_both_known_disagree = 0
+        self._unique_primary_known_secondary_unknown = 0
+        self._unique_primary_unknown_secondary_known = 0
+        self._unique_both_shadows_unknown = 0
+        self._unique_legacy_unknown_shadow_consensus_known = 0
+        self._unique_legacy_unknown_shadow_consensus_conflict = 0
+        self._unique_primary_secondary_conflict_pair_counts: Counter[str] = Counter()
+        self._unique_legacy_unknown_shadow_consensus_conflict_pair_counts: Counter[str] = Counter()
+
     def country(self, ip: str | None) -> str | None:
         legacy_country = self.legacy.country(ip)
         if not ip or not p._global_ip(ip):
@@ -145,6 +168,10 @@ class ShadowingGeoResolver:
             secondary_country, secondary_failed = self.secondary_shadow.lookup(ip)
 
         with self._lock:
+            first_unique = ip not in self._unique_seen_ips
+            if first_unique:
+                self._unique_seen_ips.add(ip)
+
             self._shadow_calls += 1
             if shadow_country:
                 self._shadow_known += 1
@@ -157,15 +184,25 @@ class ShadowingGeoResolver:
             if legacy_country and shadow_country:
                 if legacy_country == shadow_country:
                     self._legacy_known_shadow_known_agree += 1
+                    if first_unique:
+                        self._unique_legacy_known_shadow_known_agree += 1
                 else:
                     self._legacy_known_shadow_known_disagree += 1
+                    if first_unique:
+                        self._unique_legacy_known_shadow_known_disagree += 1
             elif legacy_country:
                 self._legacy_known_shadow_unknown += 1
+                if first_unique:
+                    self._unique_legacy_known_shadow_unknown += 1
             elif shadow_country:
                 self._legacy_unknown_shadow_known += 1
                 self._legacy_unknown_shadow_country_counts[shadow_country] += 1
+                if first_unique:
+                    self._unique_legacy_unknown_shadow_known += 1
             else:
                 self._both_unknown += 1
+                if first_unique:
+                    self._unique_both_unknown += 1
 
             if self.secondary_shadow is not None:
                 self._secondary_shadow_calls += 1
@@ -180,35 +217,61 @@ class ShadowingGeoResolver:
                 if legacy_country and secondary_country:
                     if legacy_country == secondary_country:
                         self._legacy_known_secondary_known_agree += 1
+                        if first_unique:
+                            self._unique_legacy_known_secondary_known_agree += 1
                     else:
                         self._legacy_known_secondary_known_disagree += 1
+                        if first_unique:
+                            self._unique_legacy_known_secondary_known_disagree += 1
                 elif legacy_country:
                     self._legacy_known_secondary_unknown += 1
+                    if first_unique:
+                        self._unique_legacy_known_secondary_unknown += 1
                 elif secondary_country:
                     self._legacy_unknown_secondary_known += 1
                     self._legacy_unknown_secondary_country_counts[secondary_country] += 1
+                    if first_unique:
+                        self._unique_legacy_unknown_secondary_known += 1
                 else:
                     self._legacy_unknown_secondary_unknown += 1
+                    if first_unique:
+                        self._unique_legacy_unknown_secondary_unknown += 1
 
                 if shadow_country and secondary_country:
                     if shadow_country == secondary_country:
                         self._primary_secondary_both_known_agree += 1
+                        if first_unique:
+                            self._unique_primary_secondary_both_known_agree += 1
                         if not legacy_country:
                             self._legacy_unknown_shadow_consensus_known += 1
                             self._legacy_unknown_shadow_consensus_country_counts[shadow_country] += 1
+                            if first_unique:
+                                self._unique_legacy_unknown_shadow_consensus_known += 1
                     else:
                         self._primary_secondary_both_known_disagree += 1
                         pair = f"{shadow_country}->{secondary_country}"
                         self._primary_secondary_conflict_pair_counts[pair] += 1
+                        if first_unique:
+                            self._unique_primary_secondary_both_known_disagree += 1
+                            self._unique_primary_secondary_conflict_pair_counts[pair] += 1
                         if not legacy_country:
                             self._legacy_unknown_shadow_consensus_conflict += 1
                             self._legacy_unknown_shadow_consensus_conflict_pair_counts[pair] += 1
+                            if first_unique:
+                                self._unique_legacy_unknown_shadow_consensus_conflict += 1
+                                self._unique_legacy_unknown_shadow_consensus_conflict_pair_counts[pair] += 1
                 elif shadow_country:
                     self._primary_known_secondary_unknown += 1
+                    if first_unique:
+                        self._unique_primary_known_secondary_unknown += 1
                 elif secondary_country:
                     self._primary_unknown_secondary_known += 1
+                    if first_unique:
+                        self._unique_primary_unknown_secondary_known += 1
                 else:
                     self._both_shadows_unknown += 1
+                    if first_unique:
+                        self._unique_both_shadows_unknown += 1
         return legacy_country
 
     def metrics(self) -> dict:
@@ -231,6 +294,12 @@ class ShadowingGeoResolver:
                 "both_unknown": self._both_unknown,
                 "shadow_country_counts": dict(sorted(self._shadow_country_counts.items())),
                 "legacy_unknown_shadow_country_counts": dict(sorted(self._legacy_unknown_shadow_country_counts.items())),
+                "unique_resolved_ips": len(self._unique_seen_ips),
+                "unique_legacy_known_shadow_known_agree": self._unique_legacy_known_shadow_known_agree,
+                "unique_legacy_known_shadow_known_disagree": self._unique_legacy_known_shadow_known_disagree,
+                "unique_legacy_known_shadow_unknown": self._unique_legacy_known_shadow_unknown,
+                "unique_legacy_unknown_shadow_known": self._unique_legacy_unknown_shadow_known,
+                "unique_both_unknown": self._unique_both_unknown,
                 "secondary_shadow_requested": self.secondary_requested,
                 "secondary_shadow_available": self.secondary_shadow is not None,
                 "secondary_shadow_init_failed": self.secondary_init_failed,
@@ -260,6 +329,20 @@ class ShadowingGeoResolver:
                     "legacy_unknown_shadow_consensus_country_counts": dict(sorted(self._legacy_unknown_shadow_consensus_country_counts.items())),
                     "primary_secondary_conflict_pair_counts": dict(sorted(self._primary_secondary_conflict_pair_counts.items())),
                     "legacy_unknown_shadow_consensus_conflict_pair_counts": dict(sorted(self._legacy_unknown_shadow_consensus_conflict_pair_counts.items())),
+                    "unique_legacy_known_secondary_known_agree": self._unique_legacy_known_secondary_known_agree,
+                    "unique_legacy_known_secondary_known_disagree": self._unique_legacy_known_secondary_known_disagree,
+                    "unique_legacy_known_secondary_unknown": self._unique_legacy_known_secondary_unknown,
+                    "unique_legacy_unknown_secondary_known": self._unique_legacy_unknown_secondary_known,
+                    "unique_legacy_unknown_secondary_unknown": self._unique_legacy_unknown_secondary_unknown,
+                    "unique_primary_secondary_both_known_agree": self._unique_primary_secondary_both_known_agree,
+                    "unique_primary_secondary_both_known_disagree": self._unique_primary_secondary_both_known_disagree,
+                    "unique_primary_known_secondary_unknown": self._unique_primary_known_secondary_unknown,
+                    "unique_primary_unknown_secondary_known": self._unique_primary_unknown_secondary_known,
+                    "unique_both_shadows_unknown": self._unique_both_shadows_unknown,
+                    "unique_legacy_unknown_shadow_consensus_known": self._unique_legacy_unknown_shadow_consensus_known,
+                    "unique_legacy_unknown_shadow_consensus_conflict": self._unique_legacy_unknown_shadow_consensus_conflict,
+                    "unique_primary_secondary_conflict_pair_counts": dict(sorted(self._unique_primary_secondary_conflict_pair_counts.items())),
+                    "unique_legacy_unknown_shadow_consensus_conflict_pair_counts": dict(sorted(self._unique_legacy_unknown_shadow_consensus_conflict_pair_counts.items())),
                 })
         return metrics
 

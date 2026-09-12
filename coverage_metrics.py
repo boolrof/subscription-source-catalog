@@ -81,6 +81,7 @@ def _geo_counters(shards: dict[int, dict], expected_shards: int, duplicates: set
     if not complete:
         return {
             "telemetry_complete": False,
+            "batch_telemetry_complete": False,
             "configured_max_new_per_shard": None,
             "lookup_budget": None,
             "unique_resolved_ips_shard_sum": None,
@@ -90,6 +91,9 @@ def _geo_counters(shards: dict[int, dict], expected_shards: int, duplicates: set
             "lookup_success": None,
             "lookup_failed": None,
             "cap_skipped": None,
+            "batch_requests": None,
+            "batch_ips": None,
+            "batch_failures": None,
             "cache_entries_before_shard_sum": None,
             "cache_entries_after_shard_sum": None,
             "cache_entries_added_shard_sum": None,
@@ -99,7 +103,7 @@ def _geo_counters(shards: dict[int, dict], expected_shards: int, duplicates: set
     geos = [(payload.get("metrics") or {}).get("geo") or {} for payload in telemetry_shards]
     max_values = {int(row.get("max_new") or 0) for row in geos}
     configured_max = next(iter(max_values)) if len(max_values) == 1 else None
-    keys = [
+    legacy_keys = [
         "resolved_calls",
         "unique_resolved_ips",
         "cache_hits",
@@ -112,9 +116,13 @@ def _geo_counters(shards: dict[int, dict], expected_shards: int, duplicates: set
         "cache_entries_after",
         "cache_entries_added",
     ]
-    sums = {key: sum(int(row.get(key) or 0) for row in geos) for key in keys}
+    batch_keys = ["batch_requests", "batch_ips", "batch_failures"]
+    sums = {key: sum(int(row.get(key) or 0) for row in geos) for key in legacy_keys}
+    batch_complete = all(all(key in row for key in batch_keys) for row in geos)
+    batch_sums = {key: sum(int(row.get(key) or 0) for row in geos) for key in batch_keys} if batch_complete else None
     return {
         "telemetry_complete": True,
+        "batch_telemetry_complete": batch_complete,
         "configured_max_new_per_shard": configured_max,
         "lookup_budget": sum(int(row.get("max_new") or 0) for row in geos),
         "resolved_calls": sums["resolved_calls"],
@@ -125,6 +133,9 @@ def _geo_counters(shards: dict[int, dict], expected_shards: int, duplicates: set
         "lookup_success": sums["lookup_success"],
         "lookup_failed": sums["lookup_failed"],
         "cap_skipped": sums["cap_skipped"],
+        "batch_requests": batch_sums["batch_requests"] if batch_sums is not None else None,
+        "batch_ips": batch_sums["batch_ips"] if batch_sums is not None else None,
+        "batch_failures": batch_sums["batch_failures"] if batch_sums is not None else None,
         "cache_entries_before_shard_sum": sums["cache_entries_before"],
         "cache_entries_after_shard_sum": sums["cache_entries_after"],
         "cache_entries_added_shard_sum": sums["cache_entries_added"],
@@ -284,6 +295,7 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
         "geo_lookup_partition": None,
         "geo_known_partition": None,
         "geo_unknown_partition": None,
+        "geo_batch_consistency": None,
         "shadow_calls_match_resolvable": None,
         "shadow_known_unknown_partition": None,
         "shadow_comparison_partition": None,
@@ -296,6 +308,11 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
             "geo_lookup_partition": geo["lookup_attempted"] == geo["lookup_success"] + geo["lookup_failed"],
             "geo_known_partition": run_nodes["geo_known"] == geo["cache_hits"] + geo["lookup_success"],
             "geo_unknown_partition": run_nodes["geo_unknown"] == run_nodes["unresolved_endpoints"] + geo["lookup_failed"] + geo["cap_skipped"],
+            "geo_batch_consistency": (
+                0 <= geo["batch_failures"] <= geo["batch_requests"] <= geo["batch_ips"] <= geo["lookup_attempted"]
+                if geo["batch_telemetry_complete"]
+                else None
+            ),
         })
     if shadow_complete:
         comparison_total = (
@@ -327,6 +344,7 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
             "run_node_counters": "current_compute_artifact_node_occurrences_before_global_dedup",
             "global_deduplicated": "current_successful_active_sources_only_one_row_per_node_digest",
             "unique_resolved_ips_shard_sum": "sum_of_per_shard_unique_counts_cross_shard_duplicates_possible",
+            "geo_batch_counters": "country_is_post_requests_network_ips_and_request_level_failures_null_when_batch_telemetry_absent",
             "geo_shadow": "observation_only_never_used_for_current_node_country_ranking_or_handoff",
             "privacy": "aggregate_only_no_ip_no_endpoint_no_uri_no_credentials_no_node_digest_no_source_id",
         },

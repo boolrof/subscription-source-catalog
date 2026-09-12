@@ -23,6 +23,20 @@ class GeoResponse:
         return self.body if size < 0 else self.body[:size]
 
 
+class BatchGeoResponse:
+    def __init__(self, ip="8.8.8.8", country="US"):
+        self.body = json.dumps([{"ip": ip, "country": country}]).encode()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def read(self, size=-1):
+        return self.body if size < 0 else self.body[:size]
+
+
 class CoverageTelemetryTests(unittest.TestCase):
     def cache_key(self, ip):
         return hashlib.sha256(("geo:" + ip).encode()).hexdigest()[:24]
@@ -77,7 +91,9 @@ class CoverageTelemetryTests(unittest.TestCase):
             }
 
         metrics = {}
-        with mock.patch.object(p, "inspect_source", side_effect=fake_inspect), mock.patch.object(p.urllib.request, "urlopen", return_value=GeoResponse("US")):
+        with mock.patch.object(p, "inspect_source", side_effect=fake_inspect), mock.patch(
+            "src.country_is_batch.urllib.request.urlopen", return_value=BatchGeoResponse("8.8.8.8", "US")
+        ):
             results = p.inspect_many(
                 items,
                 max_sources=2,
@@ -95,6 +111,9 @@ class CoverageTelemetryTests(unittest.TestCase):
         self.assertEqual(metrics["nodes"]["geo_unknown"], 0)
         self.assertEqual(metrics["geo"]["lookup_success"], 1)
         self.assertEqual(metrics["geo"]["cache_hits"], 1)
+        self.assertEqual(metrics["geo"]["batch_requests"], 1)
+        self.assertEqual(metrics["geo"]["batch_ips"], 1)
+        self.assertEqual(metrics["geo"]["batch_failures"], 0)
         self.assertNotIn("8.8.8.8", json.dumps(metrics))
 
     def test_build_metrics_reports_churn_invariants_and_no_sensitive_identifiers(self):
@@ -160,6 +179,9 @@ class CoverageTelemetryTests(unittest.TestCase):
                             "lookup_success": 0,
                             "lookup_failed": 1,
                             "cap_skipped": 0,
+                            "batch_requests": 1,
+                            "batch_ips": 1,
+                            "batch_failures": 0,
                             "cache_entries_before": 10,
                             "cache_entries_after": 10,
                             "cache_entries_added": 0,
@@ -182,8 +204,11 @@ class CoverageTelemetryTests(unittest.TestCase):
                 expected_shards=2,
             )
             self.assertTrue(metrics["geo"]["telemetry_complete"])
-            for key in ("nodes_partition", "geo_cache_partition", "geo_lookup_partition", "geo_known_partition", "geo_unknown_partition"):
+            for key in ("nodes_partition", "geo_cache_partition", "geo_lookup_partition", "geo_known_partition", "geo_unknown_partition", "geo_batch_consistency"):
                 self.assertIs(metrics["invariants"][key], True)
+            self.assertEqual(metrics["geo"]["batch_requests"], 2)
+            self.assertEqual(metrics["geo"]["batch_ips"], 2)
+            self.assertEqual(metrics["geo"]["batch_failures"], 0)
             self.assertFalse(metrics["geo_shadow"]["telemetry_complete"])
             self.assertIsNone(metrics["invariants"]["shadow_calls_match_resolvable"])
             self.assertEqual(metrics["countries"]["new_country_codes"], [])
@@ -272,7 +297,9 @@ class CoverageTelemetryTests(unittest.TestCase):
             )
             self.assertFalse(metrics["geo"]["telemetry_complete"])
             self.assertIsNone(metrics["geo"]["lookup_failed"])
+            self.assertIsNone(metrics["geo"]["batch_requests"])
             self.assertIsNone(metrics["invariants"]["geo_lookup_partition"])
+            self.assertIsNone(metrics["invariants"]["geo_batch_consistency"])
             self.assertFalse(metrics["geo_shadow"]["telemetry_complete"])
             self.assertIsNone(metrics["geo_shadow"]["shadow_known"])
 

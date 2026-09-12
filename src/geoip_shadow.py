@@ -7,6 +7,10 @@ from pathlib import Path
 from typing import Any
 
 from src import pre_admission as p
+from src.geo_resolver_batch import BatchedGeoResolver
+
+
+_LEGACY_COUNTRY_UNSET = object()
 
 
 def _country_from_record(record: Any) -> str | None:
@@ -90,7 +94,7 @@ class ShadowingGeoResolver:
         secondary_provider: str | None = None,
         secondary_release: str | None = None,
     ):
-        self.legacy = p.GeoResolver(cache, max_new=max_new, timeout=timeout)
+        self.legacy = BatchedGeoResolver(cache, max_new=max_new, timeout=timeout)
         self.shadow = shadow
         self.secondary_shadow = secondary_shadow
         self.secondary_requested = bool(secondary_requested)
@@ -156,8 +160,8 @@ class ShadowingGeoResolver:
         self._unique_primary_secondary_conflict_pair_counts: Counter[str] = Counter()
         self._unique_legacy_unknown_shadow_consensus_conflict_pair_counts: Counter[str] = Counter()
 
-    def country(self, ip: str | None) -> str | None:
-        legacy_country = self.legacy.country(ip)
+    def country(self, ip: str | None, *, _legacy_country: Any = _LEGACY_COUNTRY_UNSET) -> str | None:
+        legacy_country = self.legacy.country(ip) if _legacy_country is _LEGACY_COUNTRY_UNSET else _legacy_country
         if not ip or not p._global_ip(ip):
             return legacy_country
 
@@ -273,6 +277,14 @@ class ShadowingGeoResolver:
                     if first_unique:
                         self._unique_both_shadows_unknown += 1
         return legacy_country
+
+    def countries(self, ips: list[str | None]) -> list[str | None]:
+        values = list(ips)
+        legacy_countries = self.legacy.countries(values)
+        return [
+            self.country(ip, _legacy_country=legacy_country)
+            for ip, legacy_country in zip(values, legacy_countries)
+        ]
 
     def metrics(self) -> dict:
         metrics = self.legacy.metrics()

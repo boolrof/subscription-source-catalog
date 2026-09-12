@@ -130,6 +130,8 @@ class ShadowingGeoResolver:
         self._secondary_shadow_country_counts: Counter[str] = Counter()
         self._legacy_unknown_secondary_country_counts: Counter[str] = Counter()
         self._legacy_unknown_shadow_consensus_country_counts: Counter[str] = Counter()
+        self._primary_secondary_conflict_pair_counts: Counter[str] = Counter()
+        self._legacy_unknown_shadow_consensus_conflict_pair_counts: Counter[str] = Counter()
 
     def country(self, ip: str | None) -> str | None:
         legacy_country = self.legacy.country(ip)
@@ -196,8 +198,11 @@ class ShadowingGeoResolver:
                             self._legacy_unknown_shadow_consensus_country_counts[shadow_country] += 1
                     else:
                         self._primary_secondary_both_known_disagree += 1
+                        pair = f"{shadow_country}->{secondary_country}"
+                        self._primary_secondary_conflict_pair_counts[pair] += 1
                         if not legacy_country:
                             self._legacy_unknown_shadow_consensus_conflict += 1
+                            self._legacy_unknown_shadow_consensus_conflict_pair_counts[pair] += 1
                 elif shadow_country:
                     self._primary_known_secondary_unknown += 1
                 elif secondary_country:
@@ -253,6 +258,8 @@ class ShadowingGeoResolver:
                     "secondary_shadow_country_counts": dict(sorted(self._secondary_shadow_country_counts.items())),
                     "legacy_unknown_secondary_country_counts": dict(sorted(self._legacy_unknown_secondary_country_counts.items())),
                     "legacy_unknown_shadow_consensus_country_counts": dict(sorted(self._legacy_unknown_shadow_consensus_country_counts.items())),
+                    "primary_secondary_conflict_pair_counts": dict(sorted(self._primary_secondary_conflict_pair_counts.items())),
+                    "legacy_unknown_shadow_consensus_conflict_pair_counts": dict(sorted(self._legacy_unknown_shadow_consensus_conflict_pair_counts.items())),
                 })
         return metrics
 

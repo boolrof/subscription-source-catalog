@@ -1,7 +1,7 @@
 {
   "country": "AF",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 2,
+  "exported_candidates": 4,
   "nodes": [
     {
       "independent_source_count": 1,
@@ -11,6 +11,24 @@
       "protocol": "vless",
       "source_count": 1,
       "source_id": "b8f00aa4b7ea9c89aa3bbc7d"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T01:06:07Z",
+      "node_digest": "ce484603453078e5764c4ad6f3e0e2334313334d859570a6b2518aa5c699eb04",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "6a28f08dc24aea42726fc485"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T01:02:34Z",
+      "node_digest": "a952c58f5310d4fcf6a1a43bd83f02bb75ae6b41a137d4506506985611850a5c",
+      "pre_score": 78,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "ba4a26fff779a99fb0020b12"
     },
     {
       "independent_source_count": 1,
@@ -24,5 +42,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 2
+  "total_candidates": 4
 }

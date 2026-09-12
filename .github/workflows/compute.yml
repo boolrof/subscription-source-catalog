@@ -274,9 +274,12 @@ jobs:
           git add data/sources.json data/geo_cache.json \
             exports/prechecked_sources.json exports/country_handoff.json \
             exports/country_handoff_v4.json exports/coverage_metrics.json
-          git add -A -- data/node_index data/node_index.json \
-            exports/nodes_deduplicated exports/nodes_deduplicated.json \
-            exports/countries
+          git add -A -- data/node_index exports/nodes_deduplicated exports/countries
+          for legacy in data/node_index.json exports/nodes_deduplicated.json; do
+            if git ls-files --error-unmatch "$legacy" >/dev/null 2>&1; then
+              git add -u -- "$legacy"
+            fi
+          done
           if git diff --cached --quiet; then
             echo "No compute changes."
           else

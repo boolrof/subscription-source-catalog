@@ -1,8 +1,17 @@
 {
   "country": "NG",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 11,
+  "exported_candidates": 18,
   "nodes": [
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-12T00:07:51Z",
+      "node_digest": "0957dab724f11e194517d19fa9c3504c981bc04f3845472abbff901e89041d81",
+      "pre_score": 107,
+      "protocol": "ss",
+      "source_count": 3,
+      "source_id": "04c0faef2d3ae7794409ed6b"
+    },
     {
       "independent_source_count": 2,
       "last_seen_at": "2026-09-11T22:24:16Z",
@@ -32,21 +41,12 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T23:18:36Z",
-      "node_digest": "96aa30bb064ce2a8dd8c76c891caec5212e2b1f9a693079db1ec9547290ba54e",
+      "last_seen_at": "2026-09-12T00:10:12Z",
+      "node_digest": "c02b5e571447970ba0b2a325cbbfb68cc751a75eb6661c054dc33c3a7b53c0fc",
       "pre_score": 100,
       "protocol": "ss",
       "source_count": 1,
-      "source_id": "fe4ebe7d83f9ee5e46173c5c"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-11T23:18:36Z",
-      "node_digest": "decf647ed7a29141f70735e32405063d817fe0d7fb21dbe33395534cb896a875",
-      "pre_score": 100,
-      "protocol": "ss",
-      "source_count": 1,
-      "source_id": "fe4ebe7d83f9ee5e46173c5c"
+      "source_id": "aef88ae1a641c11950303c07"
     },
     {
       "independent_source_count": 1,
@@ -59,12 +59,75 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:06:02Z",
+      "node_digest": "2ce7c265e9e6b3d24bc31f72a6d23e779bc0f57c021245a7653964de05155a6b",
+      "pre_score": 99,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "d7437017a0a5b57765d1b19c"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-12T00:07:52Z",
+      "node_digest": "dbd2e8988975d268072408211aa7ea284708de76a9a7cfd1896a7f193a3d348c",
+      "pre_score": 97,
+      "protocol": "ss",
+      "source_count": 2,
+      "source_id": "553539a6b63fcd89d5b524de"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-11T23:18:55Z",
       "node_digest": "0e56da590d9c97a1676ca334d20aee8f1b35e52c9b6c2aee5d7be0b68f1f2d56",
       "pre_score": 95,
       "protocol": "ss",
       "source_count": 2,
       "source_id": "967700003cc8b2ce62775ecc"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:05:44Z",
+      "node_digest": "96aa30bb064ce2a8dd8c76c891caec5212e2b1f9a693079db1ec9547290ba54e",
+      "pre_score": 95,
+      "protocol": "ss",
+      "source_count": 2,
+      "source_id": "04805c224c7a557bc7122083"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:05:44Z",
+      "node_digest": "decf647ed7a29141f70735e32405063d817fe0d7fb21dbe33395534cb896a875",
+      "pre_score": 95,
+      "protocol": "ss",
+      "source_count": 2,
+      "source_id": "04805c224c7a557bc7122083"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:02:42Z",
+      "node_digest": "afb19cb80d58a946e72281485691a2b31558d917fb14033a18711999ea0d6978",
+      "pre_score": 93,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "d283fe3e9863227b09a2c446"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:05:10Z",
+      "node_digest": "c58553d77c2792a435a95908e5b11d078305cbc8a9db73c6d1d7b116add6d5d4",
+      "pre_score": 93,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "f0278d90e4aee9d9fbadc496"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:04:48Z",
+      "node_digest": "d08458398bb2551986c4e1176d7d7a555c4211a5711b14ace28ff1714c62c713",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "5a76218a264438fcfda82f0e"
     },
     {
       "independent_source_count": 1,
@@ -105,5 +168,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 11
+  "total_candidates": 18
 }

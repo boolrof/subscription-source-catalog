@@ -1,8 +1,17 @@
 {
   "country": "AF",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 1,
+  "exported_candidates": 2,
   "nodes": [
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-12T00:08:55Z",
+      "node_digest": "7b652322c97b8f098d6b0400042d1bae4f139e62b2c4bd684b939e83e23ba27d",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "b8f00aa4b7ea9c89aa3bbc7d"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-11T22:25:48Z",
@@ -15,5 +24,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 1
+  "total_candidates": 2
 }

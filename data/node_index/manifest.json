@@ -1,7 +1,7 @@
 {
   "bucket_count": 64,
   "bucket_scheme": "sha256_identifier_mod_bucket_count",
-  "max_shard_sources": 44,
+  "max_shard_sources": 70,
   "schema": "subscription-source-node-index-sharded-v3",
   "shard_files": [
     "bucket-00.json",
@@ -69,5 +69,5 @@
     "bucket-3e.json",
     "bucket-3f.json"
   ],
-  "source_count": 2013
+  "source_count": 3436
 }

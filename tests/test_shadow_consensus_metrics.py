@@ -30,6 +30,8 @@ class ShadowConsensusMetricsTests(unittest.TestCase):
             "secondary_shadow_country_counts": {"AU": 3, "US": 4},
             "legacy_unknown_secondary_country_counts": {"AU": 2, "DE": 1},
             "legacy_unknown_shadow_consensus_country_counts": {"AU": 2},
+            "primary_secondary_conflict_pair_counts": {"AU->US": 1},
+            "legacy_unknown_shadow_consensus_conflict_pair_counts": {"AU->US": 1},
         }
         shards = {0: {"metrics": {"geo": geo}}}
         base_metrics = {"nodes": {
@@ -46,7 +48,28 @@ class ShadowConsensusMetricsTests(unittest.TestCase):
         self.assertEqual(consensus["legacy_unknown_shadow_consensus_known"], 2)
         self.assertEqual(consensus["potential_geo_known_occurrences_if_consensus_fallback"], 6)
         self.assertAlmostEqual(consensus["primary_secondary_agreement_rate_when_both_known"], 5 / 6)
+        self.assertEqual(consensus["counting_unit"], "resolved_endpoint_occurrence_before_global_dedup")
+        self.assertEqual(consensus["primary_secondary_conflict_pair_counts"], {"AU->US": 1})
+        self.assertEqual(consensus["legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 1})
         self.assertTrue(all(invariants.values()))
+
+    def test_incomplete_secondary_shadow_uses_null_conflict_pairs(self):
+        shards = {0: {"metrics": {"geo": {
+            "secondary_shadow_requested": True,
+            "secondary_shadow_available": False,
+            "secondary_shadow_init_failed": True,
+        }}}}
+        _, consensus, invariants = aggregate(
+            shards,
+            expected_shards=1,
+            duplicate_shards=set(),
+            base_metrics={"nodes": {}},
+        )
+        self.assertFalse(consensus["telemetry_complete"])
+        self.assertIsNone(consensus["primary_secondary_conflict_pair_counts"])
+        self.assertIsNone(consensus["legacy_unknown_shadow_consensus_conflict_pair_counts"])
+        self.assertIsNone(invariants["primary_secondary_conflict_pairs_match_disagree"])
+        self.assertIsNone(invariants["legacy_unknown_consensus_conflict_pairs_match_conflict"])
 
 
 if __name__ == "__main__":

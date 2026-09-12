@@ -90,10 +90,13 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
         }
         consensus = {
             "telemetry_complete": False,
+            "counting_unit": "resolved_endpoint_occurrence_before_global_dedup",
             **{key: None for key in keys[9:]},
             "primary_secondary_agreement_rate_when_both_known": None,
             "consensus_recovery_rate_of_legacy_unknown": None,
             "legacy_unknown_shadow_consensus_country_counts": None,
+            "primary_secondary_conflict_pair_counts": None,
+            "legacy_unknown_shadow_consensus_conflict_pair_counts": None,
         }
         invariants = {
             "secondary_shadow_calls_match_resolvable": None,
@@ -102,6 +105,8 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
             "secondary_legacy_unknown_partition": None,
             "primary_secondary_partition": None,
             "consensus_subset_of_legacy_unknown": None,
+            "primary_secondary_conflict_pairs_match_disagree": None,
+            "legacy_unknown_consensus_conflict_pairs_match_conflict": None,
         }
         return secondary, consensus, invariants
 
@@ -112,6 +117,8 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
     legacy_geo_unknown = int(nodes.get("geo_unknown") or 0)
     resolvable = int(nodes.get("resolvable_endpoints") or 0)
     legacy_geo_known = int(nodes.get("geo_known") or 0)
+    primary_secondary_conflict_pairs = _counter_sum(geos, "primary_secondary_conflict_pair_counts")
+    legacy_unknown_conflict_pairs = _counter_sum(geos, "legacy_unknown_shadow_consensus_conflict_pair_counts")
 
     secondary = {
         **base,
@@ -123,12 +130,15 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
     }
     consensus = {
         "telemetry_complete": True,
+        "counting_unit": "resolved_endpoint_occurrence_before_global_dedup",
         **{key: sums[key] for key in keys[9:]},
         "primary_secondary_agreement_rate_when_both_known": (sums["primary_secondary_both_known_agree"] / local_both_known) if local_both_known else None,
         "consensus_recovery_rate_of_legacy_unknown": (sums["legacy_unknown_shadow_consensus_known"] / legacy_geo_unknown) if legacy_geo_unknown else None,
         "potential_geo_known_occurrences_if_consensus_fallback": legacy_geo_known + sums["legacy_unknown_shadow_consensus_known"],
         "potential_geo_unknown_occurrences_if_consensus_fallback": max(0, legacy_geo_unknown - sums["legacy_unknown_shadow_consensus_known"]),
         "legacy_unknown_shadow_consensus_country_counts": _counter_sum(geos, "legacy_unknown_shadow_consensus_country_counts"),
+        "primary_secondary_conflict_pair_counts": primary_secondary_conflict_pairs,
+        "legacy_unknown_shadow_consensus_conflict_pair_counts": legacy_unknown_conflict_pairs,
     }
     invariants = {
         "secondary_shadow_calls_match_resolvable": sums["secondary_shadow_calls"] == resolvable,
@@ -143,6 +153,8 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
             + sums["both_shadows_unknown"]
         ),
         "consensus_subset_of_legacy_unknown": sums["legacy_unknown_shadow_consensus_known"] + sums["legacy_unknown_shadow_consensus_conflict"] <= legacy_geo_unknown,
+        "primary_secondary_conflict_pairs_match_disagree": sum(primary_secondary_conflict_pairs.values()) == sums["primary_secondary_both_known_disagree"],
+        "legacy_unknown_consensus_conflict_pairs_match_conflict": sum(legacy_unknown_conflict_pairs.values()) == sums["legacy_unknown_shadow_consensus_conflict"],
     }
     return secondary, consensus, invariants
 
@@ -169,6 +181,7 @@ def main() -> int:
     metrics["geo_shadow_consensus"] = consensus
     metrics.setdefault("invariants", {}).update(invariants)
     metrics.setdefault("semantics", {})["geo_shadow_consensus"] = "observation_only_two_local_mmdbs_agree_legacy_country_ranking_unchanged"
+    metrics.setdefault("semantics", {})["geo_shadow_conflict_pairs"] = "aggregate_occurrence_weighted_country_code_pairs_only_no_ip_endpoint_uri_or_source_identifiers"
     dump(metrics_path, metrics)
     print(json.dumps({
         "secondary_complete": secondary["telemetry_complete"],

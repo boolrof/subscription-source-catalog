@@ -3,7 +3,7 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from coverage_metrics import (
+from src.artifact_stream import validate_artifact_set\nfrom src.source_index_stream import validate_source_index\nfrom src.state_stream import validate_global_index\n\nfrom coverage_metrics import (
     _artifact_state,
     _geo_counters,
     _run_counters,
@@ -124,17 +124,17 @@ def _country_scan(catalog: dict, current_dir: Path, previous_dir: Path, countrie
 
 
 def build_stream_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: Path, current_nodes: Path, previous_nodes: Path, countries_dir: Path, expected_shards: int) -> dict:
+    expected_shards = max(1, int(expected_shards))
+    validate_artifact_set(artifacts, expected_shards)
+    current_manifest = validate_global_index(current_nodes)
+    previous_manifest = validate_global_index(previous_nodes)
+    buckets = int(current_manifest.get("bucket_count") or 0)
+    if int(previous_manifest.get("bucket_count") or 0) != buckets:
+        raise ValueError("current/previous global manifests must use the same positive bucket_count")
+    source_manifest = validate_source_index(node_index, buckets=buckets)
+
     catalog = _load(data, {"sources": []})
     persistent_geo = _load(geo_cache, {})
-    current_manifest = _manifest(current_nodes)
-    previous_manifest = _manifest(previous_nodes)
-    source_manifest = _manifest(node_index)
-    buckets = int(current_manifest.get("bucket_count") or 0)
-    if buckets <= 0 or int(previous_manifest.get("bucket_count") or buckets) != buckets:
-        raise ValueError("current/previous global manifests must use the same positive bucket_count")
-    if int(source_manifest.get("bucket_count") or 0) <= 0:
-        raise ValueError("source index must be sharded with a positive bucket_count")
-
     shards, duplicate_shards = _artifact_state(artifacts)
     run_sources, run_nodes = _run_counters(shards)
     geo, geo_complete = _geo_counters(shards, expected_shards, duplicate_shards, len(persistent_geo))

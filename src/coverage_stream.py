@@ -3,7 +3,11 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from src.artifact_stream import validate_artifact_set\nfrom src.source_index_stream import validate_source_index\nfrom src.state_stream import validate_global_index\n\nfrom coverage_metrics import (
+from src.artifact_stream import validate_artifact_set
+from src.source_index_stream import validate_source_index
+from src.state_stream import validate_global_index
+
+from coverage_metrics import (
     _artifact_state,
     _geo_counters,
     _run_counters,

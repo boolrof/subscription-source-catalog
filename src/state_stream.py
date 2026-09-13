@@ -29,7 +29,7 @@ def validate_global_index(path: Path) -> dict:
     if not manifest_path.is_file():
         raise FileNotFoundError(manifest_path)
     manifest = _load_json(manifest_path, {})
-    if manifest.get("schema") != "subscription-source-global-node-index-sharded-v3":
+    if manifest.get("schema") != "subscription-source-global-node-index-sharded-v4":
         raise ValueError("invalid global-index manifest schema")
     buckets = int(manifest.get("bucket_count") or 0)
     if buckets <= 0:
@@ -54,7 +54,7 @@ def validate_global_index(path: Path) -> dict:
         if not shard_path.is_file():
             raise FileNotFoundError(shard_path)
         payload = _load_json(shard_path, {})
-        if payload.get("schema") != "subscription-source-global-node-index-shard-v3":
+        if payload.get("schema") != "subscription-source-global-node-index-shard-v4":
             raise ValueError(f"invalid global-index shard schema: {name}")
         if int(payload.get("bucket", -1)) != bucket:
             raise ValueError(f"global-index shard bucket mismatch: {name}")

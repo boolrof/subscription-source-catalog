@@ -181,7 +181,7 @@ for legacy in data/node_index.json exports/nodes_deduplicated.json; do
 done
 
 # Fail closed if anything outside the publication allowlist changed.
-unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^(data/sources\\.json|data/geo_cache\\.json|SOURCES\\.md|exports/subscription_urls\\.txt|exports/prechecked_sources\\.json|exports/country_handoff\\.json|exports/country_handoff_v4\\.json|exports/coverage_metrics\\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
+unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
 [[ -z "$unstaged" ]] || die "unexpected modified paths: $unstaged"
 
 if git diff --cached --quiet; then
@@ -197,13 +197,15 @@ if [[ "$PUBLISH" != 1 ]]; then
   exit 0
 fi
 
-log "publish sanitized generated state"
-git config user.name "catalog-pipeline"
-git config user.email "catalog-pipeline@localhost"
-git commit -m "chore(catalog): owner-operated pipeline update [skip ci]"
+log "verify immutable candidate before publication"
 git fetch origin "$EXPECTED_BRANCH"
 post_remote_sha="$(git rev-parse "origin/$EXPECTED_BRANCH")"
 [[ "$post_remote_sha" == "$remote_sha" ]] || die "remote branch advanced during pipeline"
 [[ "$(git rev-parse HEAD)" == "$remote_sha" ]] || die "pipeline code HEAD changed during transaction"
+
+log "publish sanitized generated state"
+git config user.name "catalog-pipeline"
+git config user.email "catalog-pipeline@localhost"
+git commit -m "chore(catalog): owner-operated pipeline update [skip ci]"
 git push origin "HEAD:$EXPECTED_BRANCH"
 log "pipeline complete"

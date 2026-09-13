@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from collections import Counter
 from pathlib import Path
@@ -11,7 +12,13 @@ _COUNTRY_RE = re.compile(r"^[A-Z]{2}$")
 
 def _dump(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    tmp = path.with_name(path.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as handle:
+        json.dump(value, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, path)
 
 
 def spool_country_rows(nodes_path: Path, legacy_path: Path | None, spool_dir: Path) -> dict:

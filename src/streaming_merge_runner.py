@@ -1,6 +1,8 @@
+import hashlib
 import json
 import os
 import shutil
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -9,6 +11,7 @@ from src.country_spool import build_country_outputs, spool_country_rows
 from src.coverage_stream import build_stream_metrics
 from src.global_stream_merge import source_meta_from_catalog, spool_source_occurrences
 from src.global_stream_writer import rebuild_global_buckets
+from src.source_index_stream import validate_source_index
 
 
 def _load(path: Path, default):
@@ -28,26 +31,70 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _manifest_shard_names(source_dir: Path, manifest: dict) -> list[str]:
+    raw_names = manifest.get("shard_files")
+    if not isinstance(raw_names, list):
+        raise ValueError("global manifest shard_files must be a list")
+    names = []
+    seen = set()
+    for raw_name in raw_names:
+        name = str(raw_name)
+        if not name or Path(name).name != name or name in seen:
+            raise ValueError(f"invalid global manifest shard name: {name!r}")
+        if not (source_dir / name).is_file():
+            raise FileNotFoundError(source_dir / name)
+        seen.add(name)
+        names.append(name)
+    return names
+
+
 def snapshot_sharded_global(source_dir: Path, snapshot_dir: Path) -> dict:
-    """Create an immutable sharded previous-state snapshot without flattening it."""
-    manifest = _load(source_dir / "manifest.json", {})
+    """Build a complete sibling snapshot before replacing the prior rollback snapshot."""
+    manifest_path = source_dir / "manifest.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(manifest_path)
+    manifest = _load(manifest_path, {})
     buckets = int(manifest.get("bucket_count") or 0)
     if buckets <= 0:
         raise ValueError("global node index must be sharded before streaming merge")
-    if snapshot_dir.exists():
-        shutil.rmtree(snapshot_dir)
-    snapshot_dir.mkdir(parents=True, exist_ok=True)
-    names = ["manifest.json", *(manifest.get("shard_files") or [])]
-    for name in names:
-        src = source_dir / str(name)
-        if not src.is_file():
-            raise FileNotFoundError(src)
-        dst = snapshot_dir / src.name
+    shard_names = _manifest_shard_names(source_dir, manifest)
+
+    snapshot_dir.parent.mkdir(parents=True, exist_ok=True)
+    candidate = Path(tempfile.mkdtemp(
+        prefix=snapshot_dir.name + ".new-",
+        dir=str(snapshot_dir.parent),
+    ))
+    backup = None
+    try:
+        for name in ["manifest.json", *shard_names]:
+            src = source_dir / name
+            dst = candidate / name
+            try:
+                os.link(src, dst)
+            except OSError:
+                shutil.copy2(src, dst)
+        copied = _load(candidate / "manifest.json", {})
+        if copied != manifest:
+            raise ValueError("copied global manifest does not match source")
+        _manifest_shard_names(candidate, copied)
+
+        if snapshot_dir.exists():
+            backup = snapshot_dir.with_name(
+                snapshot_dir.name + ".old-" + next(tempfile._get_candidate_names())
+            )
+            os.replace(snapshot_dir, backup)
         try:
-            os.link(src, dst)
-        except OSError:
-            shutil.copy2(src, dst)
-    return manifest
+            os.replace(candidate, snapshot_dir)
+        except Exception:
+            if backup is not None and backup.exists() and not snapshot_dir.exists():
+                os.replace(backup, snapshot_dir)
+            raise
+        if backup is not None:
+            shutil.rmtree(backup)
+        return manifest
+    finally:
+        if candidate.exists():
+            shutil.rmtree(candidate)
 
 
 def _prechecked_sources(catalog: dict) -> dict:
@@ -57,9 +104,7 @@ def _prechecked_sources(catalog: dict) -> dict:
         pre = source.get("precheck") or {}
         if not url or not pre:
             continue
-        sid = source.get("source_id")
-        if not sid:
-            continue
+        sid = source.get("source_id") or hashlib.sha256(url.encode()).hexdigest()[:24]
         safe.append({
             "source_id": sid,
             "repository": source.get("repository"),
@@ -69,6 +114,17 @@ def _prechecked_sources(catalog: dict) -> dict:
         })
     safe.sort(key=lambda row: (-int((row.get("precheck") or {}).get("quality_score") or 0), row["source_id"]))
     return {"schema": "subscription-source-prechecked-v3", "sources": safe}
+
+
+def _require_complete_coverage(metrics: dict) -> None:
+    if not bool((metrics.get("run") or {}).get("complete")):
+        raise ValueError("streaming coverage run is incomplete")
+    failed = sorted(
+        name for name, value in (metrics.get("invariants") or {}).items()
+        if value is False
+    )
+    if failed:
+        raise ValueError("streaming coverage invariants failed: " + ", ".join(failed))
 
 
 def run_streaming_merge(
@@ -92,6 +148,7 @@ def run_streaming_merge(
 ) -> dict:
     """Run the complete bounded-memory merge/country/coverage path."""
     validate_artifact_set(artifacts_dir, expected_shards)
+    validate_source_index(node_index_path, buckets=buckets)
     catalog = _load(catalog_path, {"schema": "vgm-subscription-catalog-v1", "sources": []})
     geo_cache = _load(geo_cache_path, {})
     previous_dir = runtime_dir / "nodes-before-sharded"
@@ -155,6 +212,7 @@ def run_streaming_merge(
         countries_dir=countries_dir,
         expected_shards=max(1, expected_shards),
     )
+    _require_complete_coverage(metrics)
     _dump(coverage_path, metrics)
     return {
         **artifact_stats,
@@ -166,7 +224,7 @@ def run_streaming_merge(
         "country_rows": country_stats.get("rows", 0),
         "handoff_nodes": sum(len(rows) for rows in handoff.values()),
         "handoff_v4_nodes": sum(len(rows) for rows in handoff_v4.values()),
-        "coverage_complete": bool((metrics.get("run") or {}).get("complete")),
+        "coverage_complete": True,
     }
 
 

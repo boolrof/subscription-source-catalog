@@ -76,11 +76,11 @@ def snapshot_sharded_global(source_dir: Path, snapshot_dir: Path) -> dict:
         copied = _load(candidate / "manifest.json", {})
         if copied != manifest:
             raise ValueError("copied global manifest does not match source")
-        _manifest_shard_names(candidate, copied)
+        validate_global_index(candidate)
 
         if snapshot_dir.exists():
             backup = snapshot_dir.with_name(
-                snapshot_dir.name + ".old-" + next(tempfile._get_candidate_names())
+                snapshot_dir.name + ".old-" + uuid.uuid4().hex
             )
             os.replace(snapshot_dir, backup)
         try:

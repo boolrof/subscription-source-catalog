@@ -54,6 +54,8 @@ def apply_source_updates(
     for bucket, bucket_updates in sorted(grouped.items()):
         name = f"bucket-{bucket:02x}.json"
         bucket_path = path / name
+        if name in existing_files and not bucket_path.is_file():
+            raise FileNotFoundError(bucket_path)
         payload = load_json(bucket_path, {"sources": {}})
         sources = dict(payload.get("sources") or {})
         added += sum(1 for sid in bucket_updates if sid not in sources)

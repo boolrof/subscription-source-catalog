@@ -49,7 +49,8 @@ def apply_source_updates(
         grouped.setdefault(bucket_for(sid, buckets), {})[sid] = payload
 
     added = 0
-    touched = 0
+    touched_ids = []
+    touched_max = 0
     for bucket, bucket_updates in sorted(grouped.items()):
         name = f"bucket-{bucket:02x}.json"
         bucket_path = path / name
@@ -63,16 +64,23 @@ def apply_source_updates(
             "sources": sources,
         })
         existing_files.add(name)
-        touched += 1
+        touched_ids.append(bucket)
+        touched_max = max(touched_max, len(sources))
 
     shard_files = sorted(existing_files)
-    source_count = 0
-    max_shard_sources = 0
-    for name in shard_files:
-        payload = load_json(path / name, {"sources": {}})
-        count = len(payload.get("sources") or {})
-        source_count += count
-        max_shard_sources = max(max_shard_sources, count)
+    known_source_count = manifest.get("source_count")
+    known_max = manifest.get("max_shard_sources")
+    if isinstance(known_source_count, int) and isinstance(known_max, int):
+        source_count = known_source_count + added
+        max_shard_sources = max(known_max, touched_max)
+    else:
+        source_count = 0
+        max_shard_sources = 0
+        for name in shard_files:
+            payload = load_json(path / name, {"sources": {}})
+            count = len(payload.get("sources") or {})
+            source_count += count
+            max_shard_sources = max(max_shard_sources, count)
 
     atomic_dump(manifest_path, {
         "schema": "subscription-source-node-index-sharded-v3",
@@ -85,7 +93,8 @@ def apply_source_updates(
     return {
         "updated": len(updates),
         "added": added,
-        "touched_buckets": touched,
+        "touched_buckets": len(touched_ids),
+        "touched_bucket_ids": touched_ids,
         "source_count": source_count,
         "max_shard_sources": max_shard_sources,
     }

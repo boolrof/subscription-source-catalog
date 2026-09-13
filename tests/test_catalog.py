@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -65,6 +66,20 @@ class CatalogTests(unittest.TestCase):
             c.sources[candidate["url"]]["status"] = "rejected"
             self.assertFalse(c.apply_lifecycle(set(), 3))
             self.assertEqual(c.sources[candidate["url"]]["status"], "rejected")
+
+    def test_save_replaces_temp_file_with_valid_json(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "sources.json"
+            c = Catalog(path)
+            c.sources["https://example/sub.txt"] = {
+                "url": "https://example/sub.txt",
+                "status": "active",
+            }
+            c.save()
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["schema"], "vgm-subscription-catalog-v1")
+            self.assertEqual(payload["sources"][0]["url"], "https://example/sub.txt")
+            self.assertFalse(path.with_name(path.name + ".tmp").exists())
 
 
 if __name__ == "__main__":

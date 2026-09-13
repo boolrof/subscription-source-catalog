@@ -40,7 +40,6 @@ def _country_scan(catalog: dict, current_dir: Path, previous_dir: Path, countrie
         source_keys[sid] = pre.get("duplicate_group") or sid
 
     totals = Counter()
-    exported = {}
     source_sets = defaultdict(set)
     independent_sets = defaultdict(set)
     protocols = defaultdict(Counter)
@@ -101,10 +100,9 @@ def _country_scan(catalog: dict, current_dir: Path, previous_dir: Path, countrie
     per_country = {}
     for country in sorted(current_codes):
         country_file = _load(countries_dir / f"{country}.json", {})
-        exported[country] = int(country_file.get("exported_candidates") or 0)
         per_country[country] = {
             "total_candidates": totals[country],
-            "exported_candidates": exported[country],
+            "exported_candidates": int(country_file.get("exported_candidates") or 0),
             "contributing_sources": len(source_sets[country]),
             "independent_sources": len(independent_sets[country]),
             "protocol_counts": dict(sorted(protocols[country].items())),
@@ -130,11 +128,13 @@ def build_stream_metrics(*, data: Path, node_index: Path, geo_cache: Path, artif
     persistent_geo = _load(geo_cache, {})
     current_manifest = _manifest(current_nodes)
     previous_manifest = _manifest(previous_nodes)
+    source_manifest = _manifest(node_index)
     buckets = int(current_manifest.get("bucket_count") or 0)
     if buckets <= 0 or int(previous_manifest.get("bucket_count") or buckets) != buckets:
         raise ValueError("current/previous global manifests must use the same positive bucket_count")
+    if int(source_manifest.get("bucket_count") or 0) <= 0:
+        raise ValueError("source index must be sharded with a positive bucket_count")
 
-    source_manifest = _manifest(node_index)
     shards, duplicate_shards = _artifact_state(artifacts)
     run_sources, run_nodes = _run_counters(shards)
     geo, geo_complete = _geo_counters(shards, expected_shards, duplicate_shards, len(persistent_geo))
@@ -187,6 +187,9 @@ def build_stream_metrics(*, data: Path, node_index: Path, geo_cache: Path, artif
             "country": "passive_endpoint_geoip_not_verified_exit_country",
             "run_node_counters": "current_compute_artifact_node_occurrences_before_global_dedup",
             "global_deduplicated": "current_successful_active_sources_only_one_row_per_node_digest",
+            "unique_resolved_ips_shard_sum": "sum_of_per_shard_unique_counts_cross_shard_duplicates_possible",
+            "geo_batch_counters": "country_is_post_requests_network_ips_and_request_level_failures_null_when_batch_telemetry_absent",
+            "geo_shadow": "observation_only_never_used_for_current_node_country_ranking_or_handoff",
             "privacy": "aggregate_only_no_ip_no_endpoint_no_uri_no_credentials_no_node_digest_no_source_id",
         },
         "run": {"expected_shards": expected_shards, "shards_seen": len(shards), "shards_with_telemetry": sum(isinstance(p.get("metrics"), dict) for p in shards.values()), "duplicate_shards": sorted(duplicate_shards), "complete": len(shards) == expected_shards and not duplicate_shards},

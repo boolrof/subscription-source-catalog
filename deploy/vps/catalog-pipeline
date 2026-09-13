@@ -4,7 +4,7 @@ umask 077
 
 REPO_DIR="${CATALOG_REPO_DIR:-/opt/subscription-source-catalog}"
 LOCK_FILE="${CATALOG_LOCK_FILE:-/run/lock/subscription-source-catalog.lock}"
-EXPECTED_BRANCH="${CATALOG_BRANCH:-main}"
+EXPECTED_BRANCH="${CATALOG_BRANCH:-main}"\nEXPECTED_SHA="${CATALOG_EXPECTED_SHA:-}"
 SHARDS="${CATALOG_SHARDS:-20}"
 MAX_SOURCES="${CATALOG_MAX_SOURCES:-80}"
 WORKERS="${CATALOG_WORKERS:-2}"
@@ -26,20 +26,25 @@ exec 9>"$LOCK_FILE"
 flock -n 9 || die "another catalog pipeline is already running"
 
 cd "$REPO_DIR"
-mkdir -p .catalog-runtime/geoip .catalog-runtime/compute .catalog-runtime/pycache
-export PYTHONPYCACHEPREFIX="$REPO_DIR/.catalog-runtime/pycache"
+branch="$(git symbolic-ref --quiet --short HEAD || true)"
+[[ "$branch" == "$EXPECTED_BRANCH" ]] || die "expected branch $EXPECTED_BRANCH, got ${branch:-detached}"
+[[ -z "$(git status --porcelain --untracked-files=all)" ]] || die "working tree is not clean"
+
+ssh_listener_state() {
+  ss -ltnH | awk -v p=":$SSH_PORT" '$4 ~ p"$" {print $1 "|" $4}' | sort
+}
 
 BEFORE_ROUTE="$(ip route show default 2>/dev/null || true)"
 BEFORE_XUI_PID="$(pgrep -xo x-ui 2>/dev/null || true)"
-BEFORE_SSH_LISTEN="$(ss -ltnH | awk -v p=":$SSH_PORT" '$4 ~ p"$" {n++} END {print n+0}')"
-(( BEFORE_SSH_LISTEN > 0 )) || die "SSH listener not found on port $SSH_PORT"
+BEFORE_SSH_LISTEN="$(ssh_listener_state)"
+[[ -n "$BEFORE_SSH_LISTEN" ]] || die "SSH listener not found on port $SSH_PORT"
 
 cleanup() {
   rc=$?
 
   after_route="$(ip route show default 2>/dev/null || true)"
   after_xui_pid="$(pgrep -xo x-ui 2>/dev/null || true)"
-  after_ssh_listen="$(ss -ltnH | awk -v p=":$SSH_PORT" '$4 ~ p"$" {n++} END {print n+0}')"
+  after_ssh_listen="$(ssh_listener_state)"
 
   if [[ "$after_route" != "$BEFORE_ROUTE" ]]; then
     log "CRITICAL: host default route changed during catalog pipeline"
@@ -51,8 +56,8 @@ cleanup() {
     rc=91
   fi
 
-  if (( after_ssh_listen < 1 )); then
-    log "CRITICAL: SSH listener disappeared from port $SSH_PORT"
+  if [[ "$after_ssh_listen" != "$BEFORE_SSH_LISTEN" ]]; then
+    log "CRITICAL: SSH listener state changed on port $SSH_PORT"
     rc=92
   fi
 
@@ -66,14 +71,18 @@ cleanup() {
 }
 trap cleanup EXIT
 
-branch="$(git symbolic-ref --quiet --short HEAD || true)"
-[[ "$branch" == "$EXPECTED_BRANCH" ]] || die "expected branch $EXPECTED_BRANCH, got ${branch:-detached}"
-[[ -z "$(git status --porcelain)" ]] || die "working tree is not clean"
-
 log "preflight: fetch and fast-forward"
 git fetch --prune origin "$EXPECTED_BRANCH"
-git merge-base --is-ancestor HEAD "origin/$EXPECTED_BRANCH" || die "local HEAD diverged from origin/$EXPECTED_BRANCH"
-git merge --ff-only "origin/$EXPECTED_BRANCH"
+remote_sha="$(git rev-parse "origin/$EXPECTED_BRANCH")"
+if [[ -n "$EXPECTED_SHA" && "$remote_sha" != "$EXPECTED_SHA" ]]; then
+  die "remote candidate SHA mismatch: expected $EXPECTED_SHA, got $remote_sha"
+fi
+git merge-base --is-ancestor HEAD "$remote_sha" || die "local HEAD diverged from origin/$EXPECTED_BRANCH"
+git merge --ff-only "$remote_sha"
+[[ "$(git rev-parse HEAD)" == "$remote_sha" ]] || die "post-fast-forward HEAD mismatch"
+
+mkdir -p .catalog-runtime/geoip .catalog-runtime/compute .catalog-runtime/pycache
+export PYTHONPYCACHEPREFIX="$REPO_DIR/.catalog-runtime/pycache"
 
 VENV="$REPO_DIR/.venv"
 [[ -x "$VENV/bin/python" ]] || die "virtualenv missing: $VENV"
@@ -81,7 +90,7 @@ PY="$VENV/bin/python"
 
 log "preflight: unit tests"
 "$PY" -m unittest discover -s tests -v
-"$PY" -m compileall -q src run.py compute.py streaming_merge.py coverage_stream_cli.py coverage_shadow_consensus.py state_store.py
+"$PY" -m compileall -q src run.py compute.py streaming_merge.py coverage_stream_cli.py coverage_shadow_consensus.py state_store.py validate_staged_publication.py
 
 
 prepare_geoip() {
@@ -179,6 +188,9 @@ if git diff --cached --quiet; then
   exit 0
 fi
 
+log "scan staged publication for sensitive content"
+"$PY" validate_staged_publication.py
+
 if [[ "$PUBLISH" != 1 ]]; then
   log "publication disabled; leaving validated changes staged"
   exit 0
@@ -189,6 +201,8 @@ git config user.name "catalog-pipeline"
 git config user.email "catalog-pipeline@localhost"
 git commit -m "chore(catalog): owner-operated pipeline update [skip ci]"
 git fetch origin "$EXPECTED_BRANCH"
-git rebase "origin/$EXPECTED_BRANCH"
+post_remote_sha="$(git rev-parse "origin/$EXPECTED_BRANCH")"
+[[ "$post_remote_sha" == "$remote_sha" ]] || die "remote branch advanced during pipeline"
+[[ "$(git rev-parse HEAD)" == "$remote_sha" ]] || die "pipeline code HEAD changed during transaction"
 git push origin "HEAD:$EXPECTED_BRANCH"
 log "pipeline complete"

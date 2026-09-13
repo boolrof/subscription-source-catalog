@@ -17,7 +17,7 @@ class SourceIndexStreamManifestTests(unittest.TestCase):
                 encoding="utf-8",
             )
             (index / "manifest.json").write_text(
-                json.dumps({"schema": "subscription-source-node-index-sharded-v3", "bucket_count": 1, "shard_files": ["bucket-00.json"]}),
+                json.dumps({"schema": "subscription-source-node-index-sharded-v3", "bucket_count": 1, "source_count": 1, "max_shard_sources": 1, "shard_files": ["bucket-00.json"]}),
                 encoding="utf-8",
             )
             stats = apply_source_updates(index, {}, buckets=1)

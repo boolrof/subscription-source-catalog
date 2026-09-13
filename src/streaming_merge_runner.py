@@ -29,54 +29,24 @@ def _utc_now() -> str:
 
 
 def snapshot_sharded_global(source_dir: Path, snapshot_dir: Path) -> dict:
-    """Create an immutable sharded previous-state snapshot without flattening it.
-
-    Build and fully validate a fresh sibling snapshot first. Only after every
-    manifest-listed shard has been copied do we promote it over an existing
-    snapshot. If promotion fails, the previous snapshot is restored.
-    """
+    """Create an immutable sharded previous-state snapshot without flattening it."""
     manifest = _load(source_dir / "manifest.json", {})
     buckets = int(manifest.get("bucket_count") or 0)
     if buckets <= 0:
         raise ValueError("global node index must be sharded before streaming merge")
-
+    if snapshot_dir.exists():
+        shutil.rmtree(snapshot_dir)
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
     names = ["manifest.json", *(manifest.get("shard_files") or [])]
-    sources = []
     for name in names:
         src = source_dir / str(name)
         if not src.is_file():
             raise FileNotFoundError(src)
-        sources.append(src)
-
-    snapshot_dir.parent.mkdir(parents=True, exist_ok=True)
-    suffix = f"{os.getpid()}-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}"
-    fresh_dir = snapshot_dir.with_name(f"{snapshot_dir.name}.new-{suffix}")
-    backup_dir = snapshot_dir.with_name(f"{snapshot_dir.name}.old-{suffix}")
-    fresh_dir.mkdir(parents=False, exist_ok=False)
-
-    try:
-        for src in sources:
-            dst = fresh_dir / src.name
-            try:
-                os.link(src, dst)
-            except OSError:
-                shutil.copy2(src, dst)
-
-        had_previous = snapshot_dir.exists()
-        if had_previous:
-            os.replace(snapshot_dir, backup_dir)
+        dst = snapshot_dir / src.name
         try:
-            os.replace(fresh_dir, snapshot_dir)
-        except Exception:
-            if had_previous and backup_dir.exists() and not snapshot_dir.exists():
-                os.replace(backup_dir, snapshot_dir)
-            raise
-        if had_previous and backup_dir.exists():
-            shutil.rmtree(backup_dir)
-    finally:
-        if fresh_dir.exists():
-            shutil.rmtree(fresh_dir)
-
+            os.link(src, dst)
+        except OSError:
+            shutil.copy2(src, dst)
     return manifest
 
 
@@ -220,7 +190,7 @@ def rebuild_global_only(
         shutil.rmtree(spool_dir)
     source_meta = source_meta_from_catalog(catalog)
     spool_stats = spool_source_occurrences(node_index_path, None, source_meta, spool_dir, buckets=buckets)
-    manifest = rebuild_global_buckets(source_spool, global_dir, global_dir, buckets=buckets)
+    manifest = rebuild_global_buckets(spool_dir, global_dir, global_dir, buckets=buckets)
     return {
         **artifact_stats,
         "indexed_sources": spool_stats.get("sources", 0),

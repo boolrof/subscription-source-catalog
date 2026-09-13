@@ -10,6 +10,16 @@ def _load_json(path: Path, default):
         return json.load(handle)
 
 
+def _manifest_payloads(path: Path, key: str) -> Iterator[dict]:
+    manifest_path = path / "manifest.json"
+    manifest = _load_json(manifest_path, {})
+    for name in manifest.get("shard_files") or []:
+        shard_path = path / str(name)
+        if not shard_path.is_file():
+            raise FileNotFoundError(shard_path)
+        yield _load_json(shard_path, {key: {}} if key == "sources" else {key: []})
+
+
 def iter_source_shards(path: Path, legacy_path: Path | None = None) -> Iterator[dict]:
     """Yield source-index payloads one physical shard at a time."""
     if path.exists() and path.is_file():
@@ -18,9 +28,7 @@ def iter_source_shards(path: Path, legacy_path: Path | None = None) -> Iterator[
 
     manifest_path = path / "manifest.json"
     if manifest_path.exists():
-        manifest = _load_json(manifest_path, {})
-        for name in manifest.get("shard_files") or []:
-            yield _load_json(path / str(name), {"sources": {}})
+        yield from _manifest_payloads(path, "sources")
         return
 
     if legacy_path is not None and legacy_path.exists():
@@ -35,9 +43,7 @@ def iter_global_node_shards(path: Path, legacy_path: Path | None = None) -> Iter
 
     manifest_path = path / "manifest.json"
     if manifest_path.exists():
-        manifest = _load_json(manifest_path, {})
-        for name in manifest.get("shard_files") or []:
-            yield _load_json(path / str(name), {"nodes": []})
+        yield from _manifest_payloads(path, "nodes")
         return
 
     if legacy_path is not None and legacy_path.exists():

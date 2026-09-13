@@ -4,7 +4,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from src.artifact_stream import apply_artifacts
+from src.artifact_stream import apply_artifacts, validate_artifact_set
 from src.country_spool import build_country_outputs, spool_country_rows
 from src.coverage_stream import build_stream_metrics
 from src.global_stream_merge import source_meta_from_catalog, spool_source_occurrences
@@ -91,6 +91,7 @@ def run_streaming_merge(
     buckets: int = 64,
 ) -> dict:
     """Run the complete bounded-memory merge/country/coverage path."""
+    validate_artifact_set(artifacts_dir, expected_shards)
     catalog = _load(catalog_path, {"schema": "vgm-subscription-catalog-v1", "sources": []})
     geo_cache = _load(geo_cache_path, {})
     previous_dir = runtime_dir / "nodes-before-sharded"

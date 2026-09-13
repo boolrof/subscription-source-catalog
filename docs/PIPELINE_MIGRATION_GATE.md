@@ -37,13 +37,15 @@ The streaming merge changes several generated state families in place. Therefore
 On any non-zero pipeline exit:
 
 - preserve the systemd unit result and bounded journal evidence;
+- preserve `.catalog-runtime` until the failure state is classified, because it may contain the previous-global snapshot and other rollback/diagnostic evidence;
+- do not keep the legacy unconditional `rm -rf .catalog-runtime` behavior on failure;
 - inspect `git status --porcelain` and the actual generated-state paths;
 - verify default route, SSH 22022, and `x-ui` before any cleanup;
 - determine whether mutation stopped before merge, during merge, or after staging;
 - restore/recreate generated state only from a verified clean Git baseline or an explicitly verified rollback artifact;
 - never run the pipeline a second time until the checkout state is understood and the recovery target is deterministic.
 
-The pipeline must not auto-reset or auto-clean unknown changes on failure.
+Runtime cleanup is permitted only after a successful, fully verified transaction or after rollback/recovery evidence has been preserved elsewhere. The pipeline must not auto-reset or auto-clean unknown changes on failure.
 
 ## Publication gate
 

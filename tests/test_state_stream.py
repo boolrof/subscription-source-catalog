@@ -50,6 +50,22 @@ class StateStreamTests(unittest.TestCase):
             self.assertEqual(metadata["country_semantics"], "test-country-semantics")
             self.assertNotIn("shard_files", metadata)
 
+    def test_manifest_missing_source_shard_fails_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "node_index"
+            root.mkdir()
+            (root / "manifest.json").write_text(json.dumps({"shard_files": ["bucket-00.json"]}), encoding="utf-8")
+            with self.assertRaises(FileNotFoundError):
+                list(iter_source_shards(root))
+
+    def test_manifest_missing_global_shard_fails_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "nodes"
+            root.mkdir()
+            (root / "manifest.json").write_text(json.dumps({"shard_files": ["bucket-00.json"]}), encoding="utf-8")
+            with self.assertRaises(FileNotFoundError):
+                list(iter_global_node_shards(root))
+
     def test_legacy_files_remain_stream_compatible(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

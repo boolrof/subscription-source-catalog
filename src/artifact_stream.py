@@ -22,8 +22,14 @@ def validate_artifact_set(artifacts_dir: Path, expected_shards: int) -> dict:
         artifact_files += 1
         try:
             shard = int(payload.get("shard"))
+            declared_shards = int(payload.get("shards"))
         except (TypeError, ValueError) as exc:
-            raise ValueError(f"invalid compute shard id in {path}") from exc
+            raise ValueError(f"invalid compute shard metadata in {path}") from exc
+        if declared_shards != expected_shards:
+            raise ValueError(
+                f"declared shard count mismatch in {path}: "
+                f"{declared_shards} != {expected_shards}"
+            )
         if shard < 0 or shard >= expected_shards:
             raise ValueError(f"compute shard id out of range: {shard}")
         if shard in seen:

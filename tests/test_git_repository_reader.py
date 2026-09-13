@@ -55,10 +55,10 @@ class GitRepositoryReaderTests(unittest.TestCase):
             reader, stats = self.make_reader(td)
             calls = []
             tree = (
-                b"100644 blob aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 20\tREADME.md\0"
-                b"100644 blob bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb 9\tconfigs/sub.txt\0"
-                b"100644 blob cccccccccccccccccccccccccccccccccccccccc 8\tnested/nodes.list\0"
-                b"100644 blob dddddddddddddddddddddddddddddddddddddddd 10\tdocs/notes.md\0"
+                b"100644 blob aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\tREADME.md\0"
+                b"100644 blob bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\tconfigs/sub.txt\0"
+                b"100644 blob cccccccccccccccccccccccccccccccccccccccc\tnested/nodes.list\0"
+                b"100644 blob dddddddddddddddddddddddddddddddddddddddd\tdocs/notes.md\0"
             )
             blobs = {
                 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": b"https://example/x\n\n",
@@ -71,12 +71,16 @@ class GitRepositoryReaderTests(unittest.TestCase):
                 if args[:2] == ["init", "--bare"]:
                     Path(args[-1]).mkdir(parents=True, exist_ok=True)
                     return subprocess.CompletedProcess(args, 0, b"", b"")
+                if args[-3:] == ["remote", "get-url", "origin"]:
+                    return subprocess.CompletedProcess(args, 0, b"https://github.com/alice/proxy-list.git\n", b"")
                 if "remote" in args or "fetch" in args:
                     return subprocess.CompletedProcess(args, 0, b"", b"")
                 if "ls-tree" in args:
                     return subprocess.CompletedProcess(args, 0, tree, b"")
                 if "cat-file" in args:
                     sha = args[-1]
+                    if "-s" in args:
+                        return subprocess.CompletedProcess(args, 0, str(len(blobs[sha])).encode() + b"\n", b"")
                     return subprocess.CompletedProcess(args, 0, blobs[sha], b"")
                 raise AssertionError(args)
 
@@ -90,8 +94,30 @@ class GitRepositoryReaderTests(unittest.TestCase):
             self.assertEqual(stats["trees_inspected"], 1)
             self.assertEqual(stats["candidate_files_selected"], 2)
             self.assertEqual(stats["candidate_files_fetched"], 2)
-            cat_calls = [args for args in calls if "cat-file" in args]
-            self.assertEqual(len(cat_calls), 2)
+            blob_calls = [args for args in calls if "cat-file" in args and "blob" in args]
+            self.assertEqual(len(blob_calls), 2)
+
+    def test_existing_cache_reuses_origin_instead_of_readding_remote(self):
+        with tempfile.TemporaryDirectory() as td:
+            reader, stats = self.make_reader(td)
+            repo_dir = reader._repo_dir("alice/proxy-list")
+            repo_dir.mkdir(parents=True)
+            (repo_dir / "HEAD").write_text("ref: refs/heads/main\n")
+            calls = []
+
+            def fake_git(args, timeout=None):
+                calls.append(args)
+                if args[-3:] == ["remote", "get-url", "origin"]:
+                    return subprocess.CompletedProcess(args, 0, b"https://github.com/alice/proxy-list.git\n", b"")
+                if "fetch" in args:
+                    return subprocess.CompletedProcess(args, 0, b"", b"")
+                raise AssertionError(args)
+
+            reader._git = fake_git
+            prepared = reader._prepare_repo({"full_name": "alice/proxy-list", "default_branch": "main"})
+            self.assertIsNotNone(prepared)
+            self.assertFalse(any(args[-3:] == ["remote", "add", "origin"] for args in calls))
+            self.assertEqual(stats["git_fetch_failures"], 0)
 
     def test_fetch_failure_retries_then_fails_closed(self):
         with tempfile.TemporaryDirectory() as td:
@@ -101,6 +127,8 @@ class GitRepositoryReaderTests(unittest.TestCase):
                 if args[:2] == ["init", "--bare"]:
                     Path(args[-1]).mkdir(parents=True, exist_ok=True)
                     return subprocess.CompletedProcess(args, 0, b"", b"")
+                if args[-3:] == ["remote", "get-url", "origin"]:
+                    return subprocess.CompletedProcess(args, 0, b"https://github.com/alice/proxy-list.git\n", b"")
                 if "remote" in args:
                     return subprocess.CompletedProcess(args, 0, b"", b"")
                 if "fetch" in args:

@@ -36,6 +36,10 @@ class GitRepositoryReader:
         self.retries = max(0, int(self.limits.get("git_max_retries", 2)))
         self.max_files = max(1, int(self.limits.get("max_files_inspected_per_repo", 12)))
         self.max_size = max(1, int(self.limits.get("max_file_size_bytes", 1048576)))
+        self.max_size_checks = max(
+            self.max_files,
+            int(self.limits.get("git_max_candidate_size_checks", self.max_files * 4)),
+        )
 
         self.env = os.environ.copy()
         self.env.update({
@@ -77,14 +81,23 @@ class GitRepositoryReader:
         repo_dir = self._repo_dir(full_name)
         repo_dir.parent.mkdir(parents=True, exist_ok=True)
 
-        init = self._git(["init", "--bare", "--quiet", str(repo_dir)])
-        if init.returncode != 0:
+        if not repo_dir.exists():
+            init = self._git(["init", "--bare", "--quiet", str(repo_dir)])
+            if init.returncode != 0:
+                self.stats["git_fetch_failures"] += 1
+                return None
+        elif not (repo_dir / "HEAD").exists():
             self.stats["git_fetch_failures"] += 1
             return None
 
         remote_url = f"https://github.com/{full_name}.git"
-        remote = self._git(["-C", str(repo_dir), "remote", "add", "origin", remote_url])
-        if remote.returncode != 0:
+        current_remote = self._git(["-C", str(repo_dir), "remote", "get-url", "origin"])
+        if current_remote.returncode != 0:
+            remote = self._git(["-C", str(repo_dir), "remote", "add", "origin", remote_url])
+            if remote.returncode != 0:
+                self.stats["git_fetch_failures"] += 1
+                return None
+        elif current_remote.stdout.decode("utf-8", errors="replace").strip() != remote_url:
             self.stats["git_fetch_failures"] += 1
             return None
 
@@ -110,36 +123,34 @@ class GitRepositoryReader:
         self.stats["git_fetch_failures"] += 1
         return None
 
-    def _selected_entries(self, repo_dir: Path, ref: str) -> list[tuple[tuple, str, str, int]] | None:
+    def _ranked_entries(self, repo_dir: Path, ref: str) -> list[tuple[tuple, str, str]] | None:
         try:
-            tree = self._git(["-C", str(repo_dir), "ls-tree", "-rlz", "--full-tree", ref])
+            tree = self._git(["-C", str(repo_dir), "ls-tree", "-rz", "--full-tree", ref])
         except subprocess.TimeoutExpired:
             return None
         if tree.returncode != 0:
             return None
 
-        ranked: list[tuple[tuple, str, str, int]] = []
+        ranked: list[tuple[tuple, str, str]] = []
         for record in tree.stdout.split(b"\0"):
             if not record or b"\t" not in record:
                 continue
             meta, raw_path = record.split(b"\t", 1)
             fields = meta.split()
-            if len(fields) != 4 or fields[1] != b"blob":
-                continue
-            try:
-                size = int(fields[3])
-            except ValueError:
+            if len(fields) != 3 or fields[1] != b"blob":
                 continue
             path = raw_path.decode("utf-8", errors="surrogateescape")
-            priority = self.candidate_priority(path, size, self.max_size)
+            # Git tree objects do not carry blob size. Rank by path first; size is
+            # checked only for a bounded number of top candidates below.
+            priority = self.candidate_priority(path, 1, self.max_size)
             if priority is None:
                 continue
             sha = fields[2].decode("ascii", errors="ignore")
             if sha:
-                ranked.append((priority, path, sha, size))
+                ranked.append((priority, path, sha))
 
         ranked.sort(key=lambda row: row[0])
-        return ranked[: self.max_files]
+        return ranked[: self.max_size_checks]
 
     def read_candidate_files(self, repo: dict) -> tuple[list[tuple[str, str]], bool]:
         prepared = self._prepare_repo(repo)
@@ -148,17 +159,35 @@ class GitRepositoryReader:
             return [], False
         repo_dir, ref = prepared
 
-        selected = self._selected_entries(repo_dir, ref)
-        if selected is None:
+        ranked = self._ranked_entries(repo_dir, ref)
+        if ranked is None:
             self.stats["tree_failures"] += 1
             return [], False
 
         self.stats["trees_inspected"] += 1
-        self.stats["candidate_files_selected"] += len(selected)
         out: list[tuple[str, str]] = []
         complete = True
 
-        for _, path, sha, expected_size in selected:
+        for _, path, sha in ranked:
+            if len(out) >= self.max_files:
+                break
+            try:
+                size_probe = self._git(["-C", str(repo_dir), "cat-file", "-s", sha])
+            except subprocess.TimeoutExpired:
+                size_probe = None
+            if size_probe is None or size_probe.returncode != 0:
+                self.stats["git_blob_failures"] += 1
+                complete = False
+                continue
+            try:
+                expected_size = int(size_probe.stdout.decode("ascii", errors="ignore").strip())
+            except ValueError:
+                self.stats["git_blob_failures"] += 1
+                complete = False
+                continue
+            if expected_size <= 0 or expected_size > self.max_size:
+                continue
+            self.stats["candidate_files_selected"] += 1
             try:
                 blob = self._git(["-C", str(repo_dir), "cat-file", "blob", sha])
             except subprocess.TimeoutExpired:

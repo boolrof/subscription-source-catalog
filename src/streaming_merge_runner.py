@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 import tempfile
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from src.coverage_stream import build_stream_metrics
 from src.global_stream_merge import source_meta_from_catalog, spool_source_occurrences
 from src.global_stream_writer import rebuild_global_buckets
 from src.source_index_stream import validate_source_index
+from src.state_stream import validate_global_index
 
 
 def _load(path: Path, default):
@@ -53,7 +55,7 @@ def snapshot_sharded_global(source_dir: Path, snapshot_dir: Path) -> dict:
     manifest_path = source_dir / "manifest.json"
     if not manifest_path.is_file():
         raise FileNotFoundError(manifest_path)
-    manifest = _load(manifest_path, {})
+    manifest = validate_global_index(source_dir)
     buckets = int(manifest.get("bucket_count") or 0)
     if buckets <= 0:
         raise ValueError("global node index must be sharded before streaming merge")

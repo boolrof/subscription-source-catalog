@@ -9,6 +9,37 @@ def source_id_for(source: dict) -> str:
     return source.get("source_id") or hashlib.sha256(source["url"].encode()).hexdigest()[:24]
 
 
+def validate_artifact_set(artifacts_dir: Path, expected_shards: int) -> dict:
+    """Validate one complete compute artifact per logical shard before mutation."""
+    expected_shards = max(1, int(expected_shards))
+    seen = set()
+    duplicates = set()
+    artifact_files = 0
+    for path in sorted(artifacts_dir.rglob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("schema") != "subscription-source-compute-shard-v2":
+            continue
+        artifact_files += 1
+        try:
+            shard = int(payload.get("shard"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"invalid compute shard id in {path}") from exc
+        if shard < 0 or shard >= expected_shards:
+            raise ValueError(f"compute shard id out of range: {shard}")
+        if shard in seen:
+            duplicates.add(shard)
+        seen.add(shard)
+    expected = set(range(expected_shards))
+    missing = sorted(expected - seen)
+    if duplicates or missing or artifact_files != expected_shards:
+        raise ValueError(
+            "incomplete compute artifact set: "
+            f"expected={expected_shards} files={artifact_files} "
+            f"missing={missing} duplicates={sorted(duplicates)}"
+        )
+    return {"expected_shards": expected_shards, "artifact_files": artifact_files}
+
+
 def apply_artifacts(catalog: dict, artifacts_dir: Path, node_index_path: Path, geo_cache: dict, *, buckets: int = 64) -> dict:
     """Apply compute artifacts incrementally without loading the full source index."""
     by_url = {source["url"]: source for source in catalog.get("sources", [])}

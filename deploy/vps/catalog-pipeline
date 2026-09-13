@@ -4,7 +4,8 @@ umask 077
 
 REPO_DIR="${CATALOG_REPO_DIR:-/opt/subscription-source-catalog}"
 LOCK_FILE="${CATALOG_LOCK_FILE:-/run/lock/subscription-source-catalog.lock}"
-EXPECTED_BRANCH="${CATALOG_BRANCH:-main}"\nEXPECTED_SHA="${CATALOG_EXPECTED_SHA:-}"
+EXPECTED_BRANCH="${CATALOG_BRANCH:-main}"
+EXPECTED_SHA="${CATALOG_EXPECTED_SHA:-}"
 SHARDS="${CATALOG_SHARDS:-20}"
 MAX_SOURCES="${CATALOG_MAX_SOURCES:-80}"
 WORKERS="${CATALOG_WORKERS:-2}"
@@ -180,7 +181,7 @@ for legacy in data/node_index.json exports/nodes_deduplicated.json; do
 done
 
 # Fail closed if anything outside the publication allowlist changed.
-unstaged="$(git status --porcelain | awk '$1 !~ /^\?\?/ {print substr($0,4)}' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
+unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^(data/sources\\.json|data/geo_cache\\.json|SOURCES\\.md|exports/subscription_urls\\.txt|exports/prechecked_sources\\.json|exports/country_handoff\\.json|exports/country_handoff_v4\\.json|exports/coverage_metrics\\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
 [[ -z "$unstaged" ]] || die "unexpected modified paths: $unstaged"
 
 if git diff --cached --quiet; then

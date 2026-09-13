@@ -5,6 +5,7 @@ from pathlib import Path
 
 from src.catalog import Catalog
 from src.discovery import GitHubDiscovery
+from src.git_discovery import GitTransportDiscovery
 from src.generator import generate_markdown, generate_url_export
 from src.security import is_safe_public_url
 
@@ -14,11 +15,12 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--config", default="config/discovery.json")
     parser.add_argument("--data", default="data/sources.json")
+    parser.add_argument("--backend", choices=("rest", "git"), default=os.getenv("CATALOG_DISCOVERY_BACKEND", "rest"))
     args = parser.parse_args()
 
     config = json.loads(Path(args.config).read_text(encoding="utf-8"))
     catalog = Catalog(Path(args.data))
-    discovery = GitHubDiscovery(config, os.getenv("GITHUB_TOKEN"))
+    discovery = GitTransportDiscovery(config) if args.backend == "git" else GitHubDiscovery(config, os.getenv("GITHUB_TOKEN"))
     candidates = discovery.run()
 
     observed = set()
@@ -57,6 +59,9 @@ def main() -> int:
         "catalog_sources": len(catalog.sources),
     }
     print("discovery_summary " + json.dumps(summary, sort_keys=True))
+
+    if not discovery.stats.get("search_complete"):
+        return 2
 
     if args.dry_run:
         return 0

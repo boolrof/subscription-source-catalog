@@ -62,3 +62,17 @@ class SnapshotPublisherTests(unittest.TestCase):
         self.commit()
         with self.assertRaises(ValueError):publisher.publish(self.repo,self.tree,self.root,self.sha)
         self.assertFalse((self.root/"current").exists())
+
+    def test_retention_preserves_recent_current_previous_and_eight_generations(self):
+        import os
+        base=self.root/"generations";base.mkdir(parents=True)
+        names=[f"{n:040x}" for n in range(11)]
+        for n,name in enumerate(names):
+            path=base/name;path.mkdir()
+            (path/"manifest.json").write_text(json.dumps({"schema":publisher.SCHEMA,"generation":name}))
+            os.utime(path,(n,n))
+        removed=publisher.prune_generations(self.root,names[0],names[1],now=200000)
+        self.assertEqual(removed,1)
+        self.assertTrue((base/names[0]).exists())
+        self.assertTrue((base/names[1]).exists())
+        self.assertEqual(len(list(base.iterdir())),10)

@@ -121,6 +121,14 @@ def publish(repo: Path, tree: str, root: Path, code_sha: str) -> dict:
             else:
                 os.rename(stage, target)
                 sync_directory(generations)
+            previous = None
+            if (root / "current").is_symlink():
+                old_target = os.readlink(root / "current")
+                if re.fullmatch(r"generations/[0-9a-f]{40}", old_target):
+                    old_path = root / old_target
+                    if old_path.is_dir() and not old_path.is_symlink():
+                        previous = old_path.name
+                        os.utime(old_path, None)
             link = root / (".current-" + str(os.getpid()))
             try:
                 os.symlink("generations/" + tree, link)
@@ -128,9 +136,34 @@ def publish(repo: Path, tree: str, root: Path, code_sha: str) -> dict:
                 sync_directory(root)
             finally:
                 if link.is_symlink(): link.unlink()
+            try:
+                prune_generations(root, tree, previous)
+            except (OSError, ValueError):
+                print("local snapshot retention deferred")
             return {"generation":tree, "artifacts":len(files), "source_rows":len(sources)}
         finally:
             if stage.exists(): shutil.rmtree(stage)
+
+
+def prune_generations(root, current, previous, *, now=None):
+    """Keep eight generations and a 48h grace since last use as current."""
+    import time
+    now = time.time() if now is None else now
+    base = root / "generations"
+    directories = sorted((p for p in base.iterdir() if re.fullmatch(r"[0-9a-f]{40}", p.name)
+                          and p.is_dir() and not p.is_symlink()), key=lambda p:p.stat().st_mtime, reverse=True)
+    removed = 0
+    for path in directories[8:]:
+        if path.name in {current, previous} or now-path.stat().st_mtime < 48*3600:
+            continue
+        if path.resolve().parent != base.resolve():
+            raise ValueError("unsafe generation cleanup path")
+        manifest = json.loads((path / "manifest.json").read_bytes())
+        if manifest.get("schema") != SCHEMA or manifest.get("generation") != path.name:
+            continue
+        shutil.rmtree(path)
+        removed += 1
+    return removed
 
 def main():
     parser=argparse.ArgumentParser()

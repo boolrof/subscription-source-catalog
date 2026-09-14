@@ -180,8 +180,9 @@ for legacy in data/node_index.json exports/nodes_deduplicated.json; do
   if git ls-files --error-unmatch "$legacy" >/dev/null 2>&1; then git add -u -- "$legacy"; fi
 done
 
-# Fail closed if anything outside the publication allowlist changed.
-unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
+# Runtime scratch is never publication state. Fail closed on every other path
+# outside the publication allowlist.
+unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^\.catalog-runtime/' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
 [[ -z "$unstaged" ]] || die "unexpected modified paths: $unstaged"
 
 if git diff --cached --quiet; then

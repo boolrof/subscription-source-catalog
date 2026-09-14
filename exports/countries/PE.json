@@ -1,19 +1,46 @@
 {
   "country": "PE",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 1,
+  "exported_candidates": 4,
   "nodes": [
     {
       "independent_source_count": 15,
-      "last_seen_at": "2026-09-12T01:03:58Z",
+      "last_seen_at": "2026-09-14T06:49:19Z",
       "node_digest": "e913873af5d9cd750989179cafe32e2e3f45b00069ad57613b3240647f93b223",
       "pre_score": 120,
       "protocol": "vless",
       "source_count": 20,
       "source_id": "18bed83bae926ab70c97c529"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-14T06:00:05Z",
+      "node_digest": "cc1dd3b2e4a2e201c30f7af68b44ec06eccea1813d04a8f631515ae6235bb269",
+      "pre_score": 101,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "2c14cb964756adaefba80286"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-14T06:27:40Z",
+      "node_digest": "6a6a8381924fc2a837c4f2f993cb16347417652ea614f4d08308fc7d9fb75d55",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "982577b839b40914ffef526c"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-14T06:37:03Z",
+      "node_digest": "21ba696a4e4c44a73ac8d4a59a7a53430630cbd2d84e3e218a699cbf8f0baa75",
+      "pre_score": 81,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "d2a1ef344db8959b498bb087"
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 1
+  "total_candidates": 4
 }

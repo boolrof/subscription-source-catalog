@@ -185,13 +185,24 @@ done
 unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^\.catalog-runtime/' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
 [[ -z "$unstaged" ]] || die "unexpected modified paths: $unstaged"
 
+log "scan staged publication for sensitive content"
+"$PY" validate_staged_publication.py
+
+# The local compute result is sealed in an immutable Git tree. No working-tree
+# artifact is read by VGM, and optional GitHub publication is not its data plane.
+if [[ -n "${CATALOG_LOCAL_SNAPSHOT_ROOT:-}" ]]; then
+  [[ "$(ip route show default)" == "$BEFORE_ROUTE" ]] || die "default route changed before local publication"
+  [[ "$(pgrep -xo x-ui || true)" == "$BEFORE_XUI_PID" ]] || die "x-ui changed before local publication"
+  [[ "$(ssh_listener_state)" == "$BEFORE_SSH_LISTEN" ]] || die "SSH changed before local publication"
+  log "publish validated local snapshot"
+  "$PY" deploy/vps/publish-local-snapshot.py --repo "$REPO_DIR" \
+    --tree "$(git write-tree)" --code-sha "$remote_sha" --root "$CATALOG_LOCAL_SNAPSHOT_ROOT"
+fi
+
 if git diff --cached --quiet; then
   log "no catalog changes"
   exit 0
 fi
-
-log "scan staged publication for sensitive content"
-"$PY" validate_staged_publication.py
 
 if [[ "$PUBLISH" != 1 ]]; then
   log "publication disabled; leaving validated changes staged"

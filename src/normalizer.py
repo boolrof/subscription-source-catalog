@@ -11,7 +11,10 @@ def canonicalize_url(raw_url: str) -> str:
         owner, repo, ref, path = m.groups()
         return f"https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}"
 
-    parsed = urlparse(cleaned)
+    try:
+        parsed = urlparse(cleaned)
+    except ValueError:
+        return ""
     scheme = parsed.scheme.lower()
     host = parsed.netloc.lower()
     if host == "raw.github.com":

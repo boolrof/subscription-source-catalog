@@ -16,6 +16,9 @@ class NormalizerTests(unittest.TestCase):
             "https://raw.githubusercontent.com/a/b/main/sub.txt",
         )
 
+    def test_invalid_ipv6_url_is_rejected_without_exception(self):
+        self.assertEqual(canonicalize_url("http://[bad"), "")
+
 
 if __name__ == "__main__":
     unittest.main()

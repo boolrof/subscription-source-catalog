@@ -1,4 +1,15 @@
+import os
 from pathlib import Path
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as handle:
+        handle.write(text)
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, path)
 
 
 def generate_markdown(sources: list[dict], path: Path) -> None:
@@ -21,10 +32,9 @@ def generate_markdown(sources: list[dict], path: Path) -> None:
             f"{(s.get('repo_updated_at') or '')[:10]} | {s.get('source_kind','unknown')} | "
             f"{', '.join(s.get('protocol_hints', [])) or '-'} | {s.get('status','active')} | {s.get('notes') or ''} |"
         )
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _atomic_write_text(path, "\n".join(lines) + "\n")
 
 
 def generate_url_export(sources: list[dict], path: Path) -> None:
     urls = sorted({s["url"] for s in sources if s.get("status") in {"active", "stale"} and s.get("url")})
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("".join(url + "\n" for url in urls), encoding="utf-8")
+    _atomic_write_text(path, "".join(url + "\n" for url in urls))

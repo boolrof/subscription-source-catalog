@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from pathlib import Path
 
 from src.pre_admission import inspect_many, source_id
@@ -138,7 +139,13 @@ def main() -> int:
     }
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    tmp = out.with_name(out.name + ".tmp")
+    with tmp.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, out)
     print(json.dumps({
         "shard": args.shard,
         "assigned": metrics.get("sources", {}).get("assigned", len(sources)),

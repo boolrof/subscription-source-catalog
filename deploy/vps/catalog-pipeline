@@ -5,6 +5,7 @@ umask 077
 REPO_DIR="${CATALOG_REPO_DIR:-/opt/subscription-source-catalog}"
 LOCK_FILE="${CATALOG_LOCK_FILE:-/run/lock/subscription-source-catalog.lock}"
 EXPECTED_BRANCH="${CATALOG_BRANCH:-main}"
+EXPECTED_SHA="${CATALOG_EXPECTED_SHA:-}"
 SHARDS="${CATALOG_SHARDS:-20}"
 MAX_SOURCES="${CATALOG_MAX_SOURCES:-80}"
 WORKERS="${CATALOG_WORKERS:-2}"
@@ -13,46 +14,76 @@ TOP_PER_COUNTRY="${CATALOG_TOP_PER_COUNTRY:-30}"
 COUNTRY_EXPORT_LIMIT="${CATALOG_COUNTRY_EXPORT_LIMIT:-500}"
 MAX_PER_SOURCE="${CATALOG_MAX_PER_SOURCE:-5}"
 PUBLISH="${CATALOG_PUBLISH:-1}"
+SSH_PORT="${CATALOG_SSH_PORT:-22022}"
 
 log() { printf '%s %s\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" "$*"; }
 die() { log "ERROR: $*" >&2; exit 1; }
 need() { command -v "$1" >/dev/null 2>&1 || die "missing dependency: $1"; }
 
-for cmd in git python3 curl gzip sha256sum stat flock find sort xargs; do need "$cmd"; done
+for cmd in git python3 curl gzip sha256sum stat flock find sort xargs ip pgrep ss awk wc date; do need "$cmd"; done
 [[ -d "$REPO_DIR/.git" ]] || die "repository not found: $REPO_DIR"
 mkdir -p "$(dirname "$LOCK_FILE")"
 exec 9>"$LOCK_FILE"
 flock -n 9 || die "another catalog pipeline is already running"
 
 cd "$REPO_DIR"
+branch="$(git symbolic-ref --quiet --short HEAD || true)"
+[[ "$branch" == "$EXPECTED_BRANCH" ]] || die "expected branch $EXPECTED_BRANCH, got ${branch:-detached}"
+[[ -z "$(git status --porcelain --untracked-files=all)" ]] || die "working tree is not clean"
+
+ssh_listener_state() {
+  ss -ltnH | awk -v p=":$SSH_PORT" '$4 ~ p"$" {print $1 "|" $4}' | sort
+}
+
 BEFORE_ROUTE="$(ip route show default 2>/dev/null || true)"
 BEFORE_XUI_PID="$(pgrep -xo x-ui 2>/dev/null || true)"
+BEFORE_SSH_LISTEN="$(ssh_listener_state)"
+[[ -n "$BEFORE_SSH_LISTEN" ]] || die "SSH listener not found on port $SSH_PORT"
 
 cleanup() {
   rc=$?
+
   after_route="$(ip route show default 2>/dev/null || true)"
   after_xui_pid="$(pgrep -xo x-ui 2>/dev/null || true)"
+  after_ssh_listen="$(ssh_listener_state)"
+
   if [[ "$after_route" != "$BEFORE_ROUTE" ]]; then
     log "CRITICAL: host default route changed during catalog pipeline"
     rc=90
   fi
+
   if [[ -n "$BEFORE_XUI_PID" && "$after_xui_pid" != "$BEFORE_XUI_PID" ]]; then
     log "CRITICAL: x-ui PID changed during catalog pipeline"
     rc=91
   fi
-  rm -rf .catalog-runtime
+
+  if [[ "$after_ssh_listen" != "$BEFORE_SSH_LISTEN" ]]; then
+    log "CRITICAL: SSH listener state changed on port $SSH_PORT"
+    rc=92
+  fi
+
+  if (( rc == 0 )); then
+    rm -rf .catalog-runtime
+  else
+    log "pipeline failed; preserving .catalog-runtime for recovery evidence"
+  fi
+
   exit "$rc"
 }
 trap cleanup EXIT
 
-branch="$(git symbolic-ref --quiet --short HEAD || true)"
-[[ "$branch" == "$EXPECTED_BRANCH" ]] || die "expected branch $EXPECTED_BRANCH, got ${branch:-detached}"
-[[ -z "$(git status --porcelain)" ]] || die "working tree is not clean"
-
 log "preflight: fetch and fast-forward"
 git fetch --prune origin "$EXPECTED_BRANCH"
-git merge-base --is-ancestor HEAD "origin/$EXPECTED_BRANCH" || die "local HEAD diverged from origin/$EXPECTED_BRANCH"
-git merge --ff-only "origin/$EXPECTED_BRANCH"
+remote_sha="$(git rev-parse "origin/$EXPECTED_BRANCH")"
+if [[ -n "$EXPECTED_SHA" && "$remote_sha" != "$EXPECTED_SHA" ]]; then
+  die "remote candidate SHA mismatch: expected $EXPECTED_SHA, got $remote_sha"
+fi
+git merge-base --is-ancestor HEAD "$remote_sha" || die "local HEAD diverged from origin/$EXPECTED_BRANCH"
+git merge --ff-only "$remote_sha"
+[[ "$(git rev-parse HEAD)" == "$remote_sha" ]] || die "post-fast-forward HEAD mismatch"
+
+mkdir -p .catalog-runtime/geoip .catalog-runtime/compute .catalog-runtime/pycache
+export PYTHONPYCACHEPREFIX="$REPO_DIR/.catalog-runtime/pycache"
 
 VENV="$REPO_DIR/.venv"
 [[ -x "$VENV/bin/python" ]] || die "virtualenv missing: $VENV"
@@ -60,9 +91,8 @@ PY="$VENV/bin/python"
 
 log "preflight: unit tests"
 "$PY" -m unittest discover -s tests -v
-"$PY" -m compileall -q src run.py compute.py merge_compute.py coverage_metrics.py coverage_shadow_consensus.py state_store.py
+"$PY" -m compileall -q src run.py compute.py streaming_merge.py coverage_stream_cli.py coverage_shadow_consensus.py state_store.py validate_staged_publication.py
 
-mkdir -p .catalog-runtime/geoip .catalog-runtime/compute
 
 prepare_geoip() {
   local dir=.catalog-runtime/geoip
@@ -96,8 +126,8 @@ prepare_geoip() {
   rm -f "$dir/dbip-country-lite.mmdb.gz"
 }
 
-log "discovery"
-"$PY" run.py
+log "discovery: Git transport backend"
+"$PY" run.py --backend git
 
 log "prepare passive GeoIP shadow datasets"
 prepare_geoip
@@ -121,15 +151,18 @@ done
 count="$(find .catalog-runtime/compute -maxdepth 1 -type f -name 'shard-*.json' | wc -l)"
 [[ "$count" -eq "$SHARDS" ]] || die "expected $SHARDS shard artifacts, found $count"
 
-log "snapshot previous global node index"
-"$PY" state_store.py snapshot-global-nodes --path exports/nodes_deduplicated --legacy exports/nodes_deduplicated.json --output .catalog-runtime/nodes-before.json
+log "streaming merge and rank"
+"$PY" streaming_merge.py \
+  --artifacts .catalog-runtime/compute \
+  --expected-shards "$SHARDS" \
+  --top-per-country "$TOP_PER_COUNTRY" \
+  --country-export-limit "$COUNTRY_EXPORT_LIMIT" \
+  --max-per-source "$MAX_PER_SOURCE"
 
-log "merge and rank"
-"$PY" merge_compute.py --artifacts .catalog-runtime/compute --top-per-country "$TOP_PER_COUNTRY" --country-export-limit "$COUNTRY_EXPORT_LIMIT" --max-per-source "$MAX_PER_SOURCE"
-"$PY" state_store.py snapshot-source-index --path data/node_index --legacy data/node_index.json --output .catalog-runtime/node-index-current.json
-"$PY" state_store.py snapshot-global-nodes --path exports/nodes_deduplicated --legacy exports/nodes_deduplicated.json --output .catalog-runtime/nodes-current.json
-"$PY" coverage_metrics.py --artifacts .catalog-runtime/compute --node-index .catalog-runtime/node-index-current.json --nodes-deduplicated .catalog-runtime/nodes-current.json --previous-nodes .catalog-runtime/nodes-before.json --expected-shards "$SHARDS"
-"$PY" coverage_shadow_consensus.py --artifacts .catalog-runtime/compute --expected-shards "$SHARDS"
+log "shadow consensus coverage"
+"$PY" coverage_shadow_consensus.py \
+  --artifacts .catalog-runtime/compute \
+  --expected-shards "$SHARDS"
 
 log "verify bounded generated state"
 while IFS= read -r -d '' file; do
@@ -147,8 +180,9 @@ for legacy in data/node_index.json exports/nodes_deduplicated.json; do
   if git ls-files --error-unmatch "$legacy" >/dev/null 2>&1; then git add -u -- "$legacy"; fi
 done
 
-# Fail closed if anything outside the publication allowlist changed.
-unstaged="$(git status --porcelain | awk '$1 !~ /^\?\?/ {print substr($0,4)}' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
+# Runtime scratch is never publication state. Fail closed on every other path
+# outside the publication allowlist.
+unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0,4)}' | grep -vE '^\.catalog-runtime/' | grep -vE '^(data/sources\.json|data/geo_cache\.json|SOURCES\.md|exports/subscription_urls\.txt|exports/prechecked_sources\.json|exports/country_handoff\.json|exports/country_handoff_v4\.json|exports/coverage_metrics\.json|data/node_index/|exports/nodes_deduplicated/|exports/countries/)' || true)"
 [[ -z "$unstaged" ]] || die "unexpected modified paths: $unstaged"
 
 if git diff --cached --quiet; then
@@ -156,16 +190,23 @@ if git diff --cached --quiet; then
   exit 0
 fi
 
+log "scan staged publication for sensitive content"
+"$PY" validate_staged_publication.py
+
 if [[ "$PUBLISH" != 1 ]]; then
   log "publication disabled; leaving validated changes staged"
   exit 0
 fi
 
+log "verify immutable candidate before publication"
+git fetch origin "$EXPECTED_BRANCH"
+post_remote_sha="$(git rev-parse "origin/$EXPECTED_BRANCH")"
+[[ "$post_remote_sha" == "$remote_sha" ]] || die "remote branch advanced during pipeline"
+[[ "$(git rev-parse HEAD)" == "$remote_sha" ]] || die "pipeline code HEAD changed during transaction"
+
 log "publish sanitized generated state"
 git config user.name "catalog-pipeline"
 git config user.email "catalog-pipeline@localhost"
 git commit -m "chore(catalog): owner-operated pipeline update [skip ci]"
-git fetch origin "$EXPECTED_BRANCH"
-git rebase "origin/$EXPECTED_BRANCH"
 git push origin "HEAD:$EXPECTED_BRANCH"
 log "pipeline complete"

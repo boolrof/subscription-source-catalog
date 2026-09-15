@@ -10,7 +10,7 @@ The optional GeoIP shadow-validation path uses the **server-country** database p
 - Project use: local, offline, aggregate-only comparison against the legacy passive GeoIP resolver
 - Upstream methodology: compiled from public routing data and public geofeeds; it remains passive geolocation evidence, not proof of a VPN/proxy exit country
 
-The database itself is not committed to this repository. GitHub Actions downloads the current upstream release into an ephemeral runner, verifies the upstream SHA-256 checksum, shares that verified file with compute shards as a short-lived Actions artifact, and discards it after the run.
+The database itself is not committed to this repository. The owner-operated VPS pipeline downloads the current upstream release into private runtime scratch space, verifies the upstream SHA-256 checksum, makes the verified file available to the local compute process, and discards it after a successful run.
 
 ## DB-IP Country Lite
 
@@ -22,7 +22,7 @@ The optional secondary GeoIP shadow-validation path uses the **DB-IP Country Lit
 - Project use: local, offline, aggregate-only comparison against the legacy passive GeoIP resolver and the Sapics shadow dataset
 - Attribution: [IP Geolocation by DB-IP](https://db-ip.com)
 
-The DB-IP database is not committed to this repository. GitHub Actions obtains the current monthly file directly from `download.db-ip.com` over HTTPS, validates gzip integrity and sane decompressed size before the MMDB reader opens it, records a SHA-256 release identifier, shares the file only as a short-lived Actions artifact, and discards it after the run. If the file cannot be downloaded or read, the secondary shadow is simply disabled for that run.
+The DB-IP database is not committed to this repository. The owner-operated VPS pipeline obtains the current monthly file directly from `download.db-ip.com` over HTTPS, validates gzip integrity and sane decompressed size before the MMDB reader opens it, records a SHA-256 release identifier, keeps the file only in private runtime scratch space for the local compute process, and discards it after a successful run. If the file cannot be downloaded or read, the secondary shadow is simply disabled for that run.
 
 If DB-IP data is later promoted from observation-only telemetry into user-facing country results, the consuming UI/publication must preserve the attribution required by the DB-IP Lite license.
 

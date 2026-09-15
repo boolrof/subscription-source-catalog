@@ -276,14 +276,24 @@ class ShadowingGeoResolver:
                     self._both_shadows_unknown += 1
                     if first_unique:
                         self._unique_both_shadows_unknown += 1
-        return legacy_country
+        # Local MMDB is the passive country-routing source. Secondary fills only
+        # primary misses; the bounded network resolver is a final fallback.
+        return shadow_country or secondary_country or legacy_country
 
     def countries(self, ips: list[str | None]) -> list[str | None]:
         values = list(ips)
-        legacy_countries = self.legacy.countries(values)
+        primary = [self.shadow.lookup(str(ip))[0] if ip and p._global_ip(str(ip)) else None for ip in values]
+        secondary = [
+            self.secondary_shadow.lookup(str(ip))[0] if self.secondary_shadow is not None and ip and p._global_ip(str(ip)) else None
+            for ip in values
+        ]
+        fallback_positions = [i for i, (a, b) in enumerate(zip(primary, secondary)) if not a and not b]
+        fallback_values = [values[i] for i in fallback_positions]
+        fallback_results = self.legacy.countries(fallback_values) if fallback_values else []
+        legacy_by_pos = dict(zip(fallback_positions, fallback_results))
         return [
-            self.country(ip, _legacy_country=legacy_country)
-            for ip, legacy_country in zip(values, legacy_countries)
+            self.country(ip, _legacy_country=legacy_by_pos.get(i))
+            for i, ip in enumerate(values)
         ]
 
     def metrics(self) -> dict:

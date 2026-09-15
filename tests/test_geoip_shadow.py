@@ -37,21 +37,21 @@ class GeoIPShadowTests(unittest.TestCase):
         shadow = LocalMMDBShadowResolver(reader=FakeReader(error=True))
         self.assertEqual(shadow.lookup("1.1.1.1"), (None, True))
 
-    def test_shadow_never_overrides_legacy_country(self):
+    def test_primary_local_mmdb_overrides_legacy_for_passive_routing(self):
         ip = "8.8.8.8"
         key = hashlib.sha256(("geo:" + ip).encode("utf-8")).hexdigest()[:24]
         shadow = LocalMMDBShadowResolver(reader=FakeReader({ip: {"country_code": "DE"}}), provider="test", release="abc")
         resolver = ShadowingGeoResolver({key: "US"}, max_new=0, timeout=0.1, shadow=shadow)
-        self.assertEqual(resolver.country(ip), "US")
+        self.assertEqual(resolver.country(ip), "DE")
         metrics = resolver.metrics()
         self.assertEqual(metrics["legacy_known_shadow_known_disagree"], 1)
         self.assertEqual(metrics["legacy_unknown_shadow_known"], 0)
 
-    def test_shadow_measures_country_recovered_from_legacy_cap(self):
+    def test_primary_local_mmdb_recovers_country_from_legacy_cap(self):
         ip = "1.1.1.1"
         shadow = LocalMMDBShadowResolver(reader=FakeReader({ip: {"country_code": "AU"}}), provider="test", release="abc")
         resolver = ShadowingGeoResolver({}, max_new=0, timeout=0.1, shadow=shadow)
-        self.assertIsNone(resolver.country(ip))
+        self.assertEqual(resolver.country(ip), "AU")
         metrics = resolver.metrics()
         self.assertEqual(metrics["cap_skipped"], 1)
         self.assertEqual(metrics["legacy_unknown_shadow_known"], 1)

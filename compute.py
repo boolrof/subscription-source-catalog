@@ -79,7 +79,7 @@ def main() -> int:
         elif secondary_requested:
             secondary_init_failed = True
 
-    if shadow is not None:
+    if shadow is not None or secondary_shadow is not None:
         from src.geoip_shadow import inspect_many_shadow
 
         try:
@@ -100,7 +100,8 @@ def main() -> int:
                 metrics_out=metrics,
             )
         finally:
-            shadow.close()
+            if shadow is not None:
+                shadow.close()
             if secondary_shadow is not None:
                 secondary_shadow.close()
     else:
@@ -128,6 +129,14 @@ def main() -> int:
             "secondary_shadow_provider": args.geo_shadow_secondary_provider if secondary_requested else None,
             "secondary_shadow_release": (args.geo_shadow_secondary_release or "unknown") if secondary_requested else None,
         })
+
+    metrics.setdefault("geo", {}).update({
+        "shadow_requested": shadow_requested,
+        "shadow_available": shadow is not None,
+        "shadow_init_failed": shadow_init_failed,
+        "shadow_provider": shadow.provider if shadow is not None else (args.geo_shadow_provider if shadow_requested else None),
+        "shadow_release": shadow.release if shadow is not None else ((args.geo_shadow_release or "unknown") if shadow_requested else None),
+    })
 
     payload = {
         "schema": "subscription-source-compute-shard-v2",

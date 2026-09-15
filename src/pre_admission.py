@@ -554,7 +554,8 @@ def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout
         resolvable = sum(int((row.get("precheck") or {}).get("resolvable_endpoints") or 0) for row in success_rows)
         unresolved = sum(int((row.get("precheck") or {}).get("unresolved_endpoints") or 0) for row in success_rows)
         geo_known = sum(bool(node.get("endpoint_country")) for row in success_rows for node in (row.get("nodes") or []))
-        geo_metrics = geo.metrics()
+        from src.geo_telemetry import stamp
+        geo_metrics = stamp(geo.metrics())
         geo_metrics.update({
             "max_new": int(geo_max_new),
             "cache_entries_before": cache_before,

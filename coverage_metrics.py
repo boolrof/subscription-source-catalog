@@ -336,7 +336,8 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
             ) == (geo["lookup_failed"] + geo["cap_skipped"] if geo_complete else -1),
         })
 
-    return {
+    from src.geo_telemetry import apply_v2
+    return apply_v2({
         "schema": "subscription-source-coverage-metrics-v1",
         "generated_at": utc_now(),
         "semantics": {
@@ -371,7 +372,7 @@ def build_metrics(*, data: Path, node_index: Path, geo_cache: Path, artifacts: P
         "geo_shadow": shadow,
         "countries": _country_metrics(catalog, current_nodes, old_nodes, countries_dir),
         "invariants": invariants,
-    }
+    }, shards)
 
 
 def main() -> int:

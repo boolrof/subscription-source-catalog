@@ -146,6 +146,11 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
     legacy_geo_unknown = int(nodes.get("geo_unknown") or 0)
     resolvable = int(nodes.get("resolvable_endpoints") or 0)
     legacy_geo_known = int(nodes.get("geo_known") or 0)
+    from src.geo_telemetry import aggregate as routing_aggregate
+    routing = routing_aggregate(shards)
+    if routing is not None:
+        legacy_geo_known = routing["network_fallback_known"]
+        legacy_geo_unknown = int(nodes.get("parsed") or 0) - legacy_geo_known
     primary_secondary_conflict_pairs = _counter_sum(geos, "primary_secondary_conflict_pair_counts")
     legacy_unknown_conflict_pairs = _counter_sum(geos, "legacy_unknown_shadow_consensus_conflict_pair_counts")
     unique_primary_secondary_conflict_pairs = _counter_sum(geos, "unique_primary_secondary_conflict_pair_counts")
@@ -251,6 +256,10 @@ def aggregate(shards: dict[int, dict], *, expected_shards: int, duplicate_shards
             == unique_sums["unique_legacy_unknown_shadow_consensus_conflict"]
         ),
     }
+    if routing is not None:
+        consensus["potential_geo_known_occurrences_if_consensus_fallback"] = None
+        consensus["potential_geo_unknown_occurrences_if_consensus_fallback"] = None
+        consensus["comparison_semantics"] = "network_unknown_includes_not_consulted_local_hits"
     return secondary, consensus, invariants
 
 
@@ -263,8 +272,8 @@ def main() -> int:
 
     metrics_path = Path(args.metrics)
     metrics = load(metrics_path, {})
-    if metrics.get("schema") != "subscription-source-coverage-metrics-v1":
-        raise SystemExit("coverage metrics v1 required")
+    if metrics.get("schema") not in {"subscription-source-coverage-metrics-v1", "subscription-source-coverage-metrics-v2"}:
+        raise SystemExit("coverage metrics v1 or v2 required")
     shards, duplicates = artifact_state(Path(args.artifacts))
     secondary, consensus, invariants = aggregate(
         shards,
@@ -275,9 +284,11 @@ def main() -> int:
     metrics["geo_shadow_secondary"] = secondary
     metrics["geo_shadow_consensus"] = consensus
     metrics.setdefault("invariants", {}).update(invariants)
-    metrics.setdefault("semantics", {})["geo_shadow_consensus"] = "observation_only_two_local_mmdbs_agree_legacy_country_ranking_unchanged"
+    metrics.setdefault("semantics", {})["geo_shadow_consensus"] = ("diagnostic_provider_agreement_primary_mmdb_country_wins" if metrics.get("schema") == "subscription-source-coverage-metrics-v2" else "observation_only_two_local_mmdbs_agree_legacy_country_ranking_unchanged")
     metrics.setdefault("semantics", {})["geo_shadow_conflict_pairs"] = "aggregate_occurrence_weighted_country_code_pairs_only_no_ip_endpoint_uri_or_source_identifiers"
     metrics.setdefault("semantics", {})["geo_shadow_unique_ip_shard_sum"] = "aggregate_only_sum_of_per_shard_unique_ip_classifications_cross_shard_duplicates_possible_raw_ips_never_exported"
+    from src.streaming_merge_runner import _require_complete_coverage
+    _require_complete_coverage(metrics)
     dump(metrics_path, metrics)
     print(json.dumps({
         "secondary_complete": secondary["telemetry_complete"],

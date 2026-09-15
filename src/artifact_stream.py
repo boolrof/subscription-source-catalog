@@ -12,6 +12,8 @@ def source_id_for(source: dict) -> str:
 def validate_artifact_set(artifacts_dir: Path, expected_shards: int) -> dict:
     """Validate one complete compute artifact per logical shard before mutation."""
     expected_shards = max(1, int(expected_shards))
+    from src.geo_telemetry import validate
+    versions = set()
     seen = set()
     duplicates = set()
     artifact_files = 0
@@ -19,6 +21,8 @@ def validate_artifact_set(artifacts_dir: Path, expected_shards: int) -> dict:
         payload = json.loads(path.read_text(encoding="utf-8"))
         if payload.get("schema") != "subscription-source-compute-shard-v2":
             continue
+        validate(payload)
+        versions.add(((payload.get("metrics") or {}).get("geo") or {}).get("telemetry_schema"))
         artifact_files += 1
         try:
             shard = int(payload.get("shard"))
@@ -35,6 +39,8 @@ def validate_artifact_set(artifacts_dir: Path, expected_shards: int) -> dict:
         if shard in seen:
             duplicates.add(shard)
         seen.add(shard)
+    if len(versions) > 1:
+        raise ValueError("mixed GeoIP telemetry versions")
     expected = set(range(expected_shards))
     missing = sorted(expected - seen)
     if duplicates or missing or artifact_files != expected_shards:

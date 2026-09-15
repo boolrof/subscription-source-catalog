@@ -44,8 +44,8 @@ class GeoIPShadowTests(unittest.TestCase):
         resolver = ShadowingGeoResolver({key: "US"}, max_new=0, timeout=0.1, shadow=shadow)
         self.assertEqual(resolver.country(ip), "DE")
         metrics = resolver.metrics()
-        self.assertEqual(metrics["legacy_known_shadow_known_disagree"], 1)
-        self.assertEqual(metrics["legacy_unknown_shadow_known"], 0)
+        self.assertEqual(metrics["legacy_known_shadow_known_disagree"], 0)
+        self.assertEqual(metrics["legacy_unknown_shadow_known"], 1)
 
     def test_primary_local_mmdb_recovers_country_from_legacy_cap(self):
         ip = "1.1.1.1"
@@ -53,7 +53,7 @@ class GeoIPShadowTests(unittest.TestCase):
         resolver = ShadowingGeoResolver({}, max_new=0, timeout=0.1, shadow=shadow)
         self.assertEqual(resolver.country(ip), "AU")
         metrics = resolver.metrics()
-        self.assertEqual(metrics["cap_skipped"], 1)
+        self.assertEqual(metrics["cap_skipped"], 0)
         self.assertEqual(metrics["legacy_unknown_shadow_known"], 1)
         self.assertEqual(metrics["legacy_unknown_shadow_country_counts"], {"AU": 1})
 

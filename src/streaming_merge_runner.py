@@ -121,6 +121,13 @@ def _prechecked_sources(catalog: dict) -> dict:
 def _require_complete_coverage(metrics: dict) -> None:
     if not bool((metrics.get("run") or {}).get("complete")):
         raise ValueError("streaming coverage run is incomplete")
+    if metrics.get("schema") == "subscription-source-coverage-metrics-v2":
+        required = ("nodes_partition", "geo_cache_partition", "geo_lookup_partition",
+                    "geo_known_partition", "geo_unknown_partition", "geo_batch_consistency",
+                    "geo_routing_partition", "geo_network_partition")
+        if (not (metrics.get("geo") or {}).get("telemetry_complete")
+            or any((metrics.get("invariants") or {}).get(key) is not True for key in required)):
+            raise ValueError("streaming v2 coverage telemetry is incomplete or invalid")
     failed = sorted(
         name for name, value in (metrics.get("invariants") or {}).items()
         if value is False

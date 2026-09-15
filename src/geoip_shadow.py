@@ -33,7 +33,7 @@ def _country_from_record(record: Any) -> str | None:
 
 
 class LocalMMDBShadowResolver:
-    """Read a local country MMDB without affecting primary GeoIP decisions."""
+    """Read and cache a local passive endpoint-country MMDB."""
 
     def __init__(
         self,
@@ -79,7 +79,7 @@ class LocalMMDBShadowResolver:
 
 
 class ShadowingGeoResolver:
-    """Delegate authoritative passive GeoIP to legacy and observe up to two local MMDBs."""
+    """Resolve passive country with primary MMDB, secondary fallback, then network."""
 
     def __init__(
         self,
@@ -87,7 +87,7 @@ class ShadowingGeoResolver:
         *,
         max_new: int,
         timeout: float,
-        shadow: LocalMMDBShadowResolver,
+        shadow: LocalMMDBShadowResolver | None,
         secondary_shadow: LocalMMDBShadowResolver | None = None,
         secondary_requested: bool = False,
         secondary_init_failed: bool = False,
@@ -161,11 +161,13 @@ class ShadowingGeoResolver:
         self._unique_legacy_unknown_shadow_consensus_conflict_pair_counts: Counter[str] = Counter()
 
     def country(self, ip: str | None, *, _legacy_country: Any = _LEGACY_COUNTRY_UNSET) -> str | None:
-        legacy_country = self.legacy.country(ip) if _legacy_country is _LEGACY_COUNTRY_UNSET else _legacy_country
+        if _legacy_country is _LEGACY_COUNTRY_UNSET:
+            return self.countries([ip])[0]
+        legacy_country = _legacy_country
         if not ip or not p._global_ip(ip):
-            return legacy_country
+            return None
 
-        shadow_country, failed = self.shadow.lookup(ip)
+        shadow_country, failed = self.shadow.lookup(ip) if self.shadow is not None else (None, False)
         secondary_country = None
         secondary_failed = False
         if self.secondary_shadow is not None:
@@ -282,7 +284,9 @@ class ShadowingGeoResolver:
 
     def countries(self, ips: list[str | None]) -> list[str | None]:
         values = list(ips)
-        primary = [self.shadow.lookup(str(ip))[0] if ip and p._global_ip(str(ip)) else None for ip in values]
+        primary = [self.shadow.lookup(str(ip))[0] if self.shadow is not None and ip and p._global_ip(str(ip)) else None for ip in values]
+        # Secondary is also observed on primary hits for disagreement diagnostics;
+        # only primary misses count as secondary routing recoveries.
         secondary = [
             self.secondary_shadow.lookup(str(ip))[0] if self.secondary_shadow is not None and ip and p._global_ip(str(ip)) else None
             for ip in values
@@ -301,10 +305,10 @@ class ShadowingGeoResolver:
         with self._lock:
             metrics.update({
                 "shadow_requested": True,
-                "shadow_available": True,
-                "shadow_init_failed": False,
-                "shadow_provider": self.shadow.provider,
-                "shadow_release": self.shadow.release,
+                "shadow_available": self.shadow is not None,
+                "shadow_init_failed": self.shadow is None,
+                "shadow_provider": self.shadow.provider if self.shadow is not None else None,
+                "shadow_release": self.shadow.release if self.shadow is not None else None,
                 "shadow_calls": self._shadow_calls,
                 "shadow_known": self._shadow_known,
                 "shadow_unknown": self._shadow_unknown,
@@ -366,7 +370,8 @@ class ShadowingGeoResolver:
                     "unique_primary_secondary_conflict_pair_counts": dict(sorted(self._unique_primary_secondary_conflict_pair_counts.items())),
                     "unique_legacy_unknown_shadow_consensus_conflict_pair_counts": dict(sorted(self._unique_legacy_unknown_shadow_consensus_conflict_pair_counts.items())),
                 })
-        return metrics
+        from src.geo_telemetry import stamp
+        return stamp(metrics)
 
 
 def inspect_many_shadow(
@@ -378,7 +383,7 @@ def inspect_many_shadow(
     workers: int,
     geo_cache: dict[str, str],
     geo_max_new: int,
-    shadow: LocalMMDBShadowResolver,
+    shadow: LocalMMDBShadowResolver | None,
     secondary_shadow: LocalMMDBShadowResolver | None = None,
     secondary_requested: bool = False,
     secondary_init_failed: bool = False,

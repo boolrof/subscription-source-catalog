@@ -184,7 +184,8 @@ def build_stream_metrics(*, data: Path, node_index: Path, geo_cache: Path, artif
             "shadow_legacy_unknown_resolved_partition": shadow["legacy_unknown_shadow_known"] + shadow["both_unknown"] == (geo["lookup_failed"] + geo["cap_skipped"] if geo_complete else -1),
         })
 
-    return {
+    from src.geo_telemetry import apply_v2
+    return apply_v2({
         "schema": "subscription-source-coverage-metrics-v1",
         "generated_at": utc_now(),
         "semantics": {
@@ -203,4 +204,4 @@ def build_stream_metrics(*, data: Path, node_index: Path, geo_cache: Path, artif
         "geo_shadow": shadow,
         "countries": countries,
         "invariants": invariants,
-    }
+    }, shards)

@@ -79,7 +79,7 @@ class GitHubDiscovery:
     def _request(self, url: str):
         req = urllib.request.Request(url)
         req.add_header("Accept", "application/vnd.github+json")
-        req.add_header("User-Agent", "Get09-subscription-source-catalog")
+        req.add_header("User-Agent", "subscription-source-catalog")
         req.add_header("X-GitHub-Api-Version", "2022-11-28")
         if self.token:
             req.add_header("Authorization", f"Bearer {self.token}")

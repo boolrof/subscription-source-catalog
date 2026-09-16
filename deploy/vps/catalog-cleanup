@@ -39,9 +39,9 @@ fi
 # Keep it in the foreground so it cannot outlive the pipeline lock.
 # The systemd pipeline already runs as catalog; only root needs runuser.
 if [[ "$(id -un)" == "catalog" ]]; then
-  git -C "$REPO" gc --auto --no-detach --prune=2.weeks.ago
+  git -C "$REPO" -c gc.autoDetach=false gc --auto --prune=2.weeks.ago
 elif [[ "$EUID" -eq 0 ]]; then
-  runuser -u catalog -- git -C "$REPO" gc --auto --no-detach --prune=2.weeks.ago
+  runuser -u catalog -- git -C "$REPO" -c gc.autoDetach=false gc --auto --prune=2.weeks.ago
 else
   echo "cleanup must run as catalog or root" >&2
   exit 77

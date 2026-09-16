@@ -35,12 +35,13 @@ if [[ -d "$STATE/recovery" ]]; then
 fi
 # Runtime scratch is disposable only while the service is stopped.
 [[ -d "$REPO/.catalog-runtime" ]] && rm -rf --one-file-system "$REPO/.catalog-runtime"
-# Compact unreachable Git history without rewriting published history.
+# Use bounded automatic housekeeping with a two-week object recovery grace.
+# Keep it in the foreground so it cannot outlive the pipeline lock.
 # The systemd pipeline already runs as catalog; only root needs runuser.
 if [[ "$(id -un)" == "catalog" ]]; then
-  git -C "$REPO" gc --auto --prune=now
+  git -C "$REPO" gc --auto --no-detach --prune=2.weeks.ago
 elif [[ "$EUID" -eq 0 ]]; then
-  runuser -u catalog -- git -C "$REPO" gc --auto --prune=now
+  runuser -u catalog -- git -C "$REPO" gc --auto --no-detach --prune=2.weeks.ago
 else
   echo "cleanup must run as catalog or root" >&2
   exit 77

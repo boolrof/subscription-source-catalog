@@ -1,0 +1,10 @@
+# Python environments and disposable development caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# .catalog-runtime remains visible for failed-cycle recovery checks.
+# Published data/ and exports/ remain tracked.

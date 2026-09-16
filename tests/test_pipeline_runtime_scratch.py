@@ -20,7 +20,8 @@ class PipelineRuntimeScratchTests(unittest.TestCase):
     def test_cleanup_runs_git_gc_directly_for_catalog_service_user(self):
         script = (Path(__file__).parents[1] / "deploy/vps/catalog-cleanup").read_text()
         self.assertIn('if [[ "$(id -un)" == "catalog" ]]', script)
-        self.assertIn('git -C "$REPO" gc --auto --prune=now', script)
+        self.assertIn('git -C "$REPO" gc --auto --no-detach --prune=2.weeks.ago', script)
+        self.assertNotIn('--prune=now', script)
         self.assertIn('elif [[ "$EUID" -eq 0 ]]', script)
 
 if __name__ == "__main__":

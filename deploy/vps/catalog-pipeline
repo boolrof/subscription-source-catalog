@@ -112,11 +112,15 @@ fi
 [[ ${#shadow_args[@]} -gt 0 ]] || die "primary local GeoIP MMDB unavailable"
 
 log "compute: $SHARDS logical shards"
+compute_start=$SECONDS
 for (( shard=0; shard<SHARDS; shard++ )); do
+  shard_start=$SECONDS
   log "compute shard $shard/$((SHARDS-1))"
   "$PY" compute.py --shard "$shard" --shards "$SHARDS" --max-sources "$MAX_SOURCES" --workers "$WORKERS" --geo-max-new "$GEO_MAX_NEW" \
     "${shadow_args[@]}" "${secondary_shadow_args[@]}" --output ".catalog-runtime/compute/shard-${shard}.json"
+  log "timing compute_shard=$shard duration_seconds=$((SECONDS-shard_start))"
 done
+log "timing compute_total duration_seconds=$((SECONDS-compute_start))"
 
 count="$(find .catalog-runtime/compute -maxdepth 1 -type f -name 'shard-*.json' | wc -l)"
 [[ "$count" -eq "$SHARDS" ]] || die "expected $SHARDS shard artifacts, found $count"

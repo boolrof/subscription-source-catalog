@@ -36,5 +36,13 @@ fi
 # Runtime scratch is disposable only while the service is stopped.
 [[ -d "$REPO/.catalog-runtime" ]] && rm -rf --one-file-system "$REPO/.catalog-runtime"
 # Compact unreachable Git history without rewriting published history.
-runuser -u catalog -- git -C "$REPO" gc --auto --prune=now
+# The systemd pipeline already runs as catalog; only root needs runuser.
+if [[ "$(id -un)" == "catalog" ]]; then
+  git -C "$REPO" gc --auto --prune=now
+elif [[ "$EUID" -eq 0 ]]; then
+  runuser -u catalog -- git -C "$REPO" gc --auto --prune=now
+else
+  echo "cleanup must run as catalog or root" >&2
+  exit 77
+fi
 printf 'cleanup_complete free_bytes='; df -B1 --output=avail / | tail -1 | tr -d ' '

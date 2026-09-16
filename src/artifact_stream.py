@@ -74,6 +74,14 @@ def apply_artifacts(catalog: dict, artifacts_dir: Path, node_index_path: Path, g
             source = by_url[url]
             source["precheck"] = precheck
             source["source_id"] = result.get("source_id")
+            # A successful bounded precheck is stronger format evidence than
+            # discovery filename/text heuristics. Promote only from unknown;
+            # never overwrite an explicit discovery classification.
+            detected = str(precheck.get("format_detected") or "").lower()
+            if precheck.get("fetch_status") == "success" and source.get("format_hint", "unknown") == "unknown" and detected in {"uri", "base64", "mihomo", "mixed"}:
+                source["format_hint"] = detected
+                if source.get("source_kind", "unknown") == "unknown":
+                    source["source_kind"] = "subscription"
             if precheck.get("fetch_status") == "success" and result.get("source_id"):
                 success += 1
                 updates[result["source_id"]] = {

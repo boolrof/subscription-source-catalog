@@ -47,5 +47,18 @@ class ArtifactStreamTests(unittest.TestCase):
             self.assertEqual(catalog["sources"][0]["precheck"]["quality_score"], 90)
 
 
+    def test_successful_precheck_promotes_unknown_format(self):
+        import json, tempfile
+        from pathlib import Path
+        from src.artifact_stream import apply_artifacts
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td); artifacts=root/'artifacts'; artifacts.mkdir()
+            catalog={"sources":[{"url":"https://example.invalid/sub.txt","format_hint":"unknown","source_kind":"unknown"}]}
+            shard={"schema":"subscription-source-compute-shard-v2","geo_cache":{},"results":[{"url":"https://example.invalid/sub.txt","source_id":"a"*24,"precheck":{"fetch_status":"success","format_detected":"uri","checked_at":"2026-09-16T00:00:00Z"},"nodes":[]}]}
+            (artifacts/'shard-0.json').write_text(json.dumps(shard))
+            apply_artifacts(catalog,artifacts,root/'index',{})
+            self.assertEqual(catalog['sources'][0]['format_hint'],'uri')
+            self.assertEqual(catalog['sources'][0]['source_kind'],'subscription')
+
 if __name__ == "__main__":
     unittest.main()

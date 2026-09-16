@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+umask 027
+REPO_DIR="${CATALOG_REPO_DIR:-/opt/subscription-source-catalog}"
+ROOT="${CATALOG_LOCAL_SNAPSHOT_ROOT:-/var/lib/subscription-source-catalog/published}"
+exec 9>"${CATALOG_LOCK_FILE:-/run/lock/subscription-source-catalog.lock}"
+flock -n 9 || { echo "catalog publication deferred: pipeline lock held"; exit 1; }
+cd "$REPO_DIR"
+[[ -z "$(git status --porcelain --untracked-files=all)" ]] || { echo "catalog publication rejected: uncommitted state"; exit 1; }
+SHA="$(git rev-parse HEAD)"
+TREE="$(git rev-parse 'HEAD^{tree}')"
+exec /usr/bin/python3 "$REPO_DIR/deploy/vps/publish-local-snapshot.py" --repo "$REPO_DIR" --tree "$TREE" --code-sha "$SHA" --root "$ROOT"

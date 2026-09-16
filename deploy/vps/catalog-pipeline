@@ -94,52 +94,22 @@ log "preflight: unit tests"
 "$PY" -m compileall -q src run.py compute.py streaming_merge.py coverage_stream_cli.py coverage_shadow_consensus.py state_store.py validate_staged_publication.py
 
 
-prepare_geoip() {
-  local dir=.catalog-runtime/geoip
-  local data_url='https://github.com/sapics/ip-location-db/releases/download/latest/server-country.mmdb'
-  local sum_url='https://github.com/sapics/ip-location-db/releases/download/checksum/server-country.mmdb.sha256'
-  if curl --fail --location --silent --show-error --retry 3 --retry-all-errors --connect-timeout 15 --max-time 90 --max-filesize 20000000 --proto '=https' --tlsv1.2 "$data_url" -o "$dir/server-country.mmdb" \
-    && curl --fail --location --silent --show-error --retry 3 --retry-all-errors --connect-timeout 15 --max-time 30 --max-filesize 4096 --proto '=https' --tlsv1.2 "$sum_url" -o "$dir/server-country.mmdb.sha256"; then
-    expected="$(awk 'NF {print tolower($1); exit}' "$dir/server-country.mmdb.sha256")"
-    actual="$(sha256sum "$dir/server-country.mmdb" | awk '{print tolower($1)}')"
-    bytes="$(stat -c '%s' "$dir/server-country.mmdb")"
-    if [[ "$expected" =~ ^[0-9a-f]{64}$ && "$actual" == "$expected" ]] && (( bytes >= 1000000 && bytes <= 20000000 )); then
-      printf 'sha256:%s\n' "$actual" > "$dir/release.txt"
-    else
-      rm -f "$dir/server-country.mmdb" "$dir/release.txt"
-    fi
-  fi
-  for ym in "$(date -u +%Y-%m)" "$(date -u -d '1 month ago' +%Y-%m)"; do
-    url="https://download.db-ip.com/free/dbip-country-lite-${ym}.mmdb.gz"
-    rm -f "$dir/dbip-country-lite.mmdb.gz" "$dir/dbip-country-lite.mmdb"
-    if curl --fail --location --silent --show-error --retry 3 --retry-all-errors --connect-timeout 15 --max-time 90 --max-filesize 20000000 --proto '=https' --tlsv1.2 "$url" -o "$dir/dbip-country-lite.mmdb.gz" \
-      && gzip -t "$dir/dbip-country-lite.mmdb.gz" \
-      && gzip -dc "$dir/dbip-country-lite.mmdb.gz" > "$dir/dbip-country-lite.mmdb"; then
-      bytes="$(stat -c '%s' "$dir/dbip-country-lite.mmdb")"
-      if (( bytes >= 1000000 && bytes <= 20000000 )); then
-        actual="$(sha256sum "$dir/dbip-country-lite.mmdb" | awk '{print tolower($1)}')"
-        printf 'dbip-country-lite-%s sha256:%s\n' "$ym" "$actual" > "$dir/dbip-release.txt"
-        break
-      fi
-    fi
-  done
-  rm -f "$dir/dbip-country-lite.mmdb.gz"
-}
-
 log "discovery: Git transport backend"
 "$PY" run.py --backend git
 
-log "prepare passive GeoIP shadow datasets"
-prepare_geoip
-
+log "prepare passive GeoIP local-first datasets"
+GEO_DIR=/var/lib/subscription-source-catalog/geoip
 shadow_args=()
 secondary_shadow_args=()
-if [[ -s .catalog-runtime/geoip/server-country.mmdb && -s .catalog-runtime/geoip/release.txt ]]; then
-  shadow_args=(--geo-shadow-mmdb .catalog-runtime/geoip/server-country.mmdb --geo-shadow-provider sapics-server-country --geo-shadow-release "$(cat .catalog-runtime/geoip/release.txt)")
+if [[ -s "$GEO_DIR/primary.mmdb" && -s "$GEO_DIR/primary.meta" ]]; then
+  primary_release="$(sed -n 's/^release=//p' "$GEO_DIR/primary.meta" | head -1)"
+  shadow_args=(--geo-shadow-mmdb "$GEO_DIR/primary.mmdb" --geo-shadow-provider sapics-server-country --geo-shadow-release "$primary_release")
 fi
-if [[ -s .catalog-runtime/geoip/dbip-country-lite.mmdb && -s .catalog-runtime/geoip/dbip-release.txt ]]; then
-  secondary_shadow_args=(--geo-shadow-secondary-mmdb .catalog-runtime/geoip/dbip-country-lite.mmdb --geo-shadow-secondary-provider dbip-country-lite --geo-shadow-secondary-release "$(cat .catalog-runtime/geoip/dbip-release.txt)")
+if [[ -s "$GEO_DIR/secondary.mmdb" && -s "$GEO_DIR/secondary.meta" ]]; then
+  secondary_release="$(sed -n 's/^release=//p' "$GEO_DIR/secondary.meta" | head -1)"
+  secondary_shadow_args=(--geo-shadow-secondary-mmdb "$GEO_DIR/secondary.mmdb" --geo-shadow-secondary-provider dbip-country-lite --geo-shadow-secondary-release "$secondary_release")
 fi
+[[ ${#shadow_args[@]} -gt 0 ]] || die "primary local GeoIP MMDB unavailable"
 
 log "compute: $SHARDS logical shards"
 for (( shard=0; shard<SHARDS; shard++ )); do
@@ -170,6 +140,9 @@ while IFS= read -r -d '' file; do
   (( bytes <= 50000000 )) || die "generated state shard exceeds 50 MB: $file ($bytes)"
 done < <(find data/node_index exports/nodes_deduplicated -type f -name '*.json' -print0)
 
+log "export aggregate observability"
+/usr/local/bin/subscription-source-catalog-observability-export
+
 log "post-compute regression tests"
 "$PY" -m unittest discover -s tests -v
 
@@ -187,6 +160,9 @@ unstaged="$(git status --porcelain --untracked-files=all | awk '{print substr($0
 
 if git diff --cached --quiet; then
   log "no catalog changes"
+  if ! CATALOG_CLEANUP_FROM_PIPELINE=1 /usr/local/bin/subscription-source-catalog-cleanup --apply; then
+    log "cleanup warning: housekeeping incomplete; published catalog remains valid"
+  fi
   exit 0
 fi
 
@@ -209,4 +185,8 @@ git config user.name "catalog-pipeline"
 git config user.email "catalog-pipeline@localhost"
 git commit -m "chore(catalog): owner-operated pipeline update [skip ci]"
 git push origin "HEAD:$EXPECTED_BRANCH"
+log "post-publication cleanup"
+if ! CATALOG_CLEANUP_FROM_PIPELINE=1 /usr/local/bin/subscription-source-catalog-cleanup --apply; then
+    log "cleanup warning: housekeeping incomplete; published catalog remains valid"
+  fi
 log "pipeline complete"

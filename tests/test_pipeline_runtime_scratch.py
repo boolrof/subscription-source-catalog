@@ -8,6 +8,8 @@ class PipelineRuntimeScratchTests(unittest.TestCase):
         self.assertIn("grep -vE '^\\.catalog-runtime/'", script)
         self.assertIn("stage publication allowlist", script)
         self.assertNotIn("git add .catalog-runtime", script)
+        self.assertEqual(script.count("cleanup warning: housekeeping incomplete; published catalog remains valid"), 2)
+        self.assertEqual(script.count("if ! CATALOG_CLEANUP_FROM_PIPELINE=1"), 2)
 
 
 if __name__ == "__main__":

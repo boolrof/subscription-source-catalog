@@ -37,6 +37,19 @@ class SnapshotPublisherTests(unittest.TestCase):
         self.assertEqual(first,second)
         self.assertEqual((current/"manifest.json").read_bytes(),before)
 
+    def test_staging_generation_inherits_publication_group(self):
+        import os
+        expected_gid=self.root.parent.stat().st_gid
+        original_mkdtemp=publisher.tempfile.mkdtemp
+        seen=[]
+        def capture(*args,**kwargs):
+            path=original_mkdtemp(*args,**kwargs); seen.append(Path(path)); return path
+        with patch.object(publisher.tempfile,"mkdtemp",side_effect=capture):
+            publisher.publish(self.repo,self.tree,self.root,self.sha)
+        generation=(self.root/"current").resolve()
+        self.assertEqual(generation.stat().st_gid,(self.root/"generations").stat().st_gid)
+        self.assertEqual((generation/"manifest.json").stat().st_gid,generation.stat().st_gid)
+
     def test_invalid_next_generation_preserves_current(self):
         publisher.publish(self.repo,self.tree,self.root,self.sha)
         old=(self.root/"current").resolve()

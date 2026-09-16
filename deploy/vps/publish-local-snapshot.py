@@ -55,6 +55,10 @@ def publish(repo: Path, tree: str, root: Path, code_sha: str) -> dict:
     with os.fdopen(lock_fd, "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         stage = Path(tempfile.mkdtemp(prefix=".staging-", dir=root))
+        # tempfile creates the staging directory with the process primary group.
+        # Explicitly inherit the publication group so VGM readers retain access
+        # even when catalog's primary group differs from vgm-catalog.
+        os.chown(stage, -1, generations.stat().st_gid)
         os.chmod(stage, 0o2750)
         try:
             files = {}

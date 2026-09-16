@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+STATE=/var/lib/subscription-source-catalog
+REPO=/opt/subscription-source-catalog
+KEEP_DAYS=${CATALOG_CLEANUP_KEEP_DAYS:-2}
+MODE=${1:---dry-run}
+[[ "$MODE" == --dry-run || "$MODE" == --apply ]] || { echo "usage: $0 [--dry-run|--apply]" >&2; exit 64; }
+[[ -d "$STATE" && -d "$REPO/.git" ]] || exit 65
+if systemctl is-active --quiet subscription-source-catalog.service && [[ "${CATALOG_CLEANUP_FROM_PIPELINE:-0}" != 1 ]]; then
+  echo "catalog service active; cleanup refused" >&2; exit 75
+fi
+# Never touch .ssh, geoip, current repo, or arbitrary state paths.
+roots=(validation worktrees recovery validation-91ec9ff validation-dcda12e git-discovery-smoke pycache-metrics pycache-tests)
+bytes=0
+for name in "${roots[@]}"; do
+  path="$STATE/$name"; [[ -e "$path" ]] || continue
+  # Size reporting is diagnostic only. An unreadable legacy recovery subtree must not
+  # turn an otherwise successful published cycle into a failure.
+  if size=$(du -sb "$path" 2>/dev/null | awk '{print $1}'); then
+    bytes=$((bytes+size)); printf '%12d  %s\n' "$size" "$path"
+  else
+    printf '%12s  %s\n' "unavailable" "$path"
+  fi
+done
+printf 'candidate_bytes=%d\n' "$bytes"
+[[ "$MODE" == --apply ]] || exit 0
+# Remove only allowlisted scratch trees after a successful published run.
+for name in validation worktrees validation-91ec9ff validation-dcda12e git-discovery-smoke pycache-metrics pycache-tests; do
+  path="$STATE/$name"; [[ -e "$path" ]] || continue
+  rm -rf --one-file-system "$path"
+done
+# Recovery is retained for KEEP_DAYS, then expires automatically.
+if [[ -d "$STATE/recovery" ]]; then
+  find "$STATE/recovery" -mindepth 1 -maxdepth 1 -type d -mtime "+$KEEP_DAYS" -print -exec rm -rf --one-file-system {} +
+fi
+# Runtime scratch is disposable only while the service is stopped.
+[[ -d "$REPO/.catalog-runtime" ]] && rm -rf --one-file-system "$REPO/.catalog-runtime"
+# Compact unreachable Git history without rewriting published history.
+runuser -u catalog -- git -C "$REPO" gc --auto --prune=now
+printf 'cleanup_complete free_bytes='; df -B1 --output=avail / | tail -1 | tr -d ' '

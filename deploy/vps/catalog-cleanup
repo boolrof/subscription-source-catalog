@@ -46,4 +46,5 @@ else
   echo "cleanup must run as catalog or root" >&2
   exit 77
 fi
-printf 'cleanup_complete free_bytes='; df -B1 --output=avail / | tail -1 | tr -d ' '
+free_bytes="$(df -B1 --output=avail / | tail -1 | tr -d ' ')"
+printf 'cleanup_complete free_bytes=%s\n' "$free_bytes"

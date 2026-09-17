@@ -19,6 +19,11 @@ class PipelineRuntimeScratchTests(unittest.TestCase):
         self.assertIn('timing compute_shard=$shard duration_seconds=', script)
         self.assertIn('timing compute_total duration_seconds=', script)
 
+    def test_cleanup_emits_free_bytes_on_one_line(self):
+        cleanup = (Path(__file__).resolve().parents[1] / "deploy/vps/catalog-cleanup").read_text(encoding="utf-8")
+        self.assertIn("free_bytes=\"$(df -B1 --output=avail / | tail -1 | tr -d ' ')\"", cleanup)
+        self.assertIn("printf 'cleanup_complete free_bytes=%s\\n' \"$free_bytes\"", cleanup)
+
     def test_cleanup_runs_git_gc_directly_for_catalog_service_user(self):
         script = (Path(__file__).parents[1] / "deploy/vps/catalog-cleanup").read_text()
         self.assertIn('if [[ "$(id -un)" == "catalog" ]]', script)

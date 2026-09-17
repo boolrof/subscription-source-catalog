@@ -18,7 +18,7 @@ class PipelineRuntimeScratchTests(unittest.TestCase):
         script = (Path(__file__).parents[1] / "deploy/vps/catalog-pipeline").read_text()
         self.assertIn('timing compute_shard=$shard duration_seconds=', script)
         self.assertIn('timing compute_total duration_seconds=', script)
-        self.assertIn('WORKERS="${CATALOG_WORKERS:-4}"', script)
+        self.assertIn('WORKERS="${CATALOG_WORKERS:-3}"', script)
 
     def test_cleanup_emits_free_bytes_on_one_line(self):
         cleanup = (Path(__file__).resolve().parents[1] / "deploy/vps/catalog-cleanup").read_text(encoding="utf-8")

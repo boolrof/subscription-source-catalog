@@ -105,7 +105,15 @@ class CoverageTelemetryTests(unittest.TestCase):
                 metrics_out=metrics,
             )
         self.assertEqual(len(results), 2)
-        self.assertEqual(metrics["sources"], {"assigned": 2, "eligible": 2, "processed": 2, "success": 2, "failed": 0})
+        self.assertEqual(metrics["sources"]["assigned"], 2)
+        self.assertEqual(metrics["sources"]["eligible"], 2)
+        self.assertEqual(metrics["sources"]["processed"], 2)
+        self.assertEqual(metrics["sources"]["success"], 2)
+        self.assertEqual(metrics["sources"]["failed"], 0)
+        self.assertGreaterEqual(metrics["sources"]["inspect_elapsed_ms_total"], 0)
+        self.assertGreaterEqual(metrics["sources"]["inspect_elapsed_ms_max"], 0)
+        self.assertEqual(metrics["sources"]["inspect_slow_ge_8s"], 0)
+        self.assertEqual(metrics["sources"]["failure_error_counts"], {})
         self.assertEqual(metrics["nodes"]["parsed"], 2)
         self.assertEqual(metrics["nodes"]["geo_known"], 2)
         self.assertEqual(metrics["nodes"]["geo_unknown"], 0)
@@ -115,6 +123,21 @@ class CoverageTelemetryTests(unittest.TestCase):
         self.assertEqual(metrics["geo"]["batch_ips"], 1)
         self.assertEqual(metrics["geo"]["batch_failures"], 0)
         self.assertNotIn("8.8.8.8", json.dumps(metrics))
+
+    def test_source_runtime_metrics_are_aggregate_only(self):
+        rows = [
+            ({"precheck": {"fetch_status": "success"}}, 9000),
+            ({"precheck": {"fetch_status": "failed", "error": "ValueError"}}, 8500),
+            ({"precheck": {"fetch_status": "failed", "error": "UnicodeError"}}, 100),
+        ]
+        metrics = p._source_runtime_metrics(rows)
+        self.assertEqual(metrics["inspect_elapsed_ms_total"], 17600)
+        self.assertEqual(metrics["inspect_elapsed_ms_max"], 9000)
+        self.assertEqual(metrics["inspect_slow_ge_8s"], 2)
+        self.assertEqual(metrics["inspect_slow_success_ge_8s"], 1)
+        self.assertEqual(metrics["inspect_slow_failed_ge_8s"], 1)
+        self.assertEqual(metrics["failure_error_counts"], {"UnicodeError": 1, "ValueError": 1})
+        self.assertNotIn("url", json.dumps(metrics))
 
     def test_build_metrics_reports_churn_invariants_and_no_sensitive_identifiers(self):
         with tempfile.TemporaryDirectory() as td:

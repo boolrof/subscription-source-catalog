@@ -407,9 +407,9 @@ def inspect_many_shadow(
         secondary_release=secondary_release,
     )
     with p.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futures = [pool.submit(p.inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
-        out = [future.result() for future in p.as_completed(futures)]
-    out = sorted(out, key=lambda x: x["source_id"])
+        futures = [pool.submit(p._timed_inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
+        timed_rows = [future.result() for future in p.as_completed(futures)]
+    out = sorted((row for row, _ in timed_rows), key=lambda x: x["source_id"])
 
     if metrics_out is not None:
         success_rows = [row for row in out if (row.get("precheck") or {}).get("fetch_status") == "success"]
@@ -433,6 +433,7 @@ def inspect_many_shadow(
                 "processed": len(out),
                 "success": len(success_rows),
                 "failed": len(out) - len(success_rows),
+                **p._source_runtime_metrics(timed_rows),
             },
             "nodes": {
                 "raw_items": raw_items,

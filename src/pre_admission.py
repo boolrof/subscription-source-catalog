@@ -9,6 +9,7 @@ import re
 import socket
 import ssl
 import threading
+import time
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -537,15 +538,46 @@ def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolv
         return {"source_id": sid, "url": url, "precheck": {"fetch_status": "failed", "checked_at": checked, "error": type(exc).__name__, "quality_score": 0}, "nodes": []}
 
 
+def _timed_inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolver) -> tuple[dict, int]:
+    started = time.monotonic()
+    row = inspect_source(item, max_bytes=max_bytes, timeout=timeout, geo=geo)
+    return row, max(0, int((time.monotonic() - started) * 1000))
+
+
+def _source_runtime_metrics(timed_rows: list[tuple[dict, int]]) -> dict:
+    durations = [duration for _, duration in timed_rows]
+    failures: dict[str, int] = {}
+    slow_success = slow_failed = 0
+    for row, duration in timed_rows:
+        pre = row.get("precheck") or {}
+        success = pre.get("fetch_status") == "success"
+        if duration >= 8000:
+            if success:
+                slow_success += 1
+            else:
+                slow_failed += 1
+        if not success:
+            key = str(pre.get("error") or "unknown")
+            failures[key] = failures.get(key, 0) + 1
+    return {
+        "inspect_elapsed_ms_total": sum(durations),
+        "inspect_elapsed_ms_max": max(durations, default=0),
+        "inspect_slow_ge_8s": sum(duration >= 8000 for duration in durations),
+        "inspect_slow_success_ge_8s": slow_success,
+        "inspect_slow_failed_ge_8s": slow_failed,
+        "failure_error_counts": dict(sorted(failures.items())),
+    }
+
+
 def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout: float, workers: int, geo_cache: dict[str, str], geo_max_new: int, metrics_out: dict | None = None) -> list[dict]:
     eligible = [x for x in items if x.get("status") in {"active", "stale"} and x.get("url")]
     eligible.sort(key=lambda x: ((x.get("precheck") or {}).get("checked_at") or "", x["url"]))
     cache_before = len(geo_cache)
     geo = BatchedGeoResolver(geo_cache, max_new=geo_max_new)
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futures = [pool.submit(inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
-        out = [future.result() for future in as_completed(futures)]
-    out = sorted(out, key=lambda x: x["source_id"])
+        futures = [pool.submit(_timed_inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
+        timed_rows = [future.result() for future in as_completed(futures)]
+    out = sorted((row for row, _ in timed_rows), key=lambda x: x["source_id"])
     if metrics_out is not None:
         success_rows = [row for row in out if (row.get("precheck") or {}).get("fetch_status") == "success"]
         raw_items = sum(int((row.get("precheck") or {}).get("raw_items") or 0) for row in success_rows)
@@ -569,6 +601,7 @@ def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout
                 "processed": len(out),
                 "success": len(success_rows),
                 "failed": len(out) - len(success_rows),
+                **_source_runtime_metrics(timed_rows),
             },
             "nodes": {
                 "raw_items": raw_items,

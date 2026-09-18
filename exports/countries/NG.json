@@ -1,7 +1,7 @@
 {
   "country": "NG",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 2,
+  "exported_candidates": 3,
   "nodes": [
     {
       "independent_source_count": 2,
@@ -11,6 +11,15 @@
       "protocol": "ss",
       "source_count": 3,
       "source_id": "10b39303f933fae12ab9a0bf"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-18T14:51:53Z",
+      "node_digest": "5f250a4c625d902fad587e229ba99634f39cf6fa26dce5c87c063d41a9a6f524",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "5f36b9328735d68de2ccb582"
     },
     {
       "independent_source_count": 1,
@@ -24,5 +33,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 2
+  "total_candidates": 3
 }

@@ -76,6 +76,24 @@ class GitHubDiscovery:
         current = self.stats.get(key)
         self.stats[key] = remaining if current is None else min(int(current), remaining)
 
+    @staticmethod
+    def _rate_limit_retry_delay(headers, attempt: int) -> float:
+        """Prefer provider reset hints over short retries that only burn quota."""
+        if headers:
+            retry_after = headers.get("Retry-After")
+            if retry_after is not None:
+                try:
+                    return min(90.0, max(1.0, float(retry_after)))
+                except (TypeError, ValueError):
+                    pass
+            reset = headers.get("X-RateLimit-Reset")
+            if reset is not None:
+                try:
+                    return min(90.0, max(1.0, float(reset) - time.time() + 1.0))
+                except (TypeError, ValueError):
+                    pass
+        return float(min(2 ** attempt, 4))
+
     def _request(self, url: str):
         req = urllib.request.Request(url)
         req.add_header("Accept", "application/vnd.github+json")
@@ -100,7 +118,7 @@ class GitHubDiscovery:
                     return None
                 if exc.code in (403, 429):
                     if attempt < retries:
-                        time.sleep(min(2 ** attempt, 4))
+                        time.sleep(self._rate_limit_retry_delay(exc.headers, attempt))
                         continue
                     self.stats["search_complete"] = False
                     return None

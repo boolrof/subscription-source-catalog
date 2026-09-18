@@ -72,6 +72,19 @@ class GitRepositoryReader:
             env=self.env,
         )
 
+    def _cat_file(self, repo_dir: Path, args: list[str]) -> subprocess.CompletedProcess | None:
+        """Retry lazy partial-clone blob materialization before declaring an incomplete scan."""
+        for attempt in range(self.retries + 1):
+            try:
+                result = self._git(["-C", str(repo_dir), "cat-file", *args])
+            except subprocess.TimeoutExpired:
+                result = None
+            if result is not None and result.returncode == 0:
+                return result
+            if attempt < self.retries:
+                continue
+        return None
+
     def _prepare_repo(self, repo: dict) -> tuple[Path, str] | None:
         identity = self._safe_repo_identity(repo)
         if identity is None:
@@ -171,11 +184,8 @@ class GitRepositoryReader:
         for _, path, sha in ranked:
             if len(out) >= self.max_files:
                 break
-            try:
-                size_probe = self._git(["-C", str(repo_dir), "cat-file", "-s", sha])
-            except subprocess.TimeoutExpired:
-                size_probe = None
-            if size_probe is None or size_probe.returncode != 0:
+            size_probe = self._cat_file(repo_dir, ["-s", sha])
+            if size_probe is None:
                 self.stats["git_blob_failures"] += 1
                 complete = False
                 continue
@@ -188,11 +198,8 @@ class GitRepositoryReader:
             if expected_size <= 0 or expected_size > self.max_size:
                 continue
             self.stats["candidate_files_selected"] += 1
-            try:
-                blob = self._git(["-C", str(repo_dir), "cat-file", "blob", sha])
-            except subprocess.TimeoutExpired:
-                blob = None
-            if blob is None or blob.returncode != 0:
+            blob = self._cat_file(repo_dir, ["blob", sha])
+            if blob is None:
                 self.stats["git_blob_failures"] += 1
                 complete = False
                 continue

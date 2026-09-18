@@ -119,6 +119,24 @@ class GitRepositoryReaderTests(unittest.TestCase):
             self.assertFalse(any(args[-3:] == ["remote", "add", "origin"] for args in calls))
             self.assertEqual(stats["git_fetch_failures"], 0)
 
+    def test_cat_file_retries_transient_lazy_blob_failure(self):
+        with tempfile.TemporaryDirectory() as td:
+            reader, _ = self.make_reader(td)
+            repo_dir = Path(td) / "repo.git"
+            calls = 0
+
+            def fake_git(args, timeout=None):
+                nonlocal calls
+                calls += 1
+                if calls == 1:
+                    return subprocess.CompletedProcess(args, 1, b"", b"transient")
+                return subprocess.CompletedProcess(args, 0, b"7\n", b"")
+
+            reader._git = fake_git
+            result = reader._cat_file(repo_dir, ["-s", "a" * 40])
+            self.assertIsNotNone(result)
+            self.assertEqual(calls, 2)
+
     def test_fetch_failure_retries_then_fails_closed(self):
         with tempfile.TemporaryDirectory() as td:
             reader, stats = self.make_reader(td)

@@ -1,5 +1,6 @@
 import base64
 import unittest
+from unittest import mock
 
 from src.discovery import GitHubDiscovery
 
@@ -89,6 +90,13 @@ class DiscoveryTreeTests(unittest.TestCase):
         discovery._record_rate_limit({"X-RateLimit-Resource": "search", "X-RateLimit-Remaining": "27"})
         self.assertEqual(discovery.stats["rate_limit_core_remaining_min"], 875)
         self.assertEqual(discovery.stats["rate_limit_search_remaining_min"], 27)
+
+    def test_rate_limit_retry_delay_prefers_reset_header(self):
+        discovery = self.make_discovery()
+        with mock.patch("src.discovery.time.time", return_value=1000.0):
+            self.assertEqual(discovery._rate_limit_retry_delay({"X-RateLimit-Reset": "1030"}, 0), 31.0)
+        self.assertEqual(discovery._rate_limit_retry_delay({"Retry-After": "12"}, 0), 12.0)
+        self.assertEqual(discovery._rate_limit_retry_delay({}, 1), 2.0)
 
     def test_tree_selection_is_bounded(self):
         discovery = self.make_discovery()

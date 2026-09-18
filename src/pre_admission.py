@@ -231,6 +231,36 @@ def _stable_digest(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+class SharedResolutionCache:
+    """Per-shard thread-safe DNS memoization; preserves resolve_public fail-closed semantics."""
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._cache: dict[tuple[str, int], tuple[str, ...]] = {}
+        self._hits = 0
+        self._misses = 0
+
+    def resolve(self, host: str, port: int) -> list[str]:
+        key = (str(host).strip().strip("[]"), int(port))
+        with self._lock:
+            cached = self._cache.get(key)
+            if cached is not None:
+                self._hits += 1
+                return list(cached)
+            self._misses += 1
+        resolved = tuple(resolve_public(key[0], key[1]))
+        with self._lock:
+            existing = self._cache.setdefault(key, resolved)
+        return list(existing)
+
+    def metrics(self) -> dict[str, int]:
+        with self._lock:
+            return {
+                "dns_cache_entries": len(self._cache),
+                "dns_cache_hits": self._hits,
+                "dns_cache_misses": self._misses,
+            }
+
+
 @dataclass(frozen=True)
 class NodeFact:
     node_digest: str
@@ -242,7 +272,7 @@ class NodeFact:
         return {"node_digest": self.node_digest, "source_id": sid, "protocol": self.protocol, "endpoint_country": country}
 
 
-def _node_from_endpoint(raw_identity: str, protocol: str, host: str | None, port: int | None, resolved_hosts: dict[tuple[str, int], list[str]]) -> NodeFact | None:
+def _node_from_endpoint(raw_identity: str, protocol: str, host: str | None, port: int | None, resolved_hosts: dict[tuple[str, int], list[str]], resolver=resolve_public) -> NodeFact | None:
     protocol = _normal_protocol(protocol) or ""
     if not protocol or not host or not port or not (1 <= int(port) <= 65535):
         return None
@@ -251,7 +281,7 @@ def _node_from_endpoint(raw_identity: str, protocol: str, host: str | None, port
         return None
     key = (host, int(port))
     if key not in resolved_hosts:
-        resolved_hosts[key] = resolve_public(host, int(port))
+        resolved_hosts[key] = resolver(host, int(port))
     ips = resolved_hosts[key]
     return NodeFact(_stable_digest(raw_identity), protocol, host, ips[0] if ips else None)
 
@@ -353,7 +383,7 @@ def _mihomo_candidates(text: str) -> list[tuple[str, str, str | None, int | None
     return out
 
 
-def parse_nodes(body: bytes, *, max_nodes: int = 10000) -> tuple[list[NodeFact], dict]:
+def parse_nodes(body: bytes, *, max_nodes: int = 10000, resolver=resolve_public) -> tuple[list[NodeFact], dict]:
     layers = _text_layers(body)
     nodes: list[NodeFact] = []
     invalid = raw_items = 0
@@ -391,7 +421,7 @@ def parse_nodes(body: bytes, *, max_nodes: int = 10000) -> tuple[list[NodeFact],
         digest = _stable_digest(identity)
         if digest in seen:
             continue
-        fact = _node_from_endpoint(identity, scheme, host, port, resolved_hosts)
+        fact = _node_from_endpoint(identity, scheme, host, port, resolved_hosts, resolver)
         if not fact:
             invalid += 1
             continue
@@ -495,12 +525,15 @@ def source_score(stats: dict, *, content_changed: bool, duplicate: bool = False)
     return max(0, min(100, score))
 
 
-def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolver) -> dict:
+def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolver, resolver=resolve_public) -> dict:
     url, sid, checked = item["url"], source_id(item["url"]), now()
     previous = item.get("precheck") or {}
+    started = time.monotonic()
     try:
         body, headers = fetch_bounded(url, max_bytes=max_bytes, timeout=timeout)
-        nodes, parsed = parse_nodes(body)
+        fetch_done = time.monotonic()
+        nodes, parsed = parse_nodes(body, resolver=resolver)
+        parse_done = time.monotonic()
         digest = hashlib.sha256(body).hexdigest()
         changed = digest != previous.get("content_sha256")
         countries: dict[str, int] = {}
@@ -511,6 +544,7 @@ def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolv
             endpoint_countries = geo.countries(endpoint_ips)
         else:
             endpoint_countries = [geo.country(ip) for ip in endpoint_ips]
+        geo_done = time.monotonic()
         for node, country in zip(nodes, endpoint_countries):
             resolvable += bool(node.endpoint_ip)
             unresolved += not bool(node.endpoint_ip)
@@ -533,14 +567,21 @@ def inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolv
         }
         stats["quality_score_base"] = source_score(stats, content_changed=changed)
         stats["quality_score"] = stats["quality_score_base"]
-        return {"source_id": sid, "url": url, "precheck": stats, "nodes": safe_nodes}
+        return {
+            "source_id": sid, "url": url, "precheck": stats, "nodes": safe_nodes,
+            "_runtime_ms": {
+                "fetch": max(0, int((fetch_done - started) * 1000)),
+                "parse_dns": max(0, int((parse_done - fetch_done) * 1000)),
+                "geo": max(0, int((geo_done - parse_done) * 1000)),
+            },
+        }
     except Exception as exc:
         return {"source_id": sid, "url": url, "precheck": {"fetch_status": "failed", "checked_at": checked, "error": type(exc).__name__, "quality_score": 0}, "nodes": []}
 
 
-def _timed_inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolver) -> tuple[dict, int]:
+def _timed_inspect_source(item: dict, *, max_bytes: int, timeout: float, geo: GeoResolver, resolver=resolve_public) -> tuple[dict, int]:
     started = time.monotonic()
-    row = inspect_source(item, max_bytes=max_bytes, timeout=timeout, geo=geo)
+    row = inspect_source(item, max_bytes=max_bytes, timeout=timeout, geo=geo, resolver=resolver)
     return row, max(0, int((time.monotonic() - started) * 1000))
 
 
@@ -559,6 +600,14 @@ def _source_runtime_metrics(timed_rows: list[tuple[dict, int]]) -> dict:
         if not success:
             key = str(pre.get("error") or "unknown")
             failures[key] = failures.get(key, 0) + 1
+    stage_max = {"fetch": 0, "parse_dns": 0, "geo": 0}
+    stage_total = {"fetch": 0, "parse_dns": 0, "geo": 0}
+    for row, _ in timed_rows:
+        runtime = row.get("_runtime_ms") or {}
+        for stage in stage_max:
+            value = max(0, int(runtime.get(stage) or 0))
+            stage_total[stage] += value
+            stage_max[stage] = max(stage_max[stage], value)
     return {
         "inspect_elapsed_ms_total": sum(durations),
         "inspect_elapsed_ms_max": max(durations, default=0),
@@ -566,6 +615,8 @@ def _source_runtime_metrics(timed_rows: list[tuple[dict, int]]) -> dict:
         "inspect_slow_success_ge_8s": slow_success,
         "inspect_slow_failed_ge_8s": slow_failed,
         "failure_error_counts": dict(sorted(failures.items())),
+        "stage_elapsed_ms_total": stage_total,
+        "stage_elapsed_ms_max": stage_max,
     }
 
 
@@ -574,8 +625,9 @@ def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout
     eligible.sort(key=lambda x: ((x.get("precheck") or {}).get("checked_at") or "", x["url"]))
     cache_before = len(geo_cache)
     geo = BatchedGeoResolver(geo_cache, max_new=geo_max_new)
+    dns = SharedResolutionCache()
     with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futures = [pool.submit(_timed_inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
+        futures = [pool.submit(_timed_inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo, resolver=dns.resolve) for item in eligible[:max_sources]]
         timed_rows = [future.result() for future in as_completed(futures)]
     out = sorted((row for row, _ in timed_rows), key=lambda x: x["source_id"])
     if metrics_out is not None:
@@ -602,6 +654,7 @@ def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout
                 "success": len(success_rows),
                 "failed": len(out) - len(success_rows),
                 **_source_runtime_metrics(timed_rows),
+                **dns.metrics(),
             },
             "nodes": {
                 "raw_items": raw_items,
@@ -614,4 +667,6 @@ def inspect_many(items: list[dict], *, max_sources: int, max_bytes: int, timeout
             },
             "geo": geo_metrics,
         })
+    for row in out:
+        row.pop("_runtime_ms", None)
     return out

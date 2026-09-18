@@ -406,8 +406,9 @@ def inspect_many_shadow(
         secondary_provider=secondary_provider,
         secondary_release=secondary_release,
     )
+    dns = p.SharedResolutionCache()
     with p.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futures = [pool.submit(p._timed_inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo) for item in eligible[:max_sources]]
+        futures = [pool.submit(p._timed_inspect_source, item, max_bytes=max_bytes, timeout=timeout, geo=geo, resolver=dns.resolve) for item in eligible[:max_sources]]
         timed_rows = [future.result() for future in p.as_completed(futures)]
     out = sorted((row for row, _ in timed_rows), key=lambda x: x["source_id"])
 
@@ -434,6 +435,7 @@ def inspect_many_shadow(
                 "success": len(success_rows),
                 "failed": len(out) - len(success_rows),
                 **p._source_runtime_metrics(timed_rows),
+                **dns.metrics(),
             },
             "nodes": {
                 "raw_items": raw_items,
@@ -446,4 +448,6 @@ def inspect_many_shadow(
             },
             "geo": geo_metrics,
         })
+    for row in out:
+        row.pop("_runtime_ms", None)
     return out

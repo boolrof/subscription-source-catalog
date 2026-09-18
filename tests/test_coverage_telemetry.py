@@ -72,7 +72,7 @@ class CoverageTelemetryTests(unittest.TestCase):
             {"url": "https://example.com/b", "status": "stale"},
         ]
 
-        def fake_inspect(item, *, max_bytes, timeout, geo):
+        def fake_inspect(item, *, max_bytes, timeout, geo, resolver=p.resolve_public):
             country = geo.country("8.8.8.8")
             sid = p.source_id(item["url"])
             return {
@@ -114,6 +114,8 @@ class CoverageTelemetryTests(unittest.TestCase):
         self.assertGreaterEqual(metrics["sources"]["inspect_elapsed_ms_max"], 0)
         self.assertEqual(metrics["sources"]["inspect_slow_ge_8s"], 0)
         self.assertEqual(metrics["sources"]["failure_error_counts"], {})
+        self.assertIn("stage_elapsed_ms_max", metrics["sources"])
+        self.assertIn("dns_cache_hits", metrics["sources"])
         self.assertEqual(metrics["nodes"]["parsed"], 2)
         self.assertEqual(metrics["nodes"]["geo_known"], 2)
         self.assertEqual(metrics["nodes"]["geo_unknown"], 0)

@@ -175,6 +175,15 @@ class PreAdmissionTests(unittest.TestCase):
         self.assertEqual(p.source_id("https://example.com/a"), p.source_id("https://example.com/a"))
         self.assertNotEqual(p.source_id("https://example.com/a"), p.source_id("https://example.com/b"))
 
+    def test_shared_resolution_cache_reuses_result(self):
+        cache = p.SharedResolutionCache()
+        calls = []
+        with mock.patch.object(p, "resolve_public", side_effect=lambda host, port: calls.append((host, port)) or ["8.8.8.8"]):
+            self.assertEqual(cache.resolve("example.com", 443), ["8.8.8.8"])
+            self.assertEqual(cache.resolve("example.com", 443), ["8.8.8.8"])
+        self.assertEqual(calls, [("example.com", 443)])
+        self.assertEqual(cache.metrics(), {"dns_cache_entries": 1, "dns_cache_hits": 1, "dns_cache_misses": 1})
+
     def test_resolve_public_rejects_mixed_dns_answers(self):
         rows = [
             (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, "", ("8.8.8.8", 443)),

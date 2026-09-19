@@ -235,19 +235,19 @@ class SharedResolutionCache:
     """Per-shard thread-safe DNS memoization; preserves resolve_public fail-closed semantics."""
     def __init__(self):
         self._lock = threading.Lock()
-        self._cache: dict[tuple[str, int], tuple[str, ...]] = {}
+        self._cache: dict[str, tuple[str, ...]] = {}
         self._hits = 0
         self._misses = 0
 
     def resolve(self, host: str, port: int) -> list[str]:
-        key = (str(host).strip().strip("[]"), int(port))
+        key = str(host).strip().strip("[]")
         with self._lock:
             cached = self._cache.get(key)
             if cached is not None:
                 self._hits += 1
                 return list(cached)
             self._misses += 1
-        resolved = tuple(resolve_public(key[0], key[1]))
+        resolved = tuple(resolve_public(key, int(port)))
         with self._lock:
             existing = self._cache.setdefault(key, resolved)
         return list(existing)
@@ -272,14 +272,14 @@ class NodeFact:
         return {"node_digest": self.node_digest, "source_id": sid, "protocol": self.protocol, "endpoint_country": country}
 
 
-def _node_from_endpoint(raw_identity: str, protocol: str, host: str | None, port: int | None, resolved_hosts: dict[tuple[str, int], list[str]], resolver=resolve_public) -> NodeFact | None:
+def _node_from_endpoint(raw_identity: str, protocol: str, host: str | None, port: int | None, resolved_hosts: dict[str, list[str]], resolver=resolve_public) -> NodeFact | None:
     protocol = _normal_protocol(protocol) or ""
     if not protocol or not host or not port or not (1 <= int(port) <= 65535):
         return None
     host = str(host).strip().strip("[]")
     if not host:
         return None
-    key = (host, int(port))
+    key = host
     if key not in resolved_hosts:
         resolved_hosts[key] = resolver(host, int(port))
     ips = resolved_hosts[key]
@@ -383,13 +383,11 @@ def _mihomo_candidates(text: str) -> list[tuple[str, str, str | None, int | None
     return out
 
 
-def parse_nodes(body: bytes, *, max_nodes: int = 10000, resolver=resolve_public) -> tuple[list[NodeFact], dict]:
+def parse_nodes(body: bytes, *, max_nodes: int = 10000, resolver=resolve_public, dns_workers: int = 16) -> tuple[list[NodeFact], dict]:
     layers = _text_layers(body)
-    nodes: list[NodeFact] = []
     invalid = raw_items = 0
     protocol_counts: dict[str, int] = {}
     seen: set[str] = set()
-    resolved_hosts: dict[tuple[str, int], list[str]] = {}
     formats: set[str] = set()
 
     candidates: list[tuple[str, str, str | None, int | None]] = []
@@ -416,20 +414,48 @@ def parse_nodes(body: bytes, *, max_nodes: int = 10000, resolver=resolve_public)
             formats.add("mihomo")
             candidates.extend(yaml_rows)
 
+    # Structural admission is independent of DNS success: unresolved public endpoints
+    # are retained with endpoint_ip=None. Select the same first max_nodes candidates
+    # as the former sequential path, then resolve their unique hostnames concurrently.
+    selected: list[tuple[str, str, str, int, str]] = []
+    host_ports: dict[str, int] = {}
     for identity, scheme, host, port in candidates:
         raw_items += 1
         digest = _stable_digest(identity)
         if digest in seen:
             continue
-        fact = _node_from_endpoint(identity, scheme, host, port, resolved_hosts, resolver)
-        if not fact:
+        protocol = _normal_protocol(scheme) or ""
+        host_clean = str(host).strip().strip("[]") if host else ""
+        try:
+            port_i = int(port) if port is not None else 0
+        except (TypeError, ValueError):
+            port_i = 0
+        if not protocol or not host_clean or not (1 <= port_i <= 65535):
             invalid += 1
             continue
         seen.add(digest)
-        nodes.append(fact)
-        protocol_counts[fact.protocol] = protocol_counts.get(fact.protocol, 0) + 1
-        if len(nodes) >= max_nodes:
+        selected.append((identity, protocol, host_clean, port_i, digest))
+        host_ports.setdefault(host_clean, port_i)
+        if len(selected) >= max_nodes:
             break
+
+    resolved_hosts: dict[str, list[str]] = {}
+    if host_ports:
+        with ThreadPoolExecutor(max_workers=max(1, min(int(dns_workers), len(host_ports)))) as pool:
+            futures = {pool.submit(resolver, host, port): host for host, port in host_ports.items()}
+            for future in as_completed(futures):
+                host = futures[future]
+                try:
+                    resolved_hosts[host] = future.result()
+                except Exception:
+                    resolved_hosts[host] = []
+
+    nodes: list[NodeFact] = []
+    for identity, protocol, host, port, digest in selected:
+        ips = resolved_hosts.get(host) or []
+        fact = NodeFact(digest, protocol, host, ips[0] if ips else None)
+        nodes.append(fact)
+        protocol_counts[protocol] = protocol_counts.get(protocol, 0) + 1
 
     if not formats:
         detected = "unknown"

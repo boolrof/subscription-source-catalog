@@ -34,16 +34,16 @@ Before enabling scheduling, run a dry publication pass with `CATALOG_PUBLISH=0` 
 
 Use a oneshot service whose `ExecStart` is `/usr/local/bin/subscription-source-catalog-pipeline`. Set `WorkingDirectory=/opt/subscription-source-catalog`, run it as the dedicated `catalog` user, and give it a bounded service timeout long enough for all 20 logical shards. A timer can then invoke that service on the required cadence.
 
-The initial production rollout should preserve the current compute policy:
+The current measured production compute policy:
 
 ```text
 logical shards: 20
 max sources per shard: 80
-workers: 2
+workers: 4
 country.is new lookup cap per shard: 25
 ```
 
-Do not simultaneously increase the GeoIP cap during the Actions-to-VPS migration.
+Four source workers are the production baseline from measured VPS runs. Three workers materially increased compute time without a proportional memory reduction; do not raise concurrency above four without new runtime evidence. Keep the GeoIP cap unchanged unless separate measurements justify a change.
 
 ## Preflight and first run
 
@@ -61,7 +61,11 @@ Launch the pipeline server-side and return immediately to the shell. After compl
 
 A failed run must not be blindly repeated. Inspect the existing systemd job, journal, repository status and generated files first. If publication has not occurred, reset the dedicated checkout only after preserving diagnostic evidence. If publication occurred but produced a bad generated-state commit, revert that specific commit through normal Git history rather than force-pushing.
 
-The pipeline is intentionally sequential across the 20 logical shards for the first VPS rollout. Parallelism can be introduced later after measuring VPS CPU, memory, network pressure and country.is behavior; it is not part of the compliance remediation.
+The pipeline remains sequential across the 20 logical shards. Concurrency is bounded inside each shard; do not run multiple full shard processes concurrently on the current VPS because measured RAM/swap pressure is already material.
+
+## Production performance notes
+
+The 2026-09-19 production cycle completed successfully with full coverage, but stage telemetry identified DNS parsing/resolution as the dominant remaining compute bottleneck: individual successful source inspections spent up to roughly 708 seconds in parse_dns, while fetch and GeoIP stages were much smaller. The first shared per-shard DNS cache produced substantial cache hits but left many unique hostname lookups. The follow-up implementation therefore caches by hostname rather than hostname-and-port and resolves unique hostnames concurrently with a bounded per-source DNS worker pool. Preserve the fail-closed public-address validation and use subsequent production telemetry (stage_elapsed_ms_max, dns_cache_hits, dns_cache_misses) to judge further changes.
 
 ## GitHub Actions boundary
 

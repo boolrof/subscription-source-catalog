@@ -180,9 +180,20 @@ class PreAdmissionTests(unittest.TestCase):
         calls = []
         with mock.patch.object(p, "resolve_public", side_effect=lambda host, port: calls.append((host, port)) or ["8.8.8.8"]):
             self.assertEqual(cache.resolve("example.com", 443), ["8.8.8.8"])
-            self.assertEqual(cache.resolve("example.com", 443), ["8.8.8.8"])
+            self.assertEqual(cache.resolve("example.com", 8443), ["8.8.8.8"])
         self.assertEqual(calls, [("example.com", 443)])
         self.assertEqual(cache.metrics(), {"dns_cache_entries": 1, "dns_cache_hits": 1, "dns_cache_misses": 1})
+
+    def test_parse_nodes_resolves_unique_hosts_once_across_ports(self):
+        payload = b"vless://a@example.com:443?security=tls\nvless://b@example.com:8443?security=tls\n"
+        calls = []
+        def resolver(host, port):
+            calls.append((host, port))
+            return ["8.8.8.8"]
+        nodes, parsed = p.parse_nodes(payload, resolver=resolver, dns_workers=4)
+        self.assertEqual(parsed["valid_nodes"], 2)
+        self.assertEqual(len(nodes), 2)
+        self.assertEqual(calls, [("example.com", 443)])
 
     def test_resolve_public_rejects_mixed_dns_answers(self):
         rows = [

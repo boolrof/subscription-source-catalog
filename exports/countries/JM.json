@@ -1,8 +1,17 @@
 {
   "country": "JM",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 12,
+  "exported_candidates": 13,
   "nodes": [
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-20T13:04:49Z",
+      "node_digest": "7088b7bb6fd38902ddf744d5d216a2d55a9b200b087df51cc907ff0871d3c3a9",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "f3149695d9a453edf56abf63"
+    },
     {
       "independent_source_count": 1,
       "last_seen_at": "2026-09-19T02:07:34Z",
@@ -68,7 +77,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-18T13:45:04Z",
+      "last_seen_at": "2026-09-20T12:59:14Z",
       "node_digest": "9edee74781d6f6e4c0b0acbf6132bc49b9c96da7a14f5c16a85720ab40562e33",
       "pre_score": 90,
       "protocol": "vmess",
@@ -86,7 +95,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-18T01:29:21Z",
+      "last_seen_at": "2026-09-20T12:58:45Z",
       "node_digest": "c8453a3b0b8f22909348dd542f5c3d4dd019c66406b441d3158c5ee232224847",
       "pre_score": 83,
       "protocol": "trojan",
@@ -95,7 +104,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-18T01:29:21Z",
+      "last_seen_at": "2026-09-20T12:58:45Z",
       "node_digest": "eba5007d85b1aca99f104c4abf936310636b63819d056dd8e25543cccfebdd28",
       "pre_score": 83,
       "protocol": "trojan",
@@ -114,5 +123,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 12
+  "total_candidates": 13
 }

@@ -1,7 +1,7 @@
 {
   "country": "LA",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 12,
+  "exported_candidates": 13,
   "nodes": [
     {
       "independent_source_count": 3,
@@ -59,6 +59,15 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-21T12:58:46Z",
+      "node_digest": "ebec45e10354fbc403db42ef5fc4cd79d053828c1d09fdf372dda6a72ff66caa",
+      "pre_score": 96,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "41b22d9e23a9fc6f19f3fa6b"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-20T00:58:03Z",
       "node_digest": "94d18592f8f06391ab693cf24a0048f7b99066ef6bea1739fa1705190053e77f",
       "pre_score": 90,
@@ -77,7 +86,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-19T02:23:06Z",
+      "last_seen_at": "2026-09-21T13:05:24Z",
       "node_digest": "0b6e363a152a067c2a0fe28fbbe599174b626ce8bf890100660f6199a2b35139",
       "pre_score": 83,
       "protocol": "vless",
@@ -114,5 +123,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 12
+  "total_candidates": 13
 }

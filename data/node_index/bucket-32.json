@@ -3,7 +3,7 @@
   "schema": "subscription-source-node-index-shard-v3",
   "sources": {
     "022a488db665cf7e6e05fd10": {
-      "checked_at": "2026-09-20T01:02:42Z",
+      "checked_at": "2026-09-22T00:59:54Z",
       "nodes": []
     },
     "02c1df16bedbf1d2f57956b2": {
@@ -2679,7 +2679,7 @@
       "nodes": []
     },
     "0aba599edf1b804208aea4a0": {
-      "checked_at": "2026-09-20T01:01:04Z",
+      "checked_at": "2026-09-22T00:58:39Z",
       "nodes": [
         {
           "endpoint_country": "US",
@@ -6122,6 +6122,17 @@
           "node_digest": "67441a93f2b7dfbf7caabe8cb2dc44e958bc29e7ba900d9f37d683426e17b831",
           "protocol": "vmess",
           "source_id": "1e5bc10ef4e85cb7e77678fc"
+        }
+      ]
+    },
+    "1e7c61280ae196e6653a0068": {
+      "checked_at": "2026-09-22T00:56:52Z",
+      "nodes": [
+        {
+          "endpoint_country": "FR",
+          "node_digest": "c067d40275d1c19548ded7c1cc7e710ea7997ab2205e5a411fb545d5776cf386",
+          "protocol": "vless",
+          "source_id": "1e7c61280ae196e6653a0068"
         }
       ]
     },
@@ -13760,7 +13771,7 @@
       ]
     },
     "45e549c8d361237e8d29a370": {
-      "checked_at": "2026-09-20T01:02:42Z",
+      "checked_at": "2026-09-22T00:59:54Z",
       "nodes": []
     },
     "4e23418fe87d2b3e27aaea30": {
@@ -22981,7 +22992,7 @@
       ]
     },
     "777992ac1c36bb0f03f0c834": {
-      "checked_at": "2026-09-19T13:02:28Z",
+      "checked_at": "2026-09-22T00:59:46Z",
       "nodes": [
         {
           "endpoint_country": "US",
@@ -24807,17 +24818,29 @@
       ]
     },
     "8c2080559e870e69f23843d0": {
-      "checked_at": "2026-09-15T12:56:50Z",
+      "checked_at": "2026-09-22T00:55:21Z",
       "nodes": [
         {
-          "endpoint_country": "US",
-          "node_digest": "d1f20b2cec38b618da642a75d387b838e6bf62f7ecb4602fec253bee4fcb9d98",
+          "endpoint_country": "IL",
+          "node_digest": "844023a82b8c38e1c79179372664b57e9d11ea56a15affff08698d45fa084d17",
           "protocol": "ss",
           "source_id": "8c2080559e870e69f23843d0"
         },
         {
-          "endpoint_country": "US",
-          "node_digest": "34955e2c40304efcb7edcb86478ed65056947384fa00d77fa33447a506c8c4ba",
+          "endpoint_country": "IL",
+          "node_digest": "41ade3be89cbbcdc7126ed65e91ed66ec986d769a0fcc99ee320df485ec78fef",
+          "protocol": "ss",
+          "source_id": "8c2080559e870e69f23843d0"
+        },
+        {
+          "endpoint_country": "IL",
+          "node_digest": "9d2e99dfeac005b609ea18c0241b77d77d9097c4888738cbb007e064a358594e",
+          "protocol": "vless",
+          "source_id": "8c2080559e870e69f23843d0"
+        },
+        {
+          "endpoint_country": "IL",
+          "node_digest": "51f44a96ec5e5acbb389dcf30df3dfc1ba7ce3d94e5c27b3e4c30d79d3317753",
           "protocol": "vless",
           "source_id": "8c2080559e870e69f23843d0"
         }
@@ -25929,12 +25952,18 @@
       ]
     },
     "a59e4821f55ee6057c0d5abb": {
-      "checked_at": "2026-09-20T01:02:25Z",
+      "checked_at": "2026-09-22T00:59:29Z",
       "nodes": [
         {
           "endpoint_country": "AL",
           "node_digest": "9662276aa5dca671aa8984153f684bdfcd72f67e8fa6f985fda4612e48d22348",
           "protocol": "ss",
+          "source_id": "a59e4821f55ee6057c0d5abb"
+        },
+        {
+          "endpoint_country": "LV",
+          "node_digest": "ec9e17b045dc338fcf20a87d8ee6becdedd965a6ac6e82e4e9a07eaaa5f5cac6",
+          "protocol": "vless",
           "source_id": "a59e4821f55ee6057c0d5abb"
         },
         {
@@ -26509,7 +26538,7 @@
       ]
     },
     "aa40393de828011716bdb1c4": {
-      "checked_at": "2026-09-19T13:02:24Z",
+      "checked_at": "2026-09-22T00:59:41Z",
       "nodes": [
         {
           "endpoint_country": null,
@@ -26538,17 +26567,23 @@
       ]
     },
     "aa78ba0026d3378fc381bdd6": {
-      "checked_at": "2026-09-20T01:01:56Z",
+      "checked_at": "2026-09-22T00:59:14Z",
       "nodes": [
         {
           "endpoint_country": "AL",
-          "node_digest": "006b60cd1c2b7dd7e68ce0394683bcb10ffc181796fe5a12928aa2f2d5644d54",
+          "node_digest": "56ce5e7d8f5956985f4146cc84fe609108cbf1ecf0dec56c456d18b0cd5d1a80",
+          "protocol": "vless",
+          "source_id": "aa78ba0026d3378fc381bdd6"
+        },
+        {
+          "endpoint_country": "GB",
+          "node_digest": "d7d85c2ca4c784210f0deea15a7b2f85f7a6f0cf55e18b4ea3ea40c3dff7c494",
           "protocol": "vless",
           "source_id": "aa78ba0026d3378fc381bdd6"
         },
         {
           "endpoint_country": "AL",
-          "node_digest": "56ce5e7d8f5956985f4146cc84fe609108cbf1ecf0dec56c456d18b0cd5d1a80",
+          "node_digest": "006b60cd1c2b7dd7e68ce0394683bcb10ffc181796fe5a12928aa2f2d5644d54",
           "protocol": "vless",
           "source_id": "aa78ba0026d3378fc381bdd6"
         },
@@ -26560,25 +26595,13 @@
         },
         {
           "endpoint_country": "AL",
-          "node_digest": "92363562a3e061e69246a2b5f576988894277fd1c3af5748d03575b6c96dfb00",
+          "node_digest": "e23888b2c6f5f6126c518f5e9f2ab95da0a51a968c3580d3018f3899e1917893",
           "protocol": "vless",
           "source_id": "aa78ba0026d3378fc381bdd6"
         },
         {
           "endpoint_country": "AL",
           "node_digest": "9221359dad7a6215e1b10ae62a7580860d5d305799c5f36c6221afba4a0e2db8",
-          "protocol": "vless",
-          "source_id": "aa78ba0026d3378fc381bdd6"
-        },
-        {
-          "endpoint_country": "AL",
-          "node_digest": "5cd80b73684466025c4b26632ad7b223dd6c0dd444c820830368380085d2401b",
-          "protocol": "vless",
-          "source_id": "aa78ba0026d3378fc381bdd6"
-        },
-        {
-          "endpoint_country": "AL",
-          "node_digest": "56843653de58d0ab73557f00702d764ec147ebd204d0728bcb586d381f5c4889",
           "protocol": "vless",
           "source_id": "aa78ba0026d3378fc381bdd6"
         }
@@ -29308,7 +29331,7 @@
       ]
     },
     "afdb30488d40bb4b26732a9c": {
-      "checked_at": "2026-09-20T01:02:44Z",
+      "checked_at": "2026-09-22T00:59:55Z",
       "nodes": [
         {
           "endpoint_country": "LT",
@@ -29515,29 +29538,17 @@
       "nodes": []
     },
     "b3d2dfa42900c8c0e055bded": {
-      "checked_at": "2026-09-19T13:01:11Z",
+      "checked_at": "2026-09-22T00:58:53Z",
       "nodes": [
         {
           "endpoint_country": "DE",
-          "node_digest": "4f967d5fb46bfc189005a623a84933b30a2e2377e5b96cb30c6cb4c3459bf736",
+          "node_digest": "5597c4d7e373a99ea354786bbf1cdce5a441961513c5a81c438e68a5b373af4e",
           "protocol": "hysteria2",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
         {
           "endpoint_country": "NL",
           "node_digest": "8881f39675085054e22dd2ef220c0f6cce4f838504f4990aa98654e8bdc807ec",
-          "protocol": "hysteria2",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "US",
-          "node_digest": "d700ff9d39485c5db9a5a6c90c07bc91295aa7dc1610eee7e6622f93a47a2e52",
-          "protocol": "hysteria2",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "EE",
-          "node_digest": "cc2baf12fbde4d4a09326e7048ecb3aa630788beb23f9d7183932dcd6526337b",
           "protocol": "hysteria2",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -29554,20 +29565,8 @@
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
         {
-          "endpoint_country": "PK",
-          "node_digest": "a75bfd9d9f51ca760d524fe013e163af3b1e83b5cf3b6da8103c79a2f8df6e5a",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
           "endpoint_country": "US",
           "node_digest": "9ba10f5b1159f51bc5b179834b2fb2e864b1aa92fe4448a664db9e7e81f2016a",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "US",
-          "node_digest": "0ac69f23787a3c143aae20f1e92e8e39d48be2488e9af642449b61e550af3d88",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -29608,18 +29607,6 @@
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
         {
-          "endpoint_country": "US",
-          "node_digest": "fa87081be227f72120a833a598a1147c6cb078e62504ac98b87222c6aafa3973",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "CA",
-          "node_digest": "de0669a2cd5b0736ef153294674752a521cd0ee29f7be7508c6e2b6938b9d93f",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
           "endpoint_country": "RU",
           "node_digest": "f1735db5cc4815926c4d0461d84fa849751958224839d105fcbcbc656071064c",
           "protocol": "vless",
@@ -29634,24 +29621,6 @@
         {
           "endpoint_country": "GR",
           "node_digest": "bfb6e6a988e89c42250697d3b1aa556695f280726958c9f97a64596787caef70",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "DE",
-          "node_digest": "96befb8b7b5ac9c9d9c270b9e3729a967708b351370ab3aba250d18946830255",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "NL",
-          "node_digest": "71c178235e6bcade02c72a9087ea432d606c9329815e267a33c9c92d33c175c2",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "DE",
-          "node_digest": "e05ed1575bcb5fa22c465c26658506ebf9b56d6f90fe9ab1349a386460ba865b",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -29700,18 +29669,6 @@
         {
           "endpoint_country": "SC",
           "node_digest": "53e7054165e9169914cacb08dca4b43f4888d4172907949c0afdf65facd97f0b",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "GB",
-          "node_digest": "a35fa5fd67859a71dda7ab35b1374a991cbe5bb58b0dbf39ff0a7fed17b42a30",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "RU",
-          "node_digest": "13550d33b62672c3f0f9d3c9f8ba6023f5e4b182d8a1abd033c1a0d05ec1f504",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -29771,6 +29728,12 @@
         },
         {
           "endpoint_country": "GR",
+          "node_digest": "17feeac1baa98c2c0f151f48565eecbf1dd2298d060ebe4db1aa57a3bbbdbd6c",
+          "protocol": "vless",
+          "source_id": "b3d2dfa42900c8c0e055bded"
+        },
+        {
+          "endpoint_country": "GR",
           "node_digest": "b551dd1196b8ef143fd633813983b13ce35595f41cf7709bc7507ffae2eea07e",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
@@ -29778,6 +29741,12 @@
         {
           "endpoint_country": "DE",
           "node_digest": "05f32584a94c20e47739f44e26ff473a5612afcf1db3d944915da19e089fb386",
+          "protocol": "vless",
+          "source_id": "b3d2dfa42900c8c0e055bded"
+        },
+        {
+          "endpoint_country": "MD",
+          "node_digest": "8d697c18cb4e0ecce460e0aa34e18436ae264ceb8d8348e783ab6d94e1e2c76c",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -29808,6 +29777,12 @@
         {
           "endpoint_country": "US",
           "node_digest": "abd1159e32366b20d833d3b9a34423df4a29250fab1b46bec43024cc315e7d39",
+          "protocol": "vless",
+          "source_id": "b3d2dfa42900c8c0e055bded"
+        },
+        {
+          "endpoint_country": "US",
+          "node_digest": "eafaacde877a2512774686c29eed087f822cd90fb505762972e55dba9326bef6",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -29880,12 +29855,6 @@
         {
           "endpoint_country": "US",
           "node_digest": "2c42ca8e4ff31ef4c828f0801e8690df34a109053fd880e537ffb66e8d62186b",
-          "protocol": "vless",
-          "source_id": "b3d2dfa42900c8c0e055bded"
-        },
-        {
-          "endpoint_country": "PL",
-          "node_digest": "a13a1742718001d907d70e812f97b7582672cb338bb80b3af33384c991a58dfe",
           "protocol": "vless",
           "source_id": "b3d2dfa42900c8c0e055bded"
         },
@@ -32547,7 +32516,7 @@
       ]
     },
     "bf8e29997a6c728e967cbf12": {
-      "checked_at": "2026-09-20T01:00:20Z",
+      "checked_at": "2026-09-22T00:57:52Z",
       "nodes": [
         {
           "endpoint_country": "LT",
@@ -62042,7 +62011,7 @@
       ]
     },
     "cd5c7f61a1bbfc1476e34921": {
-      "checked_at": "2026-09-20T01:04:54Z",
+      "checked_at": "2026-09-22T01:02:13Z",
       "nodes": []
     },
     "d0138c0c0209b61bfd84078e": {

@@ -1,11 +1,11 @@
 {
   "country": "DZ",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 21,
+  "exported_candidates": 22,
   "nodes": [
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-22T00:56:44Z",
+      "last_seen_at": "2026-09-22T13:04:54Z",
       "node_digest": "95416e9b829b40b6b485b39b46c86ff1d37fa6478494f1320d5f3f1e695072b3",
       "pre_score": 112,
       "protocol": "ss",
@@ -18,7 +18,7 @@
       "node_digest": "a919081a5187536d2686b0ab12f42e2b1b522c3afa3fe996adac6b5e388182b6",
       "pre_score": 108,
       "protocol": "ss",
-      "source_count": 4,
+      "source_count": 3,
       "source_id": "967700003cc8b2ce62775ecc"
     },
     {
@@ -50,17 +50,8 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-20T01:05:48Z",
-      "node_digest": "7565a6da29f02f5e2a0d2454f837e26462f5706b43e30fd68dda24c83274fe45",
-      "pre_score": 100,
-      "protocol": "ss",
-      "source_count": 1,
-      "source_id": "62d7de6ea69616baedd86db7"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-20T13:01:42Z",
-      "node_digest": "abd96122fe2323038298fc6de581bdf674affc720c39b1f5783bd6390a7aae57",
+      "last_seen_at": "2026-09-22T13:01:21Z",
+      "node_digest": "dd00cf5a5c60fdeaa965284c56bb01791d08031acab802976c4c9155f041fcde",
       "pre_score": 100,
       "protocol": "ss",
       "source_count": 1,
@@ -68,7 +59,16 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-20T01:05:48Z",
+      "last_seen_at": "2026-09-22T13:04:31Z",
+      "node_digest": "f1b3c403c6d5d741ca36edcd61eb967204150a425f59d77590efa6f8a77bc127",
+      "pre_score": 100,
+      "protocol": "ss",
+      "source_count": 1,
+      "source_id": "62d7de6ea69616baedd86db7"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-22T13:04:31Z",
       "node_digest": "f93917a09e12a1ab9bc9db936c8b6ef2009dbae4345d85a14c6bc3115c215fc5",
       "pre_score": 100,
       "protocol": "ss",
@@ -86,7 +86,7 @@
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-20T13:02:37Z",
+      "last_seen_at": "2026-09-22T13:02:24Z",
       "node_digest": "066ef437c44474ff90eb4dec7bb1bf17255fa2f9e5a4fdab534a6a40db7856fb",
       "pre_score": 94,
       "protocol": "ss",
@@ -95,7 +95,7 @@
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-20T13:02:37Z",
+      "last_seen_at": "2026-09-22T13:02:24Z",
       "node_digest": "8ff24acbdd8bf28557bb22fb48b9b110a50a662d4a04b6151ac0d78c0ddf3312",
       "pre_score": 94,
       "protocol": "ss",
@@ -149,7 +149,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-20T01:03:37Z",
+      "last_seen_at": "2026-09-22T13:02:10Z",
       "node_digest": "a8bea9711c9ca536b645289263fb99ef51df862ca6873cd447551366e303c261",
       "pre_score": 89,
       "protocol": "ss",
@@ -158,7 +158,16 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-21T13:06:01Z",
+      "last_seen_at": "2026-09-22T01:01:32Z",
+      "node_digest": "4bb1ca6fa5400380e1f49441872eddc871c0dea692e8d519f2dd69ab19e72ebe",
+      "pre_score": 88,
+      "protocol": "ss",
+      "source_count": 2,
+      "source_id": "7ffd1377788f83c5d46edc14"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-22T12:57:25Z",
       "node_digest": "857a34c92c9017c3a4037801bf765c7258b73966f4ca45a84adabf286271187f",
       "pre_score": 85,
       "protocol": "ss",
@@ -185,7 +194,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-20T01:02:45Z",
+      "last_seen_at": "2026-09-22T13:00:59Z",
       "node_digest": "8011383854f54fe8390ef4390397349cff62ed51fa6567bf653a0e5756e8ad20",
       "pre_score": 83,
       "protocol": "ss",
@@ -195,5 +204,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 21
+  "total_candidates": 22
 }

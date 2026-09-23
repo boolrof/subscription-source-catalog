@@ -1,8 +1,53 @@
 {
   "country": "VI",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 3,
+  "exported_candidates": 8,
   "nodes": [
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-23T01:03:42Z",
+      "node_digest": "f6e75f3e7bcdb2550b894ddb8a0dd48fc1e02296ca32826c591d38747d089e47",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 5,
+      "source_id": "9969d74eca813bdf8977451f"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-23T01:03:42Z",
+      "node_digest": "cc5000c4a6e185c2a864395c819fb6d78ec1bcdb75da2caefe31b0cd6690faa2",
+      "pre_score": 108,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "9969d74eca813bdf8977451f"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-23T00:59:42Z",
+      "node_digest": "52128e844e881ce969dbaa8f42521b800c04a777806c4c033357ec83ffb6f918",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "f67651f3d94dd0e91de0f72a"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-23T00:55:31Z",
+      "node_digest": "56d825c7444c0dc1a4d7c27f72d5790dfc8b49c41d1cb59a4021fb9f97ebd283",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "3ca46673c6d6740c1357e4dc"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-23T01:03:12Z",
+      "node_digest": "f82b61e69c98bcc32c858b94f9867eaa9afd0510d4b696652cfab8b5666b2c50",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "8625ca4be1a8d222abfcc205"
+    },
     {
       "independent_source_count": 2,
       "last_seen_at": "2026-09-22T00:55:19Z",
@@ -33,5 +78,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 3
+  "total_candidates": 8
 }

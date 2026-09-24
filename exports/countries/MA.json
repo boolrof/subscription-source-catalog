@@ -1,11 +1,11 @@
 {
   "country": "MA",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 20,
+  "exported_candidates": 21,
   "nodes": [
     {
       "independent_source_count": 7,
-      "last_seen_at": "2026-09-24T00:59:32Z",
+      "last_seen_at": "2026-09-24T13:03:55Z",
       "node_digest": "863cb8f0593954525d60a9f1e1de08e75fb1cc68aa4f4b1a2b0e874767964517",
       "pre_score": 113,
       "protocol": "ss",
@@ -14,7 +14,7 @@
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-23T12:58:37Z",
+      "last_seen_at": "2026-09-24T12:56:33Z",
       "node_digest": "bea8eb4846eb4f286cc51f8415606ed51e8a9d476f9a4d1ade98fecfa13e3565",
       "pre_score": 108,
       "protocol": "ss",
@@ -32,7 +32,7 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-24T01:03:58Z",
+      "last_seen_at": "2026-09-24T13:03:05Z",
       "node_digest": "a92ca6eb423f723c12002b43874d8713cc74352b7a7c2df148c87dc677446938",
       "pre_score": 98,
       "protocol": "ss",
@@ -50,7 +50,7 @@
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-22T00:59:56Z",
+      "last_seen_at": "2026-09-24T13:01:01Z",
       "node_digest": "ea1f3400025ee50a04d719532f2b0d8d8e7f6fb29b430ba7a3eb261210de836c",
       "pre_score": 93,
       "protocol": "ss",
@@ -167,6 +167,15 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-24T01:02:24Z",
+      "node_digest": "c9cce14bf63f514da6557c22fcb39b7b1cf2103bb28fb558dac1b286543f02cc",
+      "pre_score": 88,
+      "protocol": "ss",
+      "source_count": 2,
+      "source_id": "7ffd1377788f83c5d46edc14"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-23T13:01:38Z",
       "node_digest": "54a894bbe5a7a491e6f4987c4e44f4be477fa7c9b4e777b50e65a467d07a04e4",
       "pre_score": 83,
@@ -186,5 +195,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 20
+  "total_candidates": 21
 }

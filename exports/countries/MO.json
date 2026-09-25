@@ -1,20 +1,29 @@
 {
   "country": "MO",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 282,
+  "exported_candidates": 274,
   "nodes": [
     {
-      "independent_source_count": 6,
+      "independent_source_count": 7,
+      "last_seen_at": "2026-09-25T01:04:32Z",
+      "node_digest": "c522dfbb3864805bdd15441c4074caf40ab57d54fccf80114f80e910815f4436",
+      "pre_score": 119,
+      "protocol": "vmess",
+      "source_count": 11,
+      "source_id": "04c0faef2d3ae7794409ed6b"
+    },
+    {
+      "independent_source_count": 5,
       "last_seen_at": "2026-09-24T12:57:33Z",
       "node_digest": "b3b02a7b190c4e659dec13a15245e16e3ce99c7c6bc1fe4fb0f005cd572609ef",
-      "pre_score": 120,
+      "pre_score": 116,
       "protocol": "trojan",
-      "source_count": 6,
+      "source_count": 5,
       "source_id": "b6a175df3297a4bfbe55a4fe"
     },
     {
       "independent_source_count": 8,
-      "last_seen_at": "2026-09-24T13:03:55Z",
+      "last_seen_at": "2026-09-25T01:00:00Z",
       "node_digest": "5f64bccd6f8a33f3102b708effbe681e946b2c056794a77cf63cf2b2906355e9",
       "pre_score": 113,
       "protocol": "trojan",
@@ -23,7 +32,7 @@
     },
     {
       "independent_source_count": 8,
-      "last_seen_at": "2026-09-24T13:03:55Z",
+      "last_seen_at": "2026-09-25T01:01:20Z",
       "node_digest": "6dba27bcec5032a43feaa7a17e5456419484113210afb38e88234be73e3753f1",
       "pre_score": 113,
       "protocol": "trojan",
@@ -32,7 +41,7 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-24T00:59:33Z",
+      "last_seen_at": "2026-09-25T01:03:08Z",
       "node_digest": "61ccc703d1f404c346d15e265583f064f70cb6f552236bd5de0b3ffaedb9311d",
       "pre_score": 112,
       "protocol": "trojan",
@@ -41,8 +50,17 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-22T13:03:49Z",
-      "node_digest": "56ea279d051e13ff7c532bc2c9ba5781c343f8712384c7f5f59619c1f1437408",
+      "last_seen_at": "2026-09-25T01:02:40Z",
+      "node_digest": "b7fe926799416927be9b0294af2e9aa92c5d6d156b3e5515fab0795e746e7367",
+      "pre_score": 112,
+      "protocol": "vless",
+      "source_count": 4,
+      "source_id": "23e3b289760ca611fc78e75f"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-25T01:03:54Z",
+      "node_digest": "3cc61f7dae32509b7d938938bd245485276079aa61adada5b400f1ff8fa39ce5",
       "pre_score": 111,
       "protocol": "trojan",
       "source_count": 5,
@@ -50,8 +68,8 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-22T13:03:49Z",
-      "node_digest": "59ae60958b51e8e8e5572514899e26534f1d80ff97c69d17f7da2e9ebb6d19ee",
+      "last_seen_at": "2026-09-25T01:03:54Z",
+      "node_digest": "3f92aa7b02b7759b29fc9e1d7599c9cb0afaa82a128b3137fdbd54d7d16f6429",
       "pre_score": 111,
       "protocol": "trojan",
       "source_count": 5,
@@ -59,8 +77,8 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-22T13:03:49Z",
-      "node_digest": "67052b8e6a7d23379733bf15fd703dea9685016a21e69cd03626e33aa58802fc",
+      "last_seen_at": "2026-09-25T01:03:54Z",
+      "node_digest": "b7958b4e068117c9be9ddd3ed1bd7e2e47e560c64f10837eeb0507b00b468287",
       "pre_score": 111,
       "protocol": "trojan",
       "source_count": 5,
@@ -68,16 +86,34 @@
     },
     {
       "independent_source_count": 4,
-      "last_seen_at": "2026-09-22T13:03:49Z",
-      "node_digest": "fe42531108f1bbc6fd4518214d044db282df0970ae127564cb5229e99f1b17a1",
+      "last_seen_at": "2026-09-25T01:03:54Z",
+      "node_digest": "f8ed30122a01fc38f73b0a8dbb90f3df0481a7b782d256031a7b2a5b6858a839",
       "pre_score": 111,
       "protocol": "trojan",
+      "source_count": 5,
+      "source_id": "1b7a7effe2ccb77920daa625"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-25T01:03:54Z",
+      "node_digest": "7538b08c3667e83c7e35fad41c2b0725338d29f6f4a14d294abfc1d4cc61bfef",
+      "pre_score": 111,
+      "protocol": "vmess",
+      "source_count": 5,
+      "source_id": "1b7a7effe2ccb77920daa625"
+    },
+    {
+      "independent_source_count": 4,
+      "last_seen_at": "2026-09-25T01:03:54Z",
+      "node_digest": "f5c37a55ead6681a506bc23b3f21ff274d926034674f59dca23605a24bc607fd",
+      "pre_score": 111,
+      "protocol": "vmess",
       "source_count": 5,
       "source_id": "1b7a7effe2ccb77920daa625"
     },
     {
       "independent_source_count": 5,
-      "last_seen_at": "2026-09-24T00:58:18Z",
+      "last_seen_at": "2026-09-25T01:01:20Z",
       "node_digest": "ca14d884bdf9a2410bd5471c1b79efa90888594849ea79eb1f55182b2197feab",
       "pre_score": 109,
       "protocol": "trojan",
@@ -86,39 +122,12 @@
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:57:33Z",
+      "last_seen_at": "2026-09-25T01:03:08Z",
       "node_digest": "f9b4b3092b3c1d4be4e8304241f829292d7adb7bb32347ea33b6d91a0a738507",
       "pre_score": 108,
       "protocol": "trojan",
       "source_count": 3,
       "source_id": "b6e34ea2d55b6e827a5ba671"
-    },
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T13:00:55Z",
-      "node_digest": "b7fe926799416927be9b0294af2e9aa92c5d6d156b3e5515fab0795e746e7367",
-      "pre_score": 108,
-      "protocol": "vless",
-      "source_count": 3,
-      "source_id": "23e3b289760ca611fc78e75f"
-    },
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-22T13:03:49Z",
-      "node_digest": "8b733669b560ffac7222be1913df979988680ef37eefc99ae8e5756236f0cb1f",
-      "pre_score": 107,
-      "protocol": "vmess",
-      "source_count": 4,
-      "source_id": "1b7a7effe2ccb77920daa625"
-    },
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-22T13:03:49Z",
-      "node_digest": "8ffcf2acceead0acf93fa1ff27fe400cec8cc73673286295797931143921babd",
-      "pre_score": 107,
-      "protocol": "vmess",
-      "source_count": 4,
-      "source_id": "1b7a7effe2ccb77920daa625"
     },
     {
       "independent_source_count": 3,
@@ -130,17 +139,8 @@
       "source_id": "04c0faef2d3ae7794409ed6b"
     },
     {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T01:00:42Z",
-      "node_digest": "c522dfbb3864805bdd15441c4074caf40ab57d54fccf80114f80e910815f4436",
-      "pre_score": 107,
-      "protocol": "vmess",
-      "source_count": 3,
-      "source_id": "04c0faef2d3ae7794409ed6b"
-    },
-    {
       "independent_source_count": 5,
-      "last_seen_at": "2026-09-24T13:03:55Z",
+      "last_seen_at": "2026-09-25T01:01:20Z",
       "node_digest": "428ccea01d51eccff0a6b69c6e84c7fa34be572a24526272a9a4d2005646d75c",
       "pre_score": 106,
       "protocol": "trojan",
@@ -149,48 +149,12 @@
     },
     {
       "independent_source_count": 5,
-      "last_seen_at": "2026-09-24T13:03:55Z",
+      "last_seen_at": "2026-09-25T01:01:20Z",
       "node_digest": "c8632d53385e1d2667df663d6663350364f54b2b969a653c992c4e6b385109e2",
       "pre_score": 106,
       "protocol": "trojan",
       "source_count": 5,
       "source_id": "9ecda5b1e95b4ce5e1349f87"
-    },
-    {
-      "independent_source_count": 4,
-      "last_seen_at": "2026-09-23T13:02:56Z",
-      "node_digest": "c24c13d5edf754097dd7924ecad93f098d5ca9955bf33cf9a5e764592c3915a6",
-      "pre_score": 105,
-      "protocol": "trojan",
-      "source_count": 4,
-      "source_id": "22d831dd218a573d9f9ca885"
-    },
-    {
-      "independent_source_count": 4,
-      "last_seen_at": "2026-09-23T13:02:56Z",
-      "node_digest": "c800f2ff0618db6a4f33fd807b43cf0730ad793c674033f3bfae31dd1dbddf8c",
-      "pre_score": 105,
-      "protocol": "trojan",
-      "source_count": 4,
-      "source_id": "22d831dd218a573d9f9ca885"
-    },
-    {
-      "independent_source_count": 4,
-      "last_seen_at": "2026-09-23T13:02:56Z",
-      "node_digest": "d91800e611b7975e952e02a22d1555bd46ef6c5a44c433b5c71740a01d38369f",
-      "pre_score": 105,
-      "protocol": "trojan",
-      "source_count": 4,
-      "source_id": "22d831dd218a573d9f9ca885"
-    },
-    {
-      "independent_source_count": 4,
-      "last_seen_at": "2026-09-23T13:02:56Z",
-      "node_digest": "df235e4b1938c3d20c7669cc08ef88f65f13590392f9d6a7d89b78655b8d80e5",
-      "pre_score": 105,
-      "protocol": "trojan",
-      "source_count": 4,
-      "source_id": "22d831dd218a573d9f9ca885"
     },
     {
       "independent_source_count": 2,
@@ -203,12 +167,30 @@
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-24T13:02:54Z",
+      "last_seen_at": "2026-09-25T01:02:37Z",
       "node_digest": "24ee76f6b5f21bf3a43f2d478f669a049082855a145d4c84e6466b38b166633a",
       "pre_score": 104,
       "protocol": "vless",
       "source_count": 2,
       "source_id": "0c7c1594a7f8a0e0302c69db"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-25T01:02:32Z",
+      "node_digest": "4f01b0250fa340ecbebdca5745d08ea1481d6b7fdc272684421407353fdc395a",
+      "pre_score": 104,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "a7e2bf0a747141acd0c063f7"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-25T01:00:35Z",
+      "node_digest": "bb2edba7040b10158ac3e573efe41e6d0eb12166e71c1d33fd6d9fd057f8b291",
+      "pre_score": 104,
+      "protocol": "vless",
+      "source_count": 2,
+      "source_id": "3b841eb84531061e454a5ffb"
     },
     {
       "independent_source_count": 2,
@@ -230,6 +212,33 @@
     },
     {
       "independent_source_count": 2,
+      "last_seen_at": "2026-09-25T01:02:45Z",
+      "node_digest": "57c4b3151640feef5af78355cae68b9ef252213bb1316aea5e5b66b62967e284",
+      "pre_score": 103,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "21d1998f81d30304e1c3fc8f"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-25T01:02:45Z",
+      "node_digest": "6b32ac0e363873c108bf653c4f0201d6829a2c0a744029d48dded65ac97a93b2",
+      "pre_score": 103,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "21d1998f81d30304e1c3fc8f"
+    },
+    {
+      "independent_source_count": 2,
+      "last_seen_at": "2026-09-25T01:02:45Z",
+      "node_digest": "cab905fdad26bce91aa77bff2cb6e31f5fdd541b18c5bb1ad0cdaa8ffc6a9159",
+      "pre_score": 103,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "21d1998f81d30304e1c3fc8f"
+    },
+    {
+      "independent_source_count": 2,
       "last_seen_at": "2026-09-24T01:02:35Z",
       "node_digest": "ce11f892708638faa79c645311e866f42040ce4a50bd3a8fdd9f8f4c063991c7",
       "pre_score": 103,
@@ -239,10 +248,10 @@
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-23T13:02:48Z",
-      "node_digest": "26f312d779828e52caf69243c951896d93ace616dc5b0ce5c446424d879e2314",
+      "last_seen_at": "2026-09-25T01:02:45Z",
+      "node_digest": "f7ef4c5b40f44b69ead970a1dbfcc796a6744e90b2bb8485d54918ff2766d164",
       "pre_score": 103,
-      "protocol": "vmess",
+      "protocol": "trojan",
       "source_count": 2,
       "source_id": "21d1998f81d30304e1c3fc8f"
     },
@@ -284,75 +293,48 @@
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "2301204105ec05817158b8361a250f972b8d755e9fb5a70ee32ac239be84df37",
+      "last_seen_at": "2026-09-25T00:58:34Z",
+      "node_digest": "c24c13d5edf754097dd7924ecad93f098d5ca9955bf33cf9a5e764592c3915a6",
       "pre_score": 101,
       "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
+      "source_count": 4,
+      "source_id": "822afbbd4cfb35d3dbf7ee4a"
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "2e9a53cc787b48f65907105f8a892ed05fbd243d8066a900f9c1073bfb7c02a6",
+      "last_seen_at": "2026-09-25T00:58:34Z",
+      "node_digest": "c800f2ff0618db6a4f33fd807b43cf0730ad793c674033f3bfae31dd1dbddf8c",
       "pre_score": 101,
       "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
+      "source_count": 4,
+      "source_id": "822afbbd4cfb35d3dbf7ee4a"
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "65878afa2be19505487ca5cd34552190aa71b5910c765912dd83d7f68ee48c25",
+      "last_seen_at": "2026-09-25T00:58:34Z",
+      "node_digest": "d91800e611b7975e952e02a22d1555bd46ef6c5a44c433b5c71740a01d38369f",
       "pre_score": 101,
       "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
+      "source_count": 4,
+      "source_id": "822afbbd4cfb35d3dbf7ee4a"
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "668a6c437df3fa255be80765b839538051fbd15dbc6652a37c43ea992874befe",
+      "last_seen_at": "2026-09-25T00:58:34Z",
+      "node_digest": "df235e4b1938c3d20c7669cc08ef88f65f13590392f9d6a7d89b78655b8d80e5",
       "pre_score": 101,
       "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
+      "source_count": 4,
+      "source_id": "822afbbd4cfb35d3dbf7ee4a"
     },
     {
       "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "790a94818b5317e1ee077ce9710678b90fcc495e0124bfc1933e30bfaffb5c8e",
-      "pre_score": 101,
-      "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
-    },
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T01:00:59Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "9a461eab84ff28aa1ce5ab8491b458f304637fabe880e394cccb8e1cc790aae7",
       "pre_score": 101,
       "protocol": "trojan",
       "source_count": 3,
       "source_id": "654534efa6d9c76508e0ee81"
-    },
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "e5841405fc04fc0ba445f89513f06a31087fb098c34145e4cd5938891dcfffb5",
-      "pre_score": 101,
-      "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
-    },
-    {
-      "independent_source_count": 3,
-      "last_seen_at": "2026-09-24T12:59:55Z",
-      "node_digest": "f18a43ef75a54bc57ec37d24c144b393a42bc6b780f36438efeb9bf7c8ae0271",
-      "pre_score": 101,
-      "protocol": "trojan",
-      "source_count": 3,
-      "source_id": "c0f2ce0bc9518bfba307b593"
     },
     {
       "independent_source_count": 1,
@@ -365,8 +347,17 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:58:26Z",
-      "node_digest": "1445eb87e810f6ff49a14a0226d9b8c65eda85c20889a498b4d1d1acef6f445b",
+      "last_seen_at": "2026-09-25T01:04:43Z",
+      "node_digest": "0b0b049d6fbb4c25a1b089f0cb8ea6712492a97e3aadceaaddc5df078403787e",
+      "pre_score": 100,
+      "protocol": "trojan",
+      "source_count": 1,
+      "source_id": "769f7460fed6bcdc3d8158fb"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:58:52Z",
+      "node_digest": "2e795c914cc5c68d29b48955116e6924f54bcd1c43cf68b8e5677c7e85dd054a",
       "pre_score": 100,
       "protocol": "trojan",
       "source_count": 1,
@@ -374,8 +365,8 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:58:26Z",
-      "node_digest": "2719bb3ec5daa3b371becefcab73c81ad32eeccdd7558e238ac79747ea9c6b69",
+      "last_seen_at": "2026-09-25T00:58:52Z",
+      "node_digest": "40a741f7942b7b646b0c1e263417d7208408443cdb88ad02ba429a32fb04e291",
       "pre_score": 100,
       "protocol": "trojan",
       "source_count": 1,
@@ -383,8 +374,8 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "464eed94091ee13c4b53f2c194675ebf6b580c2f7941c6aca81523cedd2009c1",
+      "last_seen_at": "2026-09-25T01:04:43Z",
+      "node_digest": "513817677a110aec574949c861618e400251a2b8c02f257b8b9d418456d4fc21",
       "pre_score": 100,
       "protocol": "trojan",
       "source_count": 1,
@@ -410,8 +401,8 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:58:26Z",
-      "node_digest": "95310d8532c6f47ce6c974a01919d11a9e87eec2970666a321cc7a45ba500ada",
+      "last_seen_at": "2026-09-25T00:58:52Z",
+      "node_digest": "b8a24e021c443a3fe163ed590ff134c8cdbe9af81f3d3383018fcf9f437acc80",
       "pre_score": 100,
       "protocol": "trojan",
       "source_count": 1,
@@ -428,55 +419,10 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "e4b72850efe81d70061dfc20120166c1a92aa3a46c0f7ba43663dc1fd46ba7a8",
+      "last_seen_at": "2026-09-25T01:04:43Z",
+      "node_digest": "beb7904f7ed5a016067f40f09dad83683d8e846e05f6ebcded7d6e33bc7c4dcf",
       "pre_score": 100,
       "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "2ba7ea0447fb9f873f17882ab21099540080fd6fb3411f6a9eb3d98195921d01",
-      "pre_score": 100,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "7b2442d7b75073007f57802128c2bfcf75960ee1f0e6580ac86ba27adf689d57",
-      "pre_score": 100,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "a5345cb6660cf25ac02050330a79b8fc53c545af5367557a4c9af02c86e0085d",
-      "pre_score": 100,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "c2ed8d9aa236c6b489643bba34c18b489bafa00e9d8b9496a928333b330e7992",
-      "pre_score": 100,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "ffd50eeb07638b72ea0674bafc1ed791a8d04b016de4e97a0fa4f2442d16b7b7",
-      "pre_score": 100,
-      "protocol": "vless",
       "source_count": 1,
       "source_id": "769f7460fed6bcdc3d8158fb"
     },
@@ -488,6 +434,15 @@
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "40307dae2f6ec49386d2b928"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T01:04:43Z",
+      "node_digest": "5112063fc1fb2cd38254d5a598aceb78ae1e415fde8c627a7eb203de9cb15e74",
+      "pre_score": 100,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "769f7460fed6bcdc3d8158fb"
     },
     {
       "independent_source_count": 1,
@@ -509,17 +464,8 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "9be835b49d4a49960d4fc535ae999bf3b2e344e9648139ab06dd15a71c567dab",
-      "pre_score": 100,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:58:26Z",
-      "node_digest": "bd906796fe4086362b4974c96938aa7d01e1ceaabea3f3d7eba286f8613dee60",
+      "last_seen_at": "2026-09-25T00:58:52Z",
+      "node_digest": "8d127ef88527a8384cdb725a86347149eb5a6f2f23badb5d089331bae6c10c66",
       "pre_score": 100,
       "protocol": "vmess",
       "source_count": 1,
@@ -536,30 +482,12 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "c0b31d69e29a6740ed1e01291d361495fa16459b8e4d7ffab0b1975bb2fa6ac2",
-      "pre_score": 100,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
-    },
-    {
-      "independent_source_count": 1,
       "last_seen_at": "2026-09-24T00:55:53Z",
       "node_digest": "c6c06a01f632d458554cbdd3ca4809659b5284874f7490048dc5ee120a0b5ea6",
       "pre_score": 100,
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "9e1ea8dc525f2a96f5624d15"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:04:53Z",
-      "node_digest": "d1b7928a3fd6b86a474a85249924560be227165caac0a7f97b98ff2dee3cf17b",
-      "pre_score": 100,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "769f7460fed6bcdc3d8158fb"
     },
     {
       "independent_source_count": 1,
@@ -581,15 +509,6 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-24T12:55:51Z",
-      "node_digest": "57c4b3151640feef5af78355cae68b9ef252213bb1316aea5e5b66b62967e284",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "d7437017a0a5b57765d1b19c"
-    },
-    {
-      "independent_source_count": 1,
       "last_seen_at": "2026-09-24T00:59:57Z",
       "node_digest": "5b1663b62cfa43280083ce01d10765401c5354ec452a675628e26a8c85affd9a",
       "pre_score": 99,
@@ -605,33 +524,6 @@
       "protocol": "trojan",
       "source_count": 1,
       "source_id": "3692512eb6697fec18479f47"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:02Z",
-      "node_digest": "603ceea8bbf075b22a2dccf703dbc6edbb8e31c45c97714dac92ce23032ba6bd",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "21d1998f81d30304e1c3fc8f"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-24T12:55:51Z",
-      "node_digest": "6b32ac0e363873c108bf653c4f0201d6829a2c0a744029d48dded65ac97a93b2",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "d7437017a0a5b57765d1b19c"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:02Z",
-      "node_digest": "8210851e3d768c77347b8c73dd75f96f67bc4d0947e8daafe76b92a747cb5741",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "21d1998f81d30304e1c3fc8f"
     },
     {
       "independent_source_count": 1,
@@ -653,48 +545,12 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:02Z",
-      "node_digest": "9e9026a65b7450b78a185974d8b3d1415f32e24da8028cba988e79e8cc2a89a8",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "21d1998f81d30304e1c3fc8f"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:02Z",
-      "node_digest": "c3db4ebbaaa13484f2d8f844def230f58d779ac08debb7f8ce09290ac1fce5ef",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "21d1998f81d30304e1c3fc8f"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-24T12:55:51Z",
-      "node_digest": "cab905fdad26bce91aa77bff2cb6e31f5fdd541b18c5bb1ad0cdaa8ffc6a9159",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "d7437017a0a5b57765d1b19c"
-    },
-    {
-      "independent_source_count": 1,
       "last_seen_at": "2026-09-24T00:59:57Z",
       "node_digest": "e1f285d2bad55a00b52687b9e1fa3896acd1b2344a0b7b69783185a91697e939",
       "pre_score": 99,
       "protocol": "trojan",
       "source_count": 1,
       "source_id": "04c0faef2d3ae7794409ed6b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-24T12:55:51Z",
-      "node_digest": "f7ef4c5b40f44b69ead970a1dbfcc796a6744e90b2bb8485d54918ff2766d164",
-      "pre_score": 99,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "d7437017a0a5b57765d1b19c"
     },
     {
       "independent_source_count": 1,
@@ -707,8 +563,17 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:02Z",
-      "node_digest": "6b156addbec8ba280c9b9d98aa7b48d28b3ff119e9981486ce7e0819c3a23e06",
+      "last_seen_at": "2026-09-24T12:55:51Z",
+      "node_digest": "898f0dc6b035dfecdf8b6d17663c2ea4964fa7f7427b56603e0dffead64c3c7a",
+      "pre_score": 99,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "d7437017a0a5b57765d1b19c"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T01:02:45Z",
+      "node_digest": "b2a7e6bab575eb9fcbf1c620a981b753eaa894a939a801ea47c6eabce5156c74",
       "pre_score": 99,
       "protocol": "vmess",
       "source_count": 1,
@@ -716,12 +581,12 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-24T12:55:51Z",
-      "node_digest": "898f0dc6b035dfecdf8b6d17663c2ea4964fa7f7427b56603e0dffead64c3c7a",
+      "last_seen_at": "2026-09-25T01:02:45Z",
+      "node_digest": "e3f5a724b95d50bd63e9eb4041781e424b7849e33bff443f08d8ec2c539ade9a",
       "pre_score": 99,
       "protocol": "vmess",
       "source_count": 1,
-      "source_id": "d7437017a0a5b57765d1b19c"
+      "source_id": "21d1998f81d30304e1c3fc8f"
     },
     {
       "independent_source_count": 1,
@@ -860,6 +725,15 @@
     },
     {
       "independent_source_count": 2,
+      "last_seen_at": "2026-09-25T01:03:08Z",
+      "node_digest": "f25e3f22d3eaf8d324cbd232710e38ffc35cfa71b6d98d5a88d3853bda2bb4c8",
+      "pre_score": 97,
+      "protocol": "trojan",
+      "source_count": 2,
+      "source_id": "1e34d2651b36a3665d8ca93c"
+    },
+    {
+      "independent_source_count": 2,
       "last_seen_at": "2026-09-24T01:00:59Z",
       "node_digest": "f518c5418152ce2af6ed50ffb8634de9b8e8bbba01416079551f9e413c1fd2df",
       "pre_score": 97,
@@ -875,33 +749,6 @@
       "protocol": "vmess",
       "source_count": 2,
       "source_id": "a56e0307cde44c93d0ff794a"
-    },
-    {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-23T12:58:52Z",
-      "node_digest": "9494b768289f1a1bdebda92083e16741557fda3b8e8f03160daca27f537e118a",
-      "pre_score": 97,
-      "protocol": "vmess",
-      "source_count": 2,
-      "source_id": "40c3b535a7fcfe597fa66b06"
-    },
-    {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-23T13:01:51Z",
-      "node_digest": "b33be64e57683b007db4f5be68a1eebecfe5eebc2cab70157bbe5ec93f5b1a26",
-      "pre_score": 97,
-      "protocol": "vmess",
-      "source_count": 2,
-      "source_id": "16ef4d814d325d8053ea15e1"
-    },
-    {
-      "independent_source_count": 2,
-      "last_seen_at": "2026-09-23T13:02:56Z",
-      "node_digest": "d0985e12591dc626a96e23ab0e7d44a637033a9b1f98d75b776f0e8ac5b81e12",
-      "pre_score": 97,
-      "protocol": "vmess",
-      "source_count": 2,
-      "source_id": "94650a460f3e4c7887e51b8a"
     },
     {
       "independent_source_count": 2,
@@ -1004,7 +851,7 @@
     },
     {
       "independent_source_count": 2,
-      "last_seen_at": "2026-09-24T01:01:43Z",
+      "last_seen_at": "2026-09-25T01:04:05Z",
       "node_digest": "01f1ee2ad9aea1488cf60d117cf1fca516e613fa5206b0034656a19acb37412b",
       "pre_score": 94,
       "protocol": "trojan",
@@ -1076,15 +923,6 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T12:59:32Z",
-      "node_digest": "f25e3f22d3eaf8d324cbd232710e38ffc35cfa71b6d98d5a88d3853bda2bb4c8",
-      "pre_score": 93,
-      "protocol": "trojan",
-      "source_count": 1,
-      "source_id": "61641c10141a9e7ac84e18b8"
-    },
-    {
-      "independent_source_count": 1,
       "last_seen_at": "2026-09-24T00:55:31Z",
       "node_digest": "ffcbe60e139d07df63ca6bedbbfefaa35aeb79b8efc6545aeaf3f65253dd03e4",
       "pre_score": 93,
@@ -1121,21 +959,21 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:24Z",
-      "node_digest": "aa169743f3789d535e8ef654727ff616318cb3c96dcdb7f7f89d049a4829e3d7",
-      "pre_score": 93,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "3cc2d98fbf7467b270733e3a"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:58:10Z",
-      "node_digest": "38e8b9a9a0e8d158683b8301e5c1cc2552b759fd661394a8b598c497fcf095b6",
+      "last_seen_at": "2026-09-25T00:58:34Z",
+      "node_digest": "0a81009611b5acb543ad8a5f878b0666c3c2893ba7b0f3e07cdce378357c114c",
       "pre_score": 93,
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "94650a460f3e4c7887e51b8a"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-23T13:02:48Z",
+      "node_digest": "26f312d779828e52caf69243c951896d93ace616dc5b0ce5c446424d879e2314",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "856b03177307df203bc7d3b8"
     },
     {
       "independent_source_count": 1,
@@ -1184,12 +1022,30 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-23T12:58:52Z",
+      "node_digest": "9494b768289f1a1bdebda92083e16741557fda3b8e8f03160daca27f537e118a",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "40c3b535a7fcfe597fa66b06"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-23T01:03:25Z",
       "node_digest": "a376447f05e14f7a12649475baa6d8754c25ceae1f959b01f1e7d83271fb048f",
       "pre_score": 93,
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "c13a2e8ba4ddc16869c056de"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-23T13:01:51Z",
+      "node_digest": "b33be64e57683b007db4f5be68a1eebecfe5eebc2cab70157bbe5ec93f5b1a26",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "16ef4d814d325d8053ea15e1"
     },
     {
       "independent_source_count": 1,
@@ -1208,6 +1064,15 @@
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "54af1568230700c9cecc35af"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-23T13:02:56Z",
+      "node_digest": "d0985e12591dc626a96e23ab0e7d44a637033a9b1f98d75b776f0e8ac5b81e12",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "a25176dccc42dc80fca53714"
     },
     {
       "independent_source_count": 1,
@@ -1247,6 +1112,15 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:58:34Z",
+      "node_digest": "e9c38dc316377ae1960cf0f6e7e94eb46bc28cd9a111d3abea19014027dadfe6",
+      "pre_score": 93,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "94650a460f3e4c7887e51b8a"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-23T13:02:28Z",
       "node_digest": "eda9cedbe405a169f0e83713258bc6eec1b88c58751def20d4caa31442572418",
       "pre_score": 93,
@@ -1262,6 +1136,69 @@
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "1c8f8ba9f1a7858664226adc"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "2301204105ec05817158b8361a250f972b8d755e9fb5a70ee32ac239be84df37",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "2e9a53cc787b48f65907105f8a892ed05fbd243d8066a900f9c1073bfb7c02a6",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "65878afa2be19505487ca5cd34552190aa71b5910c765912dd83d7f68ee48c25",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "668a6c437df3fa255be80765b839538051fbd15dbc6652a37c43ea992874befe",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "790a94818b5317e1ee077ce9710678b90fcc495e0124bfc1933e30bfaffb5c8e",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "e5841405fc04fc0ba445f89513f06a31087fb098c34145e4cd5938891dcfffb5",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
+    },
+    {
+      "independent_source_count": 3,
+      "last_seen_at": "2026-09-25T01:00:37Z",
+      "node_digest": "f18a43ef75a54bc57ec37d24c144b393a42bc6b780f36438efeb9bf7c8ae0271",
+      "pre_score": 91,
+      "protocol": "trojan",
+      "source_count": 3,
+      "source_id": "c0f2ce0bc9518bfba307b593"
     },
     {
       "independent_source_count": 1,
@@ -1427,15 +1364,6 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:52Z",
-      "node_digest": "56054c3801cf3c3e0d4865c50905bc28d5ab16e05a59e76f12011adc6f0f7ff5",
-      "pre_score": 88,
-      "protocol": "vmess",
-      "source_count": 2,
-      "source_id": "3013b5e514c6d4207c7e3265"
-    },
-    {
-      "independent_source_count": 1,
       "last_seen_at": "2026-09-24T01:01:51Z",
       "node_digest": "7cba944a2fe33ca5bd4fd66eb6d6b0c46d309bee2aede5a3d21ebf51e65213fd",
       "pre_score": 88,
@@ -1445,8 +1373,8 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:52Z",
-      "node_digest": "bcae79a145c534a9d94071038c74e43574bac4ffee17928594c835daf78a5812",
+      "last_seen_at": "2026-09-25T00:58:04Z",
+      "node_digest": "ddafac3e2b461ee183907855dbef1e61c87125a316eb79889bf7dd683bdaa0e0",
       "pre_score": 88,
       "protocol": "vmess",
       "source_count": 2,
@@ -1463,7 +1391,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:01:26Z",
+      "last_seen_at": "2026-09-25T01:01:20Z",
       "node_digest": "3583f90c9f759767bd5ff84286015d374b1a2dda0b047c3d922c9a685e81aa5b",
       "pre_score": 86,
       "protocol": "vless",
@@ -1472,7 +1400,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T13:01:26Z",
+      "last_seen_at": "2026-09-25T01:01:20Z",
       "node_digest": "b9c8bccb9d1bb890ed7d1c7e8d822ebf3063b0b8c7ea6f39d70e8dc916d055c1",
       "pre_score": 86,
       "protocol": "vless",
@@ -1499,106 +1427,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "151b20218b06fe1f5d171798bdfd68a3ec0bd07a2d105131e32f13f502c94385",
-      "pre_score": 84,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "21195a9dee664f381d10763f0601c01dc9cbf90bb8d22f0564309cb80a056b98",
-      "pre_score": 84,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "21d80c35b961a1b62f778a965d986a59779cc83c29c2f80069219848e57399a6",
-      "pre_score": 84,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "57ba415f424443b7ab97093bb7701abb67a116e8c6ab83497757667247be2ff2",
-      "pre_score": 84,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "9d4094faf66002568aef81c37c61686f9253b3e4705c90e176b760121c94541a",
-      "pre_score": 84,
-      "protocol": "vless",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "2fea124d19294c71559c5eb246b21ec2c77b38d0b42b81e0f4c8c4fd44f89d2e",
-      "pre_score": 84,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "3ae7d6b8947a6c023a62d124c40a3bb43f73b2202597c22fb9083772e5f10a74",
-      "pre_score": 84,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "3ffae893ebd037c1559b22f80fcee32ba539e0036dbd68ce76c57a66af71e462",
-      "pre_score": 84,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "ad75e2ad752b38c9cee882aa3b9def7a1a97185c82ca818a4df8247087ff7eee",
-      "pre_score": 84,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "bd23cd09f919cb0506805071090cd416d717b13145fb3f6f2b632b7bec7bd1c7",
-      "pre_score": 84,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-22T12:57:07Z",
-      "node_digest": "e6e97021476b0825953f18baea15eb7e96dfb6d2288aae98679ce0a8fa72d9ec",
-      "pre_score": 84,
-      "protocol": "vmess",
-      "source_count": 1,
-      "source_id": "04fdd46dd33e292d3f0e733b"
-    },
-    {
-      "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "02c07d89977007e71961c581e5428bd7d6995292785be26260defb8d4ce8ccae",
       "pre_score": 83,
       "protocol": "ss",
@@ -1607,7 +1436,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "08d3e0514479f91fa0b2e677b271eadadd26684dc696b67effdc567cde298409",
       "pre_score": 83,
       "protocol": "ss",
@@ -1616,7 +1445,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "2861410b1872e10e74df7df5c5e9cdce888e0edc6e0b9f60622d0577aec18074",
       "pre_score": 83,
       "protocol": "ss",
@@ -1625,7 +1454,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "5723d5bb67fdc21fd54e78511cc680d54915d4e6bf839ff09ba40450ea52ed14",
       "pre_score": 83,
       "protocol": "ss",
@@ -1634,7 +1463,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "8365d8a3bfee2bd653b0ec395aebdbdb5201f5f67574a7f0789675b9f924d365",
       "pre_score": 83,
       "protocol": "ss",
@@ -1643,7 +1472,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "c24cc0a860c34357aff1c2d60100ef38e5b33c455b3f249a2dd71ad42047c4d4",
       "pre_score": 83,
       "protocol": "ss",
@@ -1661,7 +1490,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "052151919cb5327779bb9f5797a66420d5a6996c14003920da72e9412fec5146",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1679,7 +1508,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "0858569fb2f4faaa3710d6460d5a31b325a521635bcc07eb7420935de6cace1c",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1706,7 +1535,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "189a2c532a492b8bd97f83cfcff891bf8776f2eff1fe0abe79f94dbdb65b3051",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1724,7 +1553,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "1c0a6246d7cf198275343804879c5a0f68067e883ba688955a4e78ba343394ef",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1733,7 +1562,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "1de66d84f6ff7da0843a924a0611ad5cdbf1b941cf15ffee0c7aea1d7e98bfa9",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1742,7 +1571,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "1feeecf9f4090850d765924d03d94a8a5a6d23384e9b6da27c8312ccaa86f0f7",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1778,7 +1607,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "2babf418225754f656745ab57c4745a02fff94f8f54b64e6817cba01c363150a",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1787,7 +1616,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "2d85f66a6056abe1e006b83be9a5b09c2ec4d7afb5296e22f2d1e11200510a51",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1805,7 +1634,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "347bf604ef41c2ab495953c835775f6e2ee5b5e37aee25d589b31863ecf23096",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1823,7 +1652,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "36594ee0c62809106199b3a28361146d71326ec3406da27f686f87ed57453096",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1859,7 +1688,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "3b65a1ca261146c9998a2908aaead1ddcb68e4341f9f632be4f5210addd434ae",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1868,7 +1697,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "3be8d9cde001b93de88b55a929b2cb8b3fa8c62a87e72d651aac166b0a30d5da",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1886,7 +1715,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "3f5bb7316e33c85ce22e0ce95d426f9632203c25a196e024c776d0f9876106ae",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1922,7 +1751,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "4b66ed446fde766bfc662be76daa3a52047d236bfec93e677251083271eb10a9",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1958,7 +1787,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "54bb84170ac19e6fb9f2c23e64bacb2176ba9150294842b39d56ce6a04b06003",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1967,7 +1796,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "563e02176d8c3348989730791e3df20950d04a355c87f3cf354ab364b77feb2b",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1976,7 +1805,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "569aeaf6229df66132864418ec8904885e117b83c26ebf57b2e6179e312e73f6",
       "pre_score": 83,
       "protocol": "trojan",
@@ -1994,7 +1823,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "60e906a7a1fadafd196d2e8be6476a175c50e5d221173cb9034d76c4f14722db",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2003,7 +1832,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "62d4d5158e301dbe15c0f4b51279fa13341a1e7921a28810424cac3f4e9642d8",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2012,7 +1841,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "682c5b9e94f0ebfd273dfc913056b38d0a2e1045f4d6bff5204a32f2b8a976a1",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2066,7 +1895,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "78bc0743f6faaa48dae5e79314723e648457dfc2479da7773669759749be82e2",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2075,7 +1904,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "7a1c868265d0008cbef4884d24d3e7e46f5bf218ebf1580061a13a76adbfcff1",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2084,7 +1913,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "7ca3efd9774fe8f07d2de24b8c2c750749e649633a71be5a0de667addf1a95fd",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2102,7 +1931,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "825b534976a82e8e8023bf7efadea13457aa0141ed864e8cff0100a9fa356399",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2111,7 +1940,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "82e588f917a605cc0b2ee1056ec06cfe70d987be132c24b4ee70b185ade8ae54",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2156,7 +1985,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "99ea3eb9d3f0f52ba05abba619fa12cc9efc34400c57f7188e4ebc9bc44573c2",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2165,7 +1994,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "9aa88f3b1120bdacf6dedb6043ccfea811c8c64e94265ae1a13d950a57f1a64f",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2183,7 +2012,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "a3c82aaf36b825f97763d33683cdb3dffa6c0552d4fc3fc4d70640fb6f3e6808",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2246,7 +2075,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "ad96d889a839e8fc4a4d4eac60565b1ba9b274a0331cc64ba809648826f01d44",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2264,7 +2093,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T00:55:58Z",
+      "last_seen_at": "2026-09-25T00:56:26Z",
       "node_digest": "b095fd69e3a52a0f3adc5f720b485182f7c39f308e5c9b7fbc260806939fa27a",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2282,7 +2111,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "b396061994f0fc72ea7ad855f34d0cc1fba09931731125c128637442efa26566",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2291,7 +2120,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "b64304d3cd71503509e7bb619da5ce351fed1a0d0a9b32b9688720a7c5a4f6da",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2300,7 +2129,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "b7985d4bd437f905c2807fc2db532182b1219b7a072a47f1614a3dac706207e0",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2309,7 +2138,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "ba690c44054fcf48d887b8b4115c1741dd75d102627a24b90159f7b8eaf17505",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2327,7 +2156,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "c047b8801d0e6ec10633b5a15e2b4bc2182d0d99f892a2578e491a2f7903eaa2",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2336,7 +2165,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "c3d76753d3718f7d1aa919ea24cb44c6e7023e32df13720badbd445544feb839",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2390,7 +2219,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "d72c5645c77803e443e4a68e7b43491b57f82534b62c4fd2177d1fe594de59ea",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2408,7 +2237,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "de5a18312a7994bb32956cc2ca242e1b74a7edc29755c4db1f62eee1dbaff4ac",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2435,7 +2264,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "e59fbe7696340f3e8f79cf6575567c5b5b77dff2528aadb5bbddba3e9fb17e6d",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2453,7 +2282,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "ecaf8cbeb58af8ee3cd137615b1d73072c7150146b458db88b0475474e335e67",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2462,7 +2291,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "f05ef9b2e67dec0d17f4ed24d9fab20be5e6df49caa63e75e74d54cf0f5be0d7",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2471,7 +2300,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:01:25Z",
+      "last_seen_at": "2026-09-25T01:02:18Z",
       "node_digest": "fab2bf11a0f4ee99ee4a673ca2c5dacc67c6153517ce5e7f01e08233b929b182",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2489,7 +2318,7 @@
     },
     {
       "independent_source_count": 1,
-      "last_seen_at": "2026-09-23T01:02:55Z",
+      "last_seen_at": "2026-09-25T01:04:01Z",
       "node_digest": "ff3dadc1feb1ccdbe24fc259173df92eede75e71eaa8671f01001b39e71730cb",
       "pre_score": 83,
       "protocol": "trojan",
@@ -2540,9 +2369,108 @@
       "protocol": "vmess",
       "source_count": 1,
       "source_id": "05e9a0584186c59621d30ba1"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "151b20218b06fe1f5d171798bdfd68a3ec0bd07a2d105131e32f13f502c94385",
+      "pre_score": 74,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "21195a9dee664f381d10763f0601c01dc9cbf90bb8d22f0564309cb80a056b98",
+      "pre_score": 74,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "21d80c35b961a1b62f778a965d986a59779cc83c29c2f80069219848e57399a6",
+      "pre_score": 74,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "57ba415f424443b7ab97093bb7701abb67a116e8c6ab83497757667247be2ff2",
+      "pre_score": 74,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "9d4094faf66002568aef81c37c61686f9253b3e4705c90e176b760121c94541a",
+      "pre_score": 74,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "2fea124d19294c71559c5eb246b21ec2c77b38d0b42b81e0f4c8c4fd44f89d2e",
+      "pre_score": 74,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "3ae7d6b8947a6c023a62d124c40a3bb43f73b2202597c22fb9083772e5f10a74",
+      "pre_score": 74,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "3ffae893ebd037c1559b22f80fcee32ba539e0036dbd68ce76c57a66af71e462",
+      "pre_score": 74,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "ad75e2ad752b38c9cee882aa3b9def7a1a97185c82ca818a4df8247087ff7eee",
+      "pre_score": 74,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "bd23cd09f919cb0506805071090cd416d717b13145fb3f6f2b632b7bec7bd1c7",
+      "pre_score": 74,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-25T00:57:14Z",
+      "node_digest": "e6e97021476b0825953f18baea15eb7e96dfb6d2288aae98679ce0a8fa72d9ec",
+      "pre_score": 74,
+      "protocol": "vmess",
+      "source_count": 1,
+      "source_id": "04fdd46dd33e292d3f0e733b"
     }
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 282
+  "total_candidates": 274
 }

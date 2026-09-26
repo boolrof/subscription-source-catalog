@@ -1,7 +1,7 @@
 {
   "country": "TJ",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 5,
+  "exported_candidates": 8,
   "nodes": [
     {
       "independent_source_count": 2,
@@ -41,6 +41,33 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-26T01:01:55Z",
+      "node_digest": "30d93ae449e74da94d5824b58d84a1299ba79314c6b8f2db2d4d20bef64ca07a",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "1f73ec84186c1fc90f1290d8"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-26T01:01:55Z",
+      "node_digest": "65685f5deb360675d031ce990c3c7cad74e6ad60b60ddd260952e5b0d5293657",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "1f73ec84186c1fc90f1290d8"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-26T01:01:55Z",
+      "node_digest": "cc24efa4aac9f2d79da5d577ba54073a3ff22066068e0ca9b80ffa28eac18258",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "1f73ec84186c1fc90f1290d8"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-24T13:00:06Z",
       "node_digest": "7579fa3d58fb35fb63d4d7b426f3456a8f613d13d6397606600d31974fab0bd2",
       "pre_score": 85,
@@ -51,5 +78,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 5
+  "total_candidates": 8
 }

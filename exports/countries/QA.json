@@ -1,7 +1,7 @@
 {
   "country": "QA",
   "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
-  "exported_candidates": 20,
+  "exported_candidates": 23,
   "nodes": [
     {
       "independent_source_count": 4,
@@ -41,6 +41,15 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-26T12:59:03Z",
+      "node_digest": "535e4bd976274a3296e9c1bb8887708cd062b05174470a48d6692eacbb2d7880",
+      "pre_score": 100,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "a7e2bf0a747141acd0c063f7"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-25T13:02:37Z",
       "node_digest": "a931f7d9e4fb51d23a346cbb659e3a443e5687da0eb00f20e6de13763b6931aa",
       "pre_score": 99,
@@ -68,12 +77,30 @@
     },
     {
       "independent_source_count": 1,
+      "last_seen_at": "2026-09-26T12:58:06Z",
+      "node_digest": "6ffdf1cc883459d9e8e175eae4f2f5c23e19c425f3ebd459f3e0f8cb67b85796",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "6d838d86ff13f5af051bbd59"
+    },
+    {
+      "independent_source_count": 1,
       "last_seen_at": "2026-09-26T01:01:55Z",
       "node_digest": "d0bde6f670390f531dca2e530590babd4bcdb4661c6a0d1fdc5f8f2f9028ee90",
       "pre_score": 93,
       "protocol": "vless",
       "source_count": 1,
       "source_id": "1f73ec84186c1fc90f1290d8"
+    },
+    {
+      "independent_source_count": 1,
+      "last_seen_at": "2026-09-26T12:58:06Z",
+      "node_digest": "ddf3224ceeda2007c23d6b2f037d894d1b451540a014526371677b7e269d74fa",
+      "pre_score": 93,
+      "protocol": "vless",
+      "source_count": 1,
+      "source_id": "6d838d86ff13f5af051bbd59"
     },
     {
       "independent_source_count": 1,
@@ -186,5 +213,5 @@
   ],
   "schema": "subscription-source-country-ranking-v3",
   "source_id_semantics": "preferred_public_retrieval_source_id_only_no_credentials",
-  "total_candidates": 20
+  "total_candidates": 23
 }

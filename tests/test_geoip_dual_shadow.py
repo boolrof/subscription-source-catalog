@@ -1,0 +1,94 @@
+import json
+import unittest
+from unittest.mock import patch
+
+from src.geoip_shadow import LocalMMDBShadowResolver, ShadowingGeoResolver
+
+
+class FakeReader:
+    def __init__(self, value=None, fail=False):
+        self.value = value
+        self.fail = fail
+
+    def get(self, _key):
+        if self.fail:
+            raise RuntimeError("lookup failed")
+        return self.value
+
+
+class DualShadowTests(unittest.TestCase):
+    def resolver(self, primary, secondary):
+        return ShadowingGeoResolver(
+            {}, max_new=0, timeout=0.1,
+            shadow=LocalMMDBShadowResolver(reader=FakeReader(primary), provider="primary"),
+            secondary_shadow=LocalMMDBShadowResolver(reader=FakeReader(secondary), provider="secondary"),
+            secondary_requested=True,
+        )
+
+    @patch("src.geoip_shadow.p._global_ip", return_value=True)
+    def test_consensus_is_counted_only_when_both_local_datasets_agree(self, _global):
+        resolver = self.resolver({"country_code": "AU"}, {"country": {"iso_code": "AU"}})
+        self.assertEqual(resolver.country("test-ip"), "AU")
+        metrics = resolver.metrics()
+        self.assertEqual(metrics["primary_secondary_both_known_agree"], 1)
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_known"], 1)
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict"], 0)
+        self.assertEqual(metrics["primary_secondary_conflict_pair_counts"], {})
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict_pair_counts"], {})
+        self.assertEqual(metrics["unique_resolved_ips"], 1)
+        self.assertEqual(metrics["unique_primary_secondary_both_known_agree"], 1)
+        self.assertEqual(metrics["unique_legacy_unknown_shadow_consensus_known"], 1)
+
+    @patch("src.geoip_shadow.p._global_ip", return_value=True)
+    def test_conflict_is_observed_but_never_promoted(self, _global):
+        resolver = self.resolver({"country_code": "AU"}, {"country": {"iso_code": "US"}})
+        self.assertEqual(resolver.country("test-ip"), "AU")
+        metrics = resolver.metrics()
+        self.assertEqual(metrics["primary_secondary_both_known_disagree"], 1)
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_known"], 0)
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict"], 1)
+        self.assertEqual(metrics["primary_secondary_conflict_pair_counts"], {"AU->US": 1})
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 1})
+        self.assertEqual(metrics["unique_primary_secondary_both_known_disagree"], 1)
+        self.assertEqual(metrics["unique_primary_secondary_conflict_pair_counts"], {"AU->US": 1})
+        self.assertNotIn("test-ip", json.dumps(metrics, sort_keys=True))
+
+    @patch("src.geoip_shadow.p._global_ip", return_value=True)
+    def test_unique_ip_metrics_do_not_amplify_repeated_hot_endpoint(self, _global):
+        resolver = self.resolver({"country_code": "AU"}, {"country": {"iso_code": "US"}})
+        self.assertEqual(resolver.country("hot-ip"), "AU")
+        self.assertEqual(resolver.country("hot-ip"), "AU")
+        self.assertEqual(resolver.country("other-ip"), "AU")
+        metrics = resolver.metrics()
+
+        self.assertEqual(metrics["primary_secondary_both_known_disagree"], 3)
+        self.assertEqual(metrics["legacy_unknown_shadow_consensus_conflict"], 3)
+        self.assertEqual(metrics["primary_secondary_conflict_pair_counts"], {"AU->US": 3})
+
+        self.assertEqual(metrics["unique_resolved_ips"], 2)
+        self.assertEqual(metrics["unique_primary_secondary_both_known_disagree"], 2)
+        self.assertEqual(metrics["unique_legacy_unknown_shadow_consensus_conflict"], 2)
+        self.assertEqual(metrics["unique_primary_secondary_conflict_pair_counts"], {"AU->US": 2})
+        self.assertEqual(metrics["unique_legacy_unknown_shadow_consensus_conflict_pair_counts"], {"AU->US": 2})
+
+        serialized = json.dumps(metrics, sort_keys=True)
+        self.assertNotIn("hot-ip", serialized)
+        self.assertNotIn("other-ip", serialized)
+
+    def test_batch_adapter_uses_legacy_only_for_local_misses(self):
+        resolver = self.resolver(None, None)
+        ips = ["8.8.8.8", "8.8.8.8", "1.1.1.1"]
+        with patch.object(resolver.legacy, "countries", return_value=["US", "US", "AU"]) as countries, patch.object(
+            resolver.legacy, "country", side_effect=AssertionError("batch adapter re-queried legacy GeoIP")
+        ):
+            self.assertEqual(resolver.countries(ips), ["US", "US", "AU"])
+
+        countries.assert_called_once_with(ips)
+        metrics = resolver.metrics()
+        self.assertEqual(metrics["shadow_calls"], 3)
+        self.assertEqual(metrics["unique_resolved_ips"], 2)
+        self.assertEqual(metrics["both_shadows_unknown"], 3)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,7 @@
+# Insert inside the existing HTTPS site before its fallback handle.
+# The random token is the capability; directory browsing is not enabled.
+handle_path /country-subscriptions/* {
+	root * /var/lib/subscription-source-catalog/delivery/public
+	header Cache-Control "no-store"
+	file_server
+}

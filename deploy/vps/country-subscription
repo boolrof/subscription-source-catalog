@@ -1,0 +1,117 @@
+#!/opt/subscription-source-catalog/.venv/bin/python
+from __future__ import annotations
+
+import argparse
+import grp
+import json
+import os
+import secrets
+import sys
+import time
+from pathlib import Path
+
+CATALOG_REPO = Path("/opt/subscription-source-catalog")
+DELIVERY_ROOT = Path("/var/lib/subscription-source-catalog/delivery")
+DEFAULT_BASE_URL = "https://dzenprivate.dynv6.net:8443/country-subscriptions"
+
+sys.path.insert(0, str(CATALOG_REPO))
+
+from src.country_subscription_delivery import cleanup_expired, create_delivery
+from src.on_demand_fresh import collect_fresh_country
+
+
+def generate_fresh(country: str, *, protocol: str, limit: int, max_sources: int, ttl_seconds: int, base_url: str) -> dict:
+    fresh = collect_fresh_country(
+        country=country,
+        protocol=protocol,
+        config_path=CATALOG_REPO / "config/discovery.json",
+        data_path=CATALOG_REPO / "data/sources.json",
+        primary_mmdb=Path("/var/lib/subscription-source-catalog/geoip/primary.mmdb"),
+        max_sources=max_sources,
+    )
+    uris = list(fresh["uris"])[:limit]
+    if not uris:
+        raise RuntimeError("fresh on-demand collection found no matching nodes")
+    now = int(time.time())
+    expires_at = now + ttl_seconds
+    token = secrets.token_urlsafe(24)
+    web_gid = grp.getgrnam("caddy").gr_gid
+    stats = dict(fresh["stats"])
+    metadata = {
+        "schema": "subscription-source-country-delivery-v3",
+        "mode": "fresh_on_demand",
+        "country": fresh["country"],
+        "country_semantics": "endpoint_country_passive_geoip_not_verified_exit_country",
+        "protocol_filter": fresh["protocol"],
+        "delivered_candidates": len(uris),
+        "available_country_matches": len(fresh["uris"]),
+        "sources_considered": stats.get("sources_considered"),
+        "source_fetch_ok": stats.get("source_fetch_ok"),
+        "source_fetch_failed": stats.get("source_fetch_failed"),
+        "unique_protocol_uris": stats.get("unique_protocol_uris"),
+        "resolved_endpoints": stats.get("resolved_endpoints"),
+        "generated_at_epoch": now,
+    }
+    create_delivery(
+        DELIVERY_ROOT,
+        token=token,
+        uris=uris,
+        metadata=metadata,
+        expires_at=expires_at,
+        web_gid=web_gid,
+    )
+    cleanup = cleanup_expired(DELIVERY_ROOT, now_epoch=now)
+    url = base_url.rstrip("/") + "/" + token + "/subscription.txt"
+    return {
+        "mode": "fresh_on_demand",
+        "country": fresh["country"],
+        "protocol": fresh["protocol"],
+        "sources_considered": stats.get("sources_considered"),
+        "source_fetch_ok": stats.get("source_fetch_ok"),
+        "unique_protocol_uris": stats.get("unique_protocol_uris"),
+        "available_country_matches": len(fresh["uris"]),
+        "delivered_candidates": len(uris),
+        "expires_at_epoch": expires_at,
+        "subscription_url": url,
+        "cleanup": cleanup,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Generate a bounded on-demand country subscription.")
+    parser.add_argument("country", nargs="?")
+    parser.add_argument("--protocol", choices=["vless", "vmess", "trojan", "ss", "hysteria2"])
+    parser.add_argument("--limit", type=int, default=300, help="maximum delivered nodes")
+    parser.add_argument("--max-sources", type=int, default=150, help="fresh public sources fetched on demand")
+    parser.add_argument("--ttl-seconds", type=int, default=86400)
+    parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
+    parser.add_argument("--cleanup-only", action="store_true")
+    args = parser.parse_args()
+
+    if args.cleanup_only:
+        print(json.dumps(cleanup_expired(DELIVERY_ROOT, now_epoch=int(time.time())), sort_keys=True))
+        return 0
+    if not args.country:
+        parser.error("country is required unless --cleanup-only is used")
+    if not 1 <= args.limit <= 500:
+        parser.error("--limit must be 1..500")
+    if not 10 <= args.max_sources <= 500:
+        parser.error("--max-sources must be 10..500")
+    if not args.protocol:
+        parser.error("--protocol is required")
+    if not 300 <= args.ttl_seconds <= 604800:
+        parser.error("--ttl-seconds must be 300..604800")
+    result = generate_fresh(
+        args.country,
+        protocol=args.protocol,
+        limit=args.limit,
+        max_sources=args.max_sources,
+        ttl_seconds=args.ttl_seconds,
+        base_url=args.base_url,
+    )
+    print(json.dumps(result, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
